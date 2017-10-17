@@ -23,8 +23,8 @@ public:
     }
 };
 
-// Factory
-
+//Factory
+//Abstract Factory模式和Factory最大的差别就是抽象工厂创建的是一系列相关的对象的家族
 class AbstractFactory {
 public:
     virtual ~AbstractFactory() { }
