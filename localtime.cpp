@@ -25,5 +25,15 @@ int main(int argc, char *argv[])
     strftime(szEnd,50,"%H:%M:%S",ptmEnd);
     printf("%s \n",szTmp);
     printf("%s \n",szEnd);
+    
+    int diff=difftime(tEnd,tNow);
+    printf("%d \n",diff);
+
+    time_t biggest=0x7FFFFFFFF;
+    //ctime is localtime
+    printf("%s \n",ctime(&biggest));
+    printf("%s \n",asctime(gmtime(&biggest)));
+    
+
     return 0;
 }
