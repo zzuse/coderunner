@@ -8,4 +8,5 @@ int main(int argc, char *argv[]) {
 	sprintf(tmp,"%c",TS_PATH_DELIMITER);
 	strcat(name, tmp);
 	printf("%s",name);
+	printf("sizeof char A %d",sizeof 'A');
 }

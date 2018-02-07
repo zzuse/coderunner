@@ -1,12 +1,22 @@
 *.dSYM
 *.class
+.DS_Store
+arrays
 bin
+chartoString
 enumerate
 getAges
+int_to_float_lose_precision
 localtime
 malloc
+parsingDclaration
+producerConsumer
+showMatrix
 sizeof
+stringtochar
 sudoku
+threadQueue
+transformStr
 ResponsibilityChain
 abstractFactory
 adapter
@@ -29,3 +39,4 @@ state
 template
 visitor
 shellSort
+

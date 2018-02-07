@@ -3,7 +3,7 @@
 using namespace std;
 void quickSort(int s[], int l, int r)  
 {  
-    if (l< r)  
+    if (l<r)  
     {        
         int i = l, j = r, x = s[l];  
         while (i < j)  
