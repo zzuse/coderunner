@@ -9,6 +9,7 @@ getAges
 int_to_float_lose_precision
 localtime
 malloc
+macro
 parsingDclaration
 producerConsumer
 showMatrix
