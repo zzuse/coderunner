@@ -1,6 +1,7 @@
 *.dSYM
 *.class
 .DS_Store
+argc
 arrays
 bin
 chartoString
