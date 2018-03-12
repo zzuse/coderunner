@@ -12,8 +12,8 @@ class BasePlusCommissionEmployee : public CommissionEmployee
 		void setBaseSalary(double);
 		double getBaseSalary() const;
 		
-		double earnings() const;
-		void print() const;
+		virtual double earnings() const override;
+		virtual void print() const override;
 	private:
 		double baseSalary;
 };

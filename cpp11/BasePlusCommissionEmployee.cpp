@@ -32,26 +32,27 @@ double BasePlusCommissionEmployee::earnings() const
 
 void BasePlusCommissionEmployee::print() const
 {
+	cout << "base-salaried ";
 	CommissionEmployee::print();
 	cout << "\nbase salary " << getBaseSalary();
 }
 
-int main(int argc, char *argv[]) {
-	BasePlusCommissionEmployee
-		employee("Bob","Lewis","333-33-3333",5000,.04,300);
-		
-	cout << fixed << setprecision(2);
-	
-	cout << "Employee information obtained by get functions: \n"
-	<<"\n name is " << employee.getFirstName() << ' ' << employee.getLastName()
-	<<"\n Social security number is " << employee.getSocialSecurityNumber()
-	<<"\n Gross sales is " << employee.getGrossSales()
-	<<"\n Commission rate is " << employee.getCommissionRate()
-	<<"\n Base salary is " << employee.getBaseSalary() << endl;
-	
-	employee.setBaseSalary(1000);
-	cout << "Updated!\n";
-	employee.print();
-	
-	cout << "\n\nEmployee's earnings: $" << employee.earnings() << endl;
-}
+	//int main(int argc, char *argv[]) {
+	//	BasePlusCommissionEmployee
+	//		employee("Bob","Lewis","333-33-3333",5000,.04,300);
+	//		
+	//	cout << fixed << setprecision(2);
+	//	
+	//	cout << "Employee information obtained by get functions: \n"
+	//	<<"\n name is " << employee.getFirstName() << ' ' << employee.getLastName()
+	//	<<"\n Social security number is " << employee.getSocialSecurityNumber()
+	//	<<"\n Gross sales is " << employee.getGrossSales()
+	//	<<"\n Commission rate is " << employee.getCommissionRate()
+	//	<<"\n Base salary is " << employee.getBaseSalary() << endl;
+	//	
+	//	employee.setBaseSalary(1000);
+	//	cout << "Updated!\n";
+	//	employee.print();
+	//	
+	//	cout << "\n\nEmployee's earnings: $" << employee.earnings() << endl;
+	//}
