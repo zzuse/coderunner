@@ -1,12 +1,15 @@
 friend
 WriteClient
 BasePlusCommissionEmployee
+BlankClient
 vectorTest
 arrayTest
 CreditInquiry
+credit.dat
 Date
 get
 PhoneNumber
+print.txt
 Time
 selfCout
 gradeBook
@@ -14,7 +17,10 @@ cout
 createAndDestroy
 cout_manipulators
 Employee
+RandomAccessFile
+ReadingRandomFile
 stringTest
 SequentialFile
+TransactionProcessing
 cin
 

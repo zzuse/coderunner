@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
 	
 	ClientData blankClient;
 	
+	cout << sizeof(ClientData);
 	for(int i=0;i<100;++i)
 	{
 		outCredit.write(reinterpret_cast<const char*> (&blankClient),sizeof(ClientData));
