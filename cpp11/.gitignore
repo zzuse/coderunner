@@ -52,5 +52,11 @@ selfCout
 setUsing
 stackUsing
 stringTest
+stlAlgMathUsage
+stlAlgMergeUsage
+stlAlgReplaceUsage
+stlAlgSortUsage
+stlAlgSwapUsage
+stringTest
 vectorTest
 
