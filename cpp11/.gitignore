@@ -51,12 +51,22 @@ queueUsing
 selfCout
 setUsing
 stackUsing
-stringTest
+stdExpDevideByZero
+stdExpNewUsage
+stdExpRethrow
+stdExpUnwindUsage
+stlAlgFunctorUsage
+stlAlgHeapsortUsage
+stlAlgLambdaUsage
 stlAlgMathUsage
 stlAlgMergeUsage
+stlAlgMinMaxUsage
+stlAlgRangeUsage
 stlAlgReplaceUsage
+stlAlgSetUsage
 stlAlgSortUsage
 stlAlgSwapUsage
 stringTest
+uniquePtrUsage
 vectorTest
 

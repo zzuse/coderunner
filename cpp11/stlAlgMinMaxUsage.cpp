@@ -1,0 +1,26 @@
+#include <iostream>
+#include <array>
+#include <algorithm>
+
+using namespace std;
+int main(int argc, char *argv[]) {
+	cout << "The minimum of 12 and 7 is: " << min(12, 7);
+	cout << "\nThe maximum of 12 and 7 is: " << max(12, 7);
+	cout << "\nThe minimum of 'G' and 'Z' is: " << min( 'G', 'Z' );
+	cout << "\nThe maximum of 'G' and 'Z' is: " << max( 'G', 'Z' );
+	
+	auto result1 = minmax(12,7);
+	cout << "\n\nThe minimum of 12 and 7 is: " << result1.first
+	<< "\nThe maximum of 12 and 7 is: " << result1.second;
+	
+	array<int, 10> items = {3,100,52,77,22,31,1,98,13,40};
+	ostream_iterator<int> output(cout," ");
+	
+	cout << "\n\nArray items contains: ";
+	copy(items.cbegin(), items.cend(), output);
+	
+	auto result2 = minmax_element(items.cbegin(), items.cend());
+	cout << "\nThe minimum element in items is: " << *result2.first
+	<< "\nThe maximum element in items is: " << *result2.second
+	<< endl;	
+}
