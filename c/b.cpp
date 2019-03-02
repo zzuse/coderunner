@@ -6,8 +6,9 @@
 #include <stdio.h>
 
 int f(int, int);
-int main() {
-	int a,b;
+int main()
+{
+	int a, b;
 	scanf("%d%d", &a, &b);
-	printf("%d\n", f(a,b));
+	printf("%d\n", f(a, b));
 }
