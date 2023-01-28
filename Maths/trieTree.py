@@ -47,6 +47,29 @@ class TrieTree:
 			p = p.childnode[index]
 		return True
 	
+	def dfs_travel(self):
+		stack = []
+		stack.append(self.root)
+		output = []
+		
+		while len(stack) > 0:
+			node = stack.pop()
+			if node.letter:
+				if node.letter is not '/':
+					output.append(node.letter)
+				if node.isend is True:
+					print("{} ".format("".join(output)))
+					clear = True
+					for child in node.childnode:
+						if child is not None:
+							clear = False
+					if clear:
+						output.clear()
+			for child in node.childnode:
+				if child is not None:
+					stack.append(child)
+		
+	
 	
 if __name__ == "__main__":
 	trie = TrieTree()
@@ -58,5 +81,7 @@ if __name__ == "__main__":
 	trie.insert("app")
 	print("insert app \n")
 	print("find app {}\n".format(trie.find("app")))
+	trie.insert("boy")
+	trie.dfs_travel()
 
 		
