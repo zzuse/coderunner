@@ -55,7 +55,7 @@ class TrieTree:
 		while len(stack) > 0:
 			node = stack.pop()
 			if node.letter:
-				if node.letter is not '/':
+				if node.letter != '/':
 					output.append(node.letter)
 				if node.isend is True:
 					print("{} ".format("".join(output)))
@@ -68,6 +68,23 @@ class TrieTree:
 			for child in node.childnode:
 				if child is not None:
 					stack.append(child)
+
+	def bfs_travel(self):
+		"""
+			only for demonstrate bfs
+		"""
+		queue = []
+		queue.append(self.root)
+
+		while len(queue) > 0:
+			node = queue[0]
+			queue = queue[1:]
+			if node.letter:
+				if node.letter != '/':
+					print("{} ".format(node.letter))
+				for child in node.childnode:
+					if child is not None:
+						queue.append(child)
 		
 	
 	
@@ -83,5 +100,6 @@ if __name__ == "__main__":
 	print("find app {}\n".format(trie.find("app")))
 	trie.insert("boy")
 	trie.dfs_travel()
+	trie.bfs_travel()
 
 		
