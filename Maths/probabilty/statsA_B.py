@@ -8,7 +8,8 @@ import scipy.stats as ss
 
 
 # 读取数据，d1对应于算法a，d2对应于算法b
-df = pd.read_csv("/Users/shenhuang/Data/oneway.csv") #设置为你自己的文件路径
+
+df = pd.DataFrame({'algo':['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'],'ratio':[ 0.29, 0.36, 0.32, 0.29, 0.34, 0.24, 0.27, 0.29, 0.31, 0.27, 0.29, 0.33, 0.31, 0.30, 0.31, 0.26, 0.25, 0.30, 0.28, 0.29]})
 d1 = df[df['algo'] == 'a']['ratio']
 d2 = df[df['algo'] == 'b']['ratio']
 
