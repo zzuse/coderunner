@@ -34,3 +34,14 @@ def plot_iris(iris, col1, col2):
 plot_iris(iris, 'Petal_Width', 'Sepal_Length')
 
 plot_iris(iris, 'Sepal_Width', 'Sepal_Length')
+
+
+from sklearn.preprocessing import scale
+
+num_cols = ['Sepal_Length', 'Sepal_Width', 'Petal_Length', 'Petal_Width']
+
+iris_scaled = scale(iris[num_cols])
+
+iris_scaled = pd.DataFrame(iris_scaled, columns = num_cols)
+
+print(iris_scaled.describe().round(3))
