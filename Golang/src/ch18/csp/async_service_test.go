@@ -23,7 +23,7 @@ func TestService(t *testing.T) {
 }
 
 func AsyncService() chan string {
-	// bufferd chan, size 1
+	// buffered chan, size 1
 	retCh := make(chan string, 1)
 	go func() {
 		ret := service()
