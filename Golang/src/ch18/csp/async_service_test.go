@@ -21,3 +21,22 @@ func TestService(t *testing.T) {
 	fmt.Println(service())
 	otherTask()
 }
+
+func AsyncService() chan string {
+	// bufferd chan, size 1
+	retCh := make(chan string, 1)
+	go func() {
+		ret := service()
+		fmt.Println("returned result.")
+		retCh <- ret
+		fmt.Println("service exited.")
+	}()
+	return retCh
+}
+
+func TestAsyncService(t *testing.T) {
+	retCh := AsyncService()
+	otherTask()
+	fmt.Println(<-retCh)
+	time.Sleep(time.Second * 1)
+}
