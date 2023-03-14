@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// because GC. not very useful
+// because GC. not very useful. It should be named sync_cache
 func TestSyncPool(t *testing.T) {
 	pool := &sync.Pool{
 		New: func() interface{} {
