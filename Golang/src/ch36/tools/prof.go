@@ -16,7 +16,11 @@ import (
 //		list fillMatrix
 //		svg
 //		exit
+// $GOPATH/bin/go-torch cpu.prof
 // go tool pprof prof mem.prof
+//		top
+//		list main.main
+//		exit
 // https://go.dev/src/runtime/pprof/pprof.go
 
 const (
