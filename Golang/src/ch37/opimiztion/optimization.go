@@ -16,7 +16,7 @@ func createRequest() string {
 	if err != nil {
 		panic(err)
 	}
-	return string(v)
+	return string(v) // v is a binary obj
 }
 
 func processRequestNew(reqs []string) []string {
