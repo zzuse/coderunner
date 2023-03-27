@@ -45,3 +45,9 @@ func TestReVar5(t *testing.T) {
 	}
 	fmt.Printf("%d byte(s) were written.\n", n)
 }
+
+func TestIntConv(t *testing.T) {
+	var srcInt = int16(-255)
+	disInt := int8(srcInt)
+	fmt.Print(srcInt, disInt)
+}
