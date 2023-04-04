@@ -70,5 +70,5 @@ func TestSliceCapacity(t *testing.T) {
 	s4 := s3[3:6]
 	fmt.Printf("The length of s4: %d\n", len(s4))
 	fmt.Printf("The capacity of s4: %d\n", cap(s4))
-	fmt.Printf("The value of s4: %d\n", s4)
+	fmt.Printf("The value of s4:  %d\n", s4)
 }
