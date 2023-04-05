@@ -75,26 +75,54 @@ func TestSliceCapacity(t *testing.T) {
 	fmt.Printf("The value of s4: %d\n", s4)
 }
 
-func TestList(t *testing.T) {
+func TestContainerList(t *testing.T) {
 	var li list.List
+	fmt.Printf("List original size is %d\n", li.Len())
 	li.PushBack("1")
 	front := li.Front()
-	fmt.Println(front)
-	li.InsertBefore(2, front)
+	li.InsertAfter("3", front)
 	back := li.Back()
-	li.InsertAfter("3", back)
-	li.PushFront("4")
-	li.PushBack("5")
-	li.MoveAfter(front, back)
-	li.MoveBefore(li.Back(), li.Front())
-	li.MoveToFront(li.Back())
+	li.InsertBefore("2", back)
 	li.MoveToBack(li.Front())
-	fmt.Println(li.Front())
+	li.MoveBefore(li.Back(), li.Front())
+	li.PushFront("5")
+	li.PushBack("4")
+	front = li.Front()
+	back = li.Back()
+	li.MoveAfter(front, back)
+	li.MoveAfter(li.Front(), li.Back())
+	li.MoveToFront(li.Back())
 
-	fmt.Printf("List size is %d", li.Len())
+	fmt.Printf("List size is %d\n", li.Len())
+	for i := li.Front(); i != nil; i = i.Next() {
+		fmt.Print(i)
+	}
 }
 
 func TestRing(t *testing.T) {
 	var r ring.Ring
-	fmt.Printf("Ring size is %d", r.Len())
+	fmt.Printf("Ring original size is %d\n", r.Len())
+	r1 := ring.New(3)
+	head1 := r1
+	r1.Value = "apple"
+	r1 = r1.Next()
+	r1.Value = "banana"
+	r1 = r1.Next()
+	r1.Value = "cherry"
+
+	r2 := ring.New(2)
+	head2 := r2
+	r2.Value = "pear"
+	r2 = r2.Next()
+	r2.Value = "Orange"
+
+	r1.Link(head2)
+	fmt.Printf("Ring 1 size is %d\n", head1.Len())
+	fmt.Printf("Ring 2 size is %d\n", head2.Len())
+	head1.Do(func(x interface{}) {
+		fmt.Println(x)
+	})
+	head2.Do(func(x interface{}) {
+		fmt.Println(x)
+	})
 }
