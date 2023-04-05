@@ -1,6 +1,8 @@
 package var_test
 
 import (
+	"container/list"
+	"container/ring"
 	"flag"
 	"fmt"
 	"io"
@@ -70,5 +72,29 @@ func TestSliceCapacity(t *testing.T) {
 	s4 := s3[3:6]
 	fmt.Printf("The length of s4: %d\n", len(s4))
 	fmt.Printf("The capacity of s4: %d\n", cap(s4))
-	fmt.Printf("The value of s4:  %d\n", s4)
+	fmt.Printf("The value of s4: %d\n", s4)
+}
+
+func TestList(t *testing.T) {
+	var li list.List
+	li.PushBack("1")
+	front := li.Front()
+	fmt.Println(front)
+	li.InsertBefore(2, front)
+	back := li.Back()
+	li.InsertAfter("3", back)
+	li.PushFront("4")
+	li.PushBack("5")
+	li.MoveAfter(front, back)
+	li.MoveBefore(li.Back(), li.Front())
+	li.MoveToFront(li.Back())
+	li.MoveToBack(li.Front())
+	fmt.Println(li.Front())
+
+	fmt.Printf("List size is %d", li.Len())
+}
+
+func TestRing(t *testing.T) {
+	var r ring.Ring
+	fmt.Printf("Ring size is %d", r.Len())
 }
