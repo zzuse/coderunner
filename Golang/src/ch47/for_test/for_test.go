@@ -19,6 +19,7 @@ func TestFooLoop(t *testing.T) {
 func TestForLoopArray(t *testing.T) {
 	numbers2 := [...]int{1, 2, 3, 4, 5, 6}
 	maxIndex2 := len(numbers2) - 1
+	// range is copy
 	for i, e := range numbers2 {
 		if i == maxIndex2 {
 			numbers2[0] += e
@@ -27,6 +28,16 @@ func TestForLoopArray(t *testing.T) {
 		}
 	}
 	fmt.Println(numbers2)
+	numbers3 := [...]int{1, 2, 3, 4, 5, 6}
+	// for is not copy
+	for index := 0; index <= maxIndex2; index++ {
+		if index == maxIndex2 {
+			numbers3[0] += numbers3[index]
+		} else {
+			numbers3[index+1] += numbers3[index]
+		}
+	}
+	fmt.Println(numbers3)
 }
 
 func TestForLoopSlice(t *testing.T) {
