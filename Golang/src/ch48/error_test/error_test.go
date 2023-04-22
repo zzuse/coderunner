@@ -165,6 +165,7 @@ func TestOs(t *testing.T) {
 	_, err = exec.LookPath(os.DevNull)
 	fmt.Printf("error: %s\n", err)
 	if execErr, ok := err.(*exec.Error); ok {
+		// error can be changed
 		execErr.Name = os.TempDir()
 		execErr.Err = os.ErrNotExist
 	}
