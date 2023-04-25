@@ -35,6 +35,8 @@ func introduce() string {
 	return "Welcome to my Golang column"
 }
 
+// GetPrimes 用于获取小于或等于参数max的所有质数。
+// 本函数使用的是爱拉托逊斯筛选法: Sieve Of Eratosthenes
 func GetPrimes(max int) []int {
 	if max <= 1 {
 		return []int{}
