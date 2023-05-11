@@ -26,4 +26,30 @@ func TestString(t *testing.T) {
 	fmt.Println("Reset the builder ...")
 	builder1.Reset()
 	fmt.Printf("The third output(%d):\n%q\n", builder1.Len(), builder1.String())
+
+	builder1.Grow(1)
+	f1 := func(b strings.Builder) {
+		//b.Grow(1)
+	}
+	f1(builder1)
+
+	ch1 := make(chan strings.Builder, 1)
+	ch1 <- builder1
+	builder2 := <-ch1
+	//builder2.Grow(1)
+	_ = builder2
+
+	builder3 := builder1
+	// builder3.Grow(1)
+	_ = builder3
+	f2 := func(bp *strings.Builder) {
+		(*bp).Grow(1)
+		builder4 := *bp
+		// builder4.Grow(1)
+		_ = builder4
+	}
+	f2(&builder1)
+	builder1.Reset()
+	builder5 := builder1
+	builder5.Grow(1)
 }
