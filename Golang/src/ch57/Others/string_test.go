@@ -53,10 +53,14 @@ func TestString(t *testing.T) {
 	builder1.Reset()
 	builder5 := builder1
 	builder5.Grow(1)
+	fmt.Println()
 
 	reader1 := strings.NewReader("NewReader returns a new Reader reading from s. " +
 		"It is similar to bytes.NewBufferString but more efficient and read-only.")
+	fmt.Printf("NewReader returns a new Reader reading from s. " +
+		"It is similar to bytes.NewBufferString but more efficient and read-only.\n")
 	fmt.Printf("The size of reader: %d\n", reader1.Size())
+	fmt.Printf("The len of reader: %d\n", reader1.Len())
 	fmt.Printf("The reading index in reader: %d\n",
 		reader1.Size()-int64(reader1.Len()))
 	buf1 := make([]byte, 47)
