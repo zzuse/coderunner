@@ -60,33 +60,35 @@ func TestString(t *testing.T) {
 	fmt.Printf("NewReader returns a new Reader reading from s. " +
 		"It is similar to bytes.NewBufferString but more efficient and read-only.\n")
 	fmt.Printf("The size of reader: %d\n", reader1.Size())
-	fmt.Printf("The len of reader: %d\n", reader1.Len())
+	fmt.Printf("The len of reader(haven't reading): %d\n", reader1.Len())
 	fmt.Printf("The reading index in reader: %d\n",
 		reader1.Size()-int64(reader1.Len()))
 	buf1 := make([]byte, 47)
 	n, _ := reader1.Read(buf1)
 	fmt.Printf("%d bytes were read. (call Read)\n", n)
-	fmt.Printf("The reading index in reader: %d\n",
-		reader1.Size()-int64(reader1.Len()))
+	fmt.Printf("The reader1 size %d, reader1 Len %d, The reading index in reader: %d\n",
+		reader1.Size(), reader1.Len(), reader1.Size()-int64(reader1.Len()))
 	fmt.Println()
 
 	buf2 := make([]byte, 21)
 	offset1 := int64(64)
 	n, _ = reader1.ReadAt(buf2, offset1)
+	// seems ReadAt did not influence reading position
 	fmt.Printf("%d bytes were read. (call ReadAt, offset: %d)\n", n, offset1)
-	fmt.Printf("The reading index in reader: %d\n",
-		reader1.Size()-int64(reader1.Len()))
+	fmt.Printf("The reader1 size %d, reader1 Len %d, The reading index in reader: %d\n",
+		reader1.Size(), reader1.Len(), reader1.Size()-int64(reader1.Len()))
 	fmt.Println()
 
 	offset2 := int64(17)
 	expectIndex := reader1.Size() - int64(reader1.Len()) + offset2
 	fmt.Printf("Seek with offset %d and whence %d ...\n", offset2, io.SeekCurrent)
+	// seems Seek influence reading position
 	readingIndex, _ := reader1.Seek(offset2, io.SeekCurrent)
 	fmt.Printf("The reading index in reader: %d (returned by Seek)\n", readingIndex)
 	fmt.Printf("The reading index in reader: %d (compute by me)\n", expectIndex)
 
 	n, _ = reader1.Read(buf2)
 	fmt.Printf("%d bytes were read. (call Read)\n", n)
-	fmt.Printf("The reading index in reader: %d\n",
-		reader1.Size()-int64(reader1.Len()))
+	fmt.Printf("The reader1 size %d, reader1 Len %d, The reading index in reader: %d\n",
+		reader1.Size(), reader1.Len(), reader1.Size()-int64(reader1.Len()))
 }
