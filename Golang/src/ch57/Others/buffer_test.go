@@ -114,4 +114,7 @@ func TestBuffer2(t *testing.T) {
 	fmt.Printf("The capacity of new buffer with contents %q: %d\n", contents, buffer1.Cap())
 	fmt.Println()
 
+	unreadBytes = unreadBytes[:cap(unreadBytes)]
+	fmt.Printf("The unread bytes of the buffer: %v\n", unreadBytes)
+	fmt.Printf("\n\n")
 }
