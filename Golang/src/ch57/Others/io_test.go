@@ -113,4 +113,6 @@ func TestIOs(t *testing.T) {
 		fmt.Printf("Read(%d): %q\n", n, buf1[:n])
 	})
 	fmt.Println()
+
+	reader1.Reset(comment)
 }
