@@ -4,9 +4,11 @@ import (
 	bytes2 "bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
+	"syscall"
 	"testing"
 )
 
@@ -71,4 +73,129 @@ func TestFile(t *testing.T) {
 		fmt.Println("The file has been created.")
 	}
 	fmt.Println()
+
+	fmt.Println("New a file associated with stderr ...")
+	file3 := os.NewFile(uintptr(syscall.Stderr), "/dev/stderr")
+	if file3 != nil {
+		file3.WriteString("The Go language program writes something to stderr.\n")
+	}
+	fmt.Println()
+
+	fmt.Printf("Open a file with path %s ...\n", filePath1)
+	file4, err := os.Open(filePath1)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	fmt.Println("Write something to the file ...")
+	_, err = file4.WriteString("something")
+	var underlyingErr string
+	if _, ok := err.(*os.PathError); ok {
+		underlyingErr = "(path error)"
+	}
+	fmt.Printf("error: %v %s\n", err, underlyingErr)
+	fmt.Println()
+
+	fmt.Printf("Open a file with path %s ...\n", filePath1)
+	file5a, err := os.Open(filePath1)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	fmt.Printf("Is there only one file descriptor for the same file in the same process? %v\n",
+		file5a.Fd() == file4.Fd())
+	file5b := os.NewFile(file5a.Fd(), filePath1)
+	fmt.Printf("Can the same file descriptor represent the same file? %v\n", file5b.Name() == file5a.Name())
+	fmt.Println()
+
+	fmt.Printf("Reuse a file on path %s ...\n", filePath1)
+	file6, err := os.OpenFile(filePath1, os.O_WRONLY|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	contents := "something"
+	fmt.Printf("Write %q to the file ...\n", contents)
+	n, err := file6.WriteString(contents)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+	} else {
+		fmt.Printf("The number of bytes written is %d.\n", n)
+	}
+}
+
+type flagDesc struct {
+	flag int
+	desc string
+}
+
+func TestFile2(t *testing.T) {
+	fileName1 := "something2.txt"
+	filePath1 := filepath.Join(os.TempDir(), fileName1)
+	fmt.Printf("The file path: %s\n", filePath1)
+	fmt.Println()
+
+	contents0 := "OpenFile is the generalized open call."
+	flagDescList := []flagDesc{
+		{
+			os.O_WRONLY | os.O_CREATE | os.O_TRUNC,
+			"os.O_WRONLY|os.O_CREATE|os.O_TRUNC",
+		},
+		{
+			os.O_WRONLY,
+			"os.O_WRONLY",
+		},
+		{
+			os.O_WRONLY | os.O_APPEND,
+			"os.O_WRONLY | os.O_APPEND",
+		},
+	}
+
+	for i, v := range flagDescList {
+		fmt.Printf("Open the file with flag %s ...\n", v.desc)
+		file1a, err := os.OpenFile(filePath1, v.flag, 0666)
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+			continue
+		}
+		fmt.Printf("The file descriptor: %d\n", file1a.Fd())
+
+		contents1 := fmt.Sprintf("[%d]: %s ", i+1, contents0)
+		fmt.Printf("Write %q to the file ...\n", contents1)
+		n, err := file1a.WriteString(contents1)
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+			continue
+		}
+		fmt.Printf("The number of bytes written is %d.\n", n)
+
+		file1b, err := os.Open(filePath1)
+		fmt.Println("Read bytes from the file ...")
+		bytes, err := ioutil.ReadAll(file1b)
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+			continue
+		}
+		fmt.Printf("Read(%d): %q\n", len(bytes), bytes)
+		fmt.Println()
+	}
+
+	fmt.Println("Try to create an existing file with flag os.O_TRUNC ...")
+	file2, err := os.OpenFile(filePath1, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	fmt.Printf("The file descriptor: %d\n", file2.Fd())
+
+	fmt.Println("Try to create an existing file with flag os.O_EXCL ...")
+	_, err = os.OpenFile(filePath1, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0666)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+	fmt.Printf("The file desccriptor: %d\n", file2.Fd())
+	fmt.Println("Try to create an existing file with flag os.O_EXCL ...")
+	_, err = os.OpenFile(filePath1, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0666)
+	fmt.Printf("error: %v\n", err)
 }
