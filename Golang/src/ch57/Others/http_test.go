@@ -2,6 +2,7 @@ package Others
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -88,5 +89,55 @@ func TestHttp2(t *testing.T) {
 			logBuf.WriteString(fmt.Sprintf("Response: %s\n", line2))
 		}(domain)
 	}
+	wg.Wait()
+}
+
+func startServer1(wg *sync.WaitGroup) {
+	defer wg.Done()
+	var httpServer1 http.Server
+	httpServer1.Addr = "127.0.0.1:8080"
+	if err := httpServer1.ListenAndServe(); err != nil {
+		if err == http.ErrServerClosed {
+			log.Println("HTTP server 1 closed.")
+		} else {
+			log.Printf("HTTP server 1 error: %v\n", err)
+		}
+	}
+}
+
+func startServer2(wg *sync.WaitGroup) {
+	defer wg.Done()
+	mux1 := http.NewServeMux()
+	mux1.HandleFunc("/hi", func(w http.ResponseWriter, req *http.Request) {
+		if req.URL.Path != "/hi" {
+			http.NotFound(w, req)
+			return
+		}
+		name := req.FormValue("name")
+		if name == "" {
+			fmt.Fprint(w, "Welcome!")
+		} else {
+			fmt.Fprintf(w, "Hi, %s!", name)
+		}
+	})
+
+	httpServer2 := http.Server{
+		Addr:    "127.0.0.1:8081",
+		Handler: mux1,
+	}
+	if err := httpServer2.ListenAndServe(); err != nil {
+		if err == http.ErrServerClosed {
+			log.Println("HTTP server 2 closed.")
+		} else {
+			log.Printf("HTTP server 2 error: %v\n", err)
+		}
+	}
+}
+
+func TestHttp3(t *testing.T) {
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go startServer1(&wg)
+	go startServer2(&wg)
 	wg.Wait()
 }
