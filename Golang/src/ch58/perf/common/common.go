@@ -1,4 +1,4 @@
-package perf
+package common
 
 import (
 	"bytes"

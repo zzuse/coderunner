@@ -1,0 +1,43 @@
+package perf_test
+
+import (
+	"errors"
+	"fmt"
+	"go_learning/src/ch58/perf/common"
+	"os"
+	"runtime/pprof"
+	"testing"
+)
+
+var (
+	profileName = "cpu_profile.out"
+)
+
+func startCPUProfile(f *os.File) error {
+	if f == nil {
+		return errors.New("nil file")
+	}
+	return pprof.StartCPUProfile(f)
+}
+
+func stopCPUProfile() {
+	pprof.StopCPUProfile()
+}
+
+func TestCpuProfile(t *testing.T) {
+	f, err := common.CreateFile("", profileName)
+	if err != nil {
+		fmt.Printf("CPU profile creation error: %v\n", err)
+		return
+	}
+	defer f.Close()
+	if err := startCPUProfile(f); err != nil {
+		fmt.Printf("CPU profile start error: %v\n", err)
+		return
+	}
+	if err = common.Execute(common.CPUProfile, 10); err != nil {
+		fmt.Printf("execute error: %v\n", err)
+		return
+	}
+	stopCPUProfile()
+}
