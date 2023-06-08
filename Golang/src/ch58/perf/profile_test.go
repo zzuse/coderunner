@@ -41,3 +41,7 @@ func TestCpuProfile(t *testing.T) {
 	}
 	stopCPUProfile()
 }
+
+func TestMemProfile(t *testing.T) {
+	f, err := common.CreateFile("", profileName)
+}
