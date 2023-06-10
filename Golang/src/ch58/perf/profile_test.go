@@ -76,3 +76,21 @@ func TestMemProfile(t *testing.T) {
 		return
 	}
 }
+
+var (
+	blockProfileName = "block_profile.out"
+	blockProfileRate = 2
+	debug            = 0
+)
+
+func startBlockProfile() {
+
+}
+
+func stopBlockProfile() {
+
+}
+
+func TestBlockProfile(t *testing.T) {
+
+}
