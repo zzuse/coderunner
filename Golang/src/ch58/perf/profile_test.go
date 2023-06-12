@@ -84,11 +84,14 @@ var (
 )
 
 func startBlockProfile() {
-
+	runtime.SetBlockProfileRate(blockProfileRate)
 }
 
-func stopBlockProfile() {
-
+func stopBlockProfile(f *os.File) error {
+	if f == nil {
+		return errors.New("nil file")
+	}
+	return pprof.Lookup("block").WriteTo(f, debug)
 }
 
 func TestBlockProfile(t *testing.T) {
