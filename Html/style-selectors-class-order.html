@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Styles - Class Order</title>
+<meta name="description" content="Styles - Class Order. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+body {
+    background-color: cadetblue;
+}
+img {
+    border: 2px solid red;
+}
+#text {
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: cornsilk;
+}
+
+.image {
+    position: absolute;
+    border: 2px solid white;
+}
+
+.marty {
+    border: 2px solid yellow;
+    left: 50px;
+    top: 200px;
+}
+</style>
+</head>
+
+<body>
+    <img id="earth" class="image" alt="" src="earthview.jpg" />
+    <img class="image marty" alt="" src="martian-machine.png" />
+    <p id="text">Elements are moved using styles</p>
+</body>
+</html>
