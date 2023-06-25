@@ -7,3 +7,53 @@
 <meta name="description" content="Events Playground. Version 1.0" />
 <meta name="author" content="The Gamer's Guide to Coding" />
 <meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+input:hover {
+   background-color: blue;
+}
+</style>
+</head>
+
+<body>
+    <input type="button" value="Click Me" onclick="this.value='You Did It!'" />
+    <br />
+
+    <input type="button" value="Click Me" onclick="this.value='You Did It!'; this.style.backgroundColor='red'" />
+    <br />
+
+    <input type="button" value="Click"
+        onmouseover="this.value='Mouse Over'"
+        onmouseleave="this.value='Click'" />
+    <br />
+
+    <input type="button" value="Click Me" onclick="buttonClick(this);" />
+    <br />
+
+    <input type="button" value="Click On Me" onclick="mouseClick(event);" />
+    <input type="button" value="Me Too" onclick="mouseClick(event);" />
+    <input type="button" value="And Me!" onclick="mouseClick(event);" />
+    <input type="button" value="Roll Over Me" onmousemove="mouseMove(event);" />
+
+    <br />
+
+    <script>
+        window.onload = function() {
+            console.log("The document has loaded");
+        }
+
+        function buttonClick(button) {
+            button.value="You Did It!";
+            button.style.backgroundColor="red";
+        }
+
+        function mouseClick(event) {
+            event.target.style.visibility = "hidden";
+        }
+
+        function mouseMove(event) {
+            console.log(event.x + "," + event.y);
+        }
+    </script>
+</body>
+</html>
