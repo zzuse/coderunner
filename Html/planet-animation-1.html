@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>As the Planet Turns - Simple</title>
+<meta name="description" content="As the Planet Turns - Simple. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    position:absolute;
+    background-color: #aaa;
+    width: 300px;
+    height: 300px;
+    overflow:hidden;
+}
+
+#thePlanet {
+    background-image: url("./assets/Planets2-SpriteSheet.png");
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 260px;
+    height: 260px;
+}
+
+.planet {
+    animation:playPlanet 2s steps(26) infinite;
+}
+
+@keyframes playPlanet {
+    from { background-position: 0px; }
+    to { background-position: -6760px; }
+}
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="thePlanet" class="planet"></div>
+    </div>
+</body>
+</html>

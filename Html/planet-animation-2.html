@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>As the Planet Turns - Advanced</title>
+<meta name="description" content="As the Planet Turns - Advanced. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    background-color: #aaa;
+    border-radius: 0px;
+    width:300px;
+    height: 300px;
+    overflow: hidden;
+}
+
+#thePlanet {
+   background-image: url("./assets/Planets2-SpriteSheet.png");
+   position: absolute;
+   left: 20px;
+   top: 20px;
+   width:260px;
+   height: 260px;
+}
+
+.planet {
+    animation: play 2s steps(26) 4;
+}
+
+@keyframes play {
+    from { background-position: 0px;}
+    to { background-position: -6760px;}
+
+}
+
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="thePlanet" class="planet"></div>
+    </div>
+
+    <script>
+        var planet = document.getElementById("thePlanet");
+        planet.addEventListener("click", planetClick);
+        planet.addEventListener("animationstart", animationStart);
+        planet.addEventListener("animationiteration", animationIteration);
+        planet.addEventListener("animationend", animationEnd);
+        var iteration = 0;
+
+        function planetClick() {
+            thePlanet.className = "";
+            setTimeout(function(){
+                thePlanet.className = "planet"
+            }, 2);
+            thePlanet.offsetHeight;
+            iteration = 0;
+        }
+
+        function animationStart() {
+            console.log("Animation has started");
+        }
+
+        function animationIteration() {
+            iteration ++;
+            console.log("Animation has iterated: %s", iteration);
+        }
+
+        function animationEnd() {
+            console.log("Animation has ended");
+        }
+    </script>
+</body>
+</html>
