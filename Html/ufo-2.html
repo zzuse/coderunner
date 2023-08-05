@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>CSS Animation 2</title>
+<meta name="description" content="CSS Animation 2. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    position: absolute;
+    background-image: url("./assets/stellar.jpg");
+    width: 600px;
+    height: 600px;
+    overflow: hidden;
+}
+
+#ufo1 {
+    position:absolute;
+    width: 400px;
+    height: 162px;
+    left: 100px;
+    top: 80px;
+    animation-name: hoverUfo;
+    animation-duration: 8s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-play-state: paused;
+}
+#ufo1:hover {
+    animation-play-state: running;
+}
+@keyframes hoverUfo {
+    0%  { top: 80px  }
+    50% { top: 270px }
+    100% { top: 80px }
+}
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="ufo1" class="ufo" alt="" src="./assets/ufo1.png" />
+        </div>
+</body>
+</html>
