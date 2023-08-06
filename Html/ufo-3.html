@@ -3,8 +3,8 @@
 
 <head>
 <meta charset="utf-8" />
-<title>CSS Animation 2</title>
-<meta name="description" content="CSS Animation 2. Version 1.0" />
+<title>CSS Animation 3</title>
+<meta name="description" content="CSS Animation 3. Version 1.0" />
 <meta name="author" content="The Gamer's Guide to Coding" />
 <meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
 
@@ -18,7 +18,7 @@
 }
 
 #ufo1 {
-    position:absolute;
+    position: absolute;
     width: 400px;
     height: 162px;
     left: 100px;
@@ -29,23 +29,31 @@
     animation-timing-function: ease-in-out;
     animation-play-state: paused;
 }
-#ufo1:hover {
-    animation-play-state: running;
-}
 
 @keyframes hoverUfo {
-    0%  { top: 80px  }
-    50% { top: 270px }
-    100% { top: 80px }
+    0%  { top: 80px }
+    50% { top: 270px}
+    100%{ top: 80px }
 }
+
 </style>
 <script src="prefixfree.min.js"></script>
-
 </head>
 
-<body>
+<body onload=init();>
     <div id="mainContent">
         <img id="ufo1" class="ufo" alt="" src="./assets/ufo.png" />
     </div>
+
+    <script type="text/javascript">
+        function init() {
+            console.log("init");
+            setTimeout(function() {
+                console.log("delayed running");
+                document.getElementById("ufo1").style.animationPlayState="running";
+            }, 2000);
+        }
+    </script>
+    
 </body>
 </html>
