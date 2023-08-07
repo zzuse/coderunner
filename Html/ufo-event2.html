@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>CSS Animation - Events 2</title>
+<meta name="description" content="CSS Animation - Events 2. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    position: absolute;
+    background-image: url("./assets/stellar.jpg");
+    width: 600px;
+    height: 600px;
+    overflow: hidden;
+}
+
+.ufo {
+    position: absolute;
+}
+
+#ufo1 {
+    width: 400px;
+    height: 162px;
+    left: 100px;
+    top: 80px;
+    margin-top: 800px;
+    transition: margin-top 5s ease-in-out;
+
+    animation-name: hoverLarge;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-play-state: paused;
+}
+
+#ufo2 {
+    width: 160px;
+    height: 65px;
+    margin-top: 165px;
+    left: 60px;
+    top: 90px;
+
+    animation-name: hoverLarge;
+    animation-duration: 14s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+#ufo3 {
+    width: 200px;
+    height: 81px;
+    left: 325px;
+    top: 150px;
+    animation: hoverSmall 6s infinite ease-in-out;
+}
+
+@keyframes hoverLarge {
+    0%   { top: 80px }
+    50%  { top: 230px }
+    100% { top: 80px }
+}
+
+@keyframes hoverSmall {
+    0%   { top: 80px }
+    50%  { top: 180px }
+    100% { top: 80px }
+}
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body onload=init();>
+    <div id="mainContent">
+        <img id="ufo3" class="ufo" alt="" src="./assets/ufo.png" />
+        <img id="ufo2" class="ufo" alt="" src="./assets/ufo.png" />
+        <img id="ufo1" class="ufo" alt="" src="./assets/ufo.png" />
+    </div>
+
+    <script>
+        document.getElementById("ufo1").addEventListener("animationiteration", iterations);
+        document.getElementById("mainContent").addEventListener("click", restartTransition);
+        var count = 0;
+
+        function iterations() {
+            count++;
+            if (count == 2) {
+                console.log("2 iterations");
+                var ufo1 = document.getElementById("ufo1");
+                ufo1.style.marginTop = "800px";
+                ufo1.style.animationPlayState = "paused";
+            }
+        }
+
+        function restartTransition() {
+            console.log("flying back");
+            ufo1.style.marginTop = "0px";
+            count = 0;
+        }
+
+        function init() {
+            var ufo1 = document.getElementById("ufo1");
+            ufo1.style.marginTop = "0px";
+            ufo1.addEventListener("transitionend", function() {
+                console.log("transition ended");
+                ufo1.style.animationPlayState = "running";
+            });
+        }
+    </script>
+</body>
+</html>

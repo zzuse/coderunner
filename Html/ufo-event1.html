@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>CSS Animation - Events 1</title>
+<meta name="description" content="CSS Animation - Events 1. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    position: absolute;
+    background-image: url("./assets/stellar.jpg");
+    width:600px;
+    height: 600px;
+    overflow: hidden;
+}
+
+.ufo {
+    position: absolute;
+}
+
+#ufo1 {
+    width: 400px;
+    height: 162px;
+    left: 100px;
+    top: 80px;
+    animation: hoverUfo 4s 1 ease-in-out 1s;
+}
+
+@keyframes hoverUfo {
+    0%  { top: 800px }
+    100%{ top: 80px  }
+}
+
+</style>
+<script src="prefixfree.min.js"></script>
+
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="ufo1" class="ufo" alt="" src="./assets/ufo.png" />
+    </div>
+
+    <script>
+        var ufo1 = document.getElementById("ufo1");
+        ufo1.addEventListener("animationstart", function() {
+            console.log("animation has started after 1 second delay");
+        });
+        ufo1.addEventListener("animationend", function() {
+            console.log("animation ended");
+        });
+    </script>
+
+</body>
+</html>
