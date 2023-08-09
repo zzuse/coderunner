@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>setTimeout 2</title>
+<meta name="description" content="setTimeout 2. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+</head>
+<body>
+    <p>Open the browser console window to see the result.</p>
+    <script>
+        console.log("Waiting 3 seconds for the timer to trigger...");
+        var myTimer = setTimeout(timeAction, 3000);
+        function timeAction () {
+            console.log("Timer has triggered.");
+            console.log("This code is in a function named timerAction.");
+        }
+    </script>
+</body>
+</html>
