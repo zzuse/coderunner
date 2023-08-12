@@ -8,4 +8,44 @@
 <meta name="author" content="The Gamer's Guide to Coding" />
 <meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
 
+<style>
+#mainContent {
+    position: absolute;
+    background-color: #fafad2;
+    width: 750px;
+    height:250px;
+    overflow: hidden;
+}
 
+#ogre {
+    position: absolute;
+    background-image: url("./assets/ogre-static.png");
+    margin 0;
+    left: 0px;
+    top: 170px;
+    width: 84px;
+    height: 80px;
+}
+</style>
+
+</head>
+<body>
+    <div id="mainContent">
+        <div id="ogre"></div>
+    </div>
+
+    <script>
+        var ogre = document.getElementById("ogre");
+        ogre.style.left = "750px";
+        var timerID = setInterval(walk, 10);
+        function walk() {
+            var left = parseInt(ogre.style.left);
+            if (left > 0) {
+                ogre.style.left = parseInt(ogre.style.left) - 1 + "px";
+            } else {
+                clearInterval(timerID);
+            }
+        }
+    </script>
+</body>
+</html>
