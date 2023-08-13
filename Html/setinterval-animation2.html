@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>timerInterval Walk</title>
+<meta name="description" content="timerInterval Walk. Version 1.0">
+<meta name="author" content="The Gamer's Guide to Coding">
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/">
+
+<style>
+#mainContent {
+    position: absolute;
+    background-color: #fafad2;
+    width: 750px;
+    height:250px;
+    overflow: hidden;
+}
+
+#ogre {
+    position: absolute;
+    background-image: url("./assets/ogre.png");
+    margin 0;
+    left: 0px;
+    top: 170px;
+    width: 84px;
+    height:80px;
+    object-fit: none;
+    object-position: -0px 0;
+    animation:play 2s steps(19) infinite;
+}
+@keyframes play {
+    from {background-position: -1520px;}
+    to   {background-position: 0px;}
+}
+</style>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="ogre"></div>
+    </div>
+
+    <script>
+        var ogre = document.getElementById("ogre");
+        ogre.style.left = "750px";
+        var timerID= setInterval(walk, 30);
+        function walk() {
+            var left = parseInt(ogre.style.left);
+            if (left > 0) {
+                ogre.style.left = parseInt(ogre.style.left) - 1 + "px";
+            } else {
+                clearInterval(timerID);
+            }
+        }
+    </script>
+</body>
+</html>
