@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Request Animation Loop, Enhanced</title>
+<meta name="description" content="Request Animation Loop, Enhanced. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/stellar.jpg");
+  width: 600px;
+  height: 600px;
+  overflow: hidden;
+}
+
+#ufo1 {
+    top: 175px;
+    width: 400px;
+    height: 162px;
+}
+
+#ufo2 {
+    top: 450px;
+    width: 200px;
+    height: 81px;
+}
+
+.ufo {
+    position:absolute;
+    left: -400px;
+}
+</style>
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="ufo1" class="ufo" alt="" src="./assets/ufo.png" />
+        <img id="ufo2" class="ufo" alt="" src="./assets/ufo2.png" />
+    </div>
+
+    <script>
+
+        var fps = 1000 / 20;
+        var newTime, oldTime = 0;
+
+        var counter = -400;
+        function animationLoop(timestamp) {
+            console.log(timestamp + " " + oldTime)
+            newTime = timestamp;
+            if (newTime - oldTime > fps) {
+                if (counter < 615) {
+                    counter += 5;
+                    document.getElementById("ufo1").style.left = counter + "px";
+                    document.getElementById("ufo2").style.left = counter + 30 + "px";
+                } else {
+                    counter = -400;
+                }
+                oldTime = oldTime += fps;
+            }
+            window.requestAnimationFrame(animationLoop);
+        }
+        animationLoop();
+    </script>
+</body>
+</html>

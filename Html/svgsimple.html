@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>SVG Path Follow</title>
+<meta name="description" content="SVG Path Follow. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+<style>
+#mainContent {
+    position:absolute;
+    background-color: #fafad2;
+    width: 750px;
+    height:250px;
+}
+
+.path {
+    stroke-dasharray: 10;
+    stroke: black;
+    stroke-width: 1;
+    fill: none;
+}
+
+.curves {
+    position:absolute;
+    overflow: hidden;
+    margin-left: 0px;
+    margin-top: 0px;
+    width:750px;
+    height: 250px;
+}
+
+.rock {
+    position:absolute;
+    width: 20px;
+    height: 20px;
+}
+</style>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="curve1" class="curves">
+            <svg class="curves">
+                <path class="path" d="M 0,185 C 91,7 395,0 575,195" />
+            </svg>
+        </div>
+        <img id="rock" class="rock spinccw" alt="rock" src="./assets/rock.png" />
+    </div>
+
+    <script type="text/javascript">
+        var rock = document.getElementById("rock");
+        var curve = document.getElementById("curve1");
+        var path = curve.getElementsByTagName("path")[0];
+        var speed = 3;
+        var curPos = 0;
+        function animate() {
+            var length = path.getTotalLength();
+            curPos = curPos + speed;
+            var point = path.getPointAtLength(curPos);
+            console.log("x:%s, y:%s", Math.floor(point.x), Math.floor(point.y));
+            rock.style.left = point.x + "px";
+            rock.style.top = point.y +  "px";
+            if (curPos < length) {
+                window.requestAnimationFrame(animate);
+            }
+        }
+        animate();
+    </script>
+
+</body>
+
+
+</html>
