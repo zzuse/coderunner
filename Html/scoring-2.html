@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Scoring 2</title>
+<meta name="description" content=">Scoring 2. Version 1.0" />
+<meta name="author" content="Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+</head>
+
+<body>
+    <script>
+        var score = {
+            total: 0,
+            queen: 100,
+            alien: 50,
+            friend: -50,
+            queenHits: 0,
+            alienHits: 0,
+            friendHits: 0,
+            calculate:function() {
+                this.total += this.queen * this.queenHits +
+                    this.alien * this.alienHits + this.friend * this.friendHits;
+                return this.total;
+            }
+        }
+        score.queenHits += 1;
+        score.alienHits += 3;
+        score.friendHits += 1;
+        console.log(score.calculate());
+
+    </script>
+</body>
+</html>

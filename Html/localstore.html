@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>LocalStorage</title>
+<meta name="description" content="LocalStorage. Version 1.0" />
+<meta name="author" content="Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+
+</head>
+
+<body>
+    <script>
+        var highScore = localStorage.getItem('MyGame_highScore');
+        if (highScore !== null) {
+            console.log("The previous high score is: %s ", highScore);
+        } else {
+            console.log("High score has not yet been set");
+        }
+        highScore = '100';
+        localStorage.setItem("MyGame_highScore", highScore);
+        //localStorage.removeItem("MyGame_highScore");
+    </script>
+
+</body>
+</html>
