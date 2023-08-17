@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Simple Web Audio API Demonstration</title>
+<meta name="description" content="Simple Web Audio API Demonstration. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+</head>
+
+<body>
+    <p>Web Audio API Demo -- Short 440 Hz sinewave blip</p>
+    <script>
+        var audio = new AudioContext();
+        var osc = audio.createOscillator();
+        osc.frequency.value = 440;
+        osc.type = "sine";
+
+        var volume = audio.createGain();
+        volume.gain.value = .5;
+        osc.connect(volume);
+        volume.connect(audio.destination);
+
+        osc.start();
+        osc.stop(audio.currentTime + .25);
+
+    </script>
+
+</body>
+
+</html>
