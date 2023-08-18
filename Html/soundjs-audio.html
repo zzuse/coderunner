@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>SoundJS Sound File Demonstration</title>
+<meta name="description" content="SoundJS Sound File Demonstration. Version 1.0" />
+<meta name="author" content="From 'The Gamer's Guide to Coding' " />
+<meta name="dcterms.rights" content="Creative Commons ShareAlike 4.0" />
+<script src="./assets/soundjs-NEXT.combined.js"></script>
+</head>
+
+<body>
+    <p>SoundJS Recorded Sounds. Press a key;<br /> <br />
+    1 - Boing <br />
+    2 - Splat
+    </p>
+
+    <script>
+        window.addEventListener("load", init);
+        window.addEventListener("keydown", soundPlay);
+
+        function soundPlay(ev) {
+            if (ev.keyCode == 49) {
+                createjs.Sound.play("boing");
+            }
+            if (ev.keyCode == 50) {
+                createjs.Sound.play("splat");
+            }
+        }
+
+        function init() {
+            if (!createjs.Sound.initializeDefaultPlugins()) {
+                console.log("Error loading SoundJS");
+            } else {
+                console.log("Success loading SoundJS");
+                createjs.Sound.addEventListener("fileload", playSound);
+                createjs.Sound.alternateExtensions = ["mp3"];
+                createjs.Sound.registerSounds(
+                    [ {id: "boing", src: "boing.ogg"},
+                      {id: "splat", src: "splat.ogg"}],
+                    "./assets/");
+            }
+        }
+
+        function playSound(ev) {
+             console.log("Preloaded:", ev.id, ev.src);
+        }
+    </script>
+</body>
+
+</html>

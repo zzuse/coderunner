@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Sound.js Sound Sprite Demonstration</title>
+<meta name="description" content="Sound.js Sound Sprite Demonstration. Version 1.0" />
+<meta name="author" content="Per source sound.js example" />
+<meta name="dcterms.rights" content="Per source sound.js example" />
+
+<script src="./assets/sound.js"></script> <!-- https://github.com/kittykatattack/sound.js -->
+</head>
+
+<body>
+    <p>Sound.js Sound Sprite -- generated sound effects. Press a key: <br /> <br />
+    1 - Shoot <br />
+    2 - Jump <br />
+    3 - Explosion <br />
+    4 - Bonus
+    </p>
+
+    <script>
+        var num1 = keyboard(49),
+            num2 = keyboard(50),
+            num3 = keyboard(51),
+            num4 = keyboard(52);
+
+        num1.press = function() { shootSound() };
+        num2.press = function() { jumpSound() };
+        num3.press = function() { explosionSound() };
+        num4.press = function() { bonusSound() };
+
+        function shootSound() {
+            soundEffect(
+                1046.5,          // frquency 
+                0,               // attack
+                0.3,             // decay
+                "sawtooth",      // waveform
+                1,               // Volume
+                -0.8,            // pan
+                0,               // wait before playing
+                1500,            // pitch bend amount
+                false,           // reverse bend
+                0,               // random pitch range
+                25,              // dissonance
+                [0.2, 0.2, 2000],// echo: [delay, feedback, filter]
+                undefined        // reverb: [duration, decay, reverse]
+            );
+        }
+
+        function jumpSound() {
+            soundEffect(
+                523.25,
+                0.05,
+                0.2,
+                "sine",
+                3,
+                0.8,
+                0,
+                600,
+                true,
+                100,
+                0,
+                undefined,
+                undefined
+            );
+        }
+
+        function explosionSound() {
+            soundEffect(
+                50,
+                0,
+                1,
+                "sawtooth",
+                1,
+                0,
+                0,
+                0,
+                false,
+                0,
+                50,
+                undefined,
+                undefined
+            );
+        }
+
+        function bonusSound() {
+            soundEffect(587.33, 0, 0.2, "square", 1, 0, 0);
+            soundEffect(880, 0, 0.2, "square", 1, 0, 0.1);
+            soundEffect(1174.66, 0, 0.3, "square", 1, 0, 0.2);
+        }
+
+        console.log(supportsAudio());
+        function supportsAudio() {
+            var a = document.createElement('audio');
+            return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+        }
+    </script>
+</body>
+</html>
+
