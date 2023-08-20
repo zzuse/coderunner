@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Tic Tac Toe - Lesson 1</title>
+<meta name="description" content="Tic Tac Toe - Lesson 1. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <table id="table" width="120" border="1">
+        <colgroup>
+            <col span="3" width="40"
+        </colgroup>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+    </table>
+
+    <p id="turn">Turn: X</p>
+
+    <script>
+        var turn = 0;
+        var myTable = document.getElementById("table");
+        for (var row = 0; row < myTable.rows.length; row = row + 1) {
+            for (var col = 0; col < myTable.rows[row].cells.length; col = col + 1) {
+                myTable.rows[row].cells[col].onclick = function() {
+                    setCellValue(this) 
+                };
+            }
+        }
+
+        function setCellValue(cell) {
+            if (turn == false) {
+                cell.textContent = "X";
+                document.getElementById("turn").textContent = "Turn: O";
+            } else {
+                cell.textContent = "O";
+                document.getElementById("turn").textContent = "Turn: X";
+            }
+            turn = !turn;
+        }
+    </script>
+</body>
