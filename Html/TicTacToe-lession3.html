@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Tic Tac Toe - Lesson 3</title>
+<meta name="description" content="Tic Tac Toe - Lesson 3. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+    background-color: #1072cc;
+    border-radius: 4px;
+    padding: 5px;
+    width: 300px;
+    height: 350px;
+    overflow: hidden;
+}
+.background {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
+.button {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #00bfff;
+    border-style: outset;
+    color: #fff;
+    background-color: #8533ff;
+    cursor: pointer;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 45px;
+    line-height: 35px;
+    border-radius:4px;
+}
+
+#turn {
+    width: 300px;
+    margin:310px 0 0 0;
+    text-align:center;
+}
+
+p {
+    font-family: "Arial Black", Gadget, sans-serif;
+    color:#fff;
+}
+
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <input id="1" type="button" class="button" style="margin: 0 0 0 0;" value=" " onclick="clickButton(this);"/>
+        <input id="2" type="button" class="button" style="margin: 0 0 0 100px;" value=" " onclick="clickButton(this);"/>
+        <input id="3" type="button" class="button" style="margin: 0 0 0 200px;" value=" " onclick="clickButton(this);"/>
+        <input id="4" type="button" class="button" style="margin: 100px 0 0 0;" value=" " onclick="clickButton(this);"/>
+        <input id="5" type="button" class="button" style="margin: 100px 0 0 100px;" value=" " onclick="clickButton(this);"/>
+        <input id="6" type="button" class="button" style="margin: 100px 0 0 200px;" value=" " onclick="clickButton(this);"/>
+        <input id="7" type="button" class="button" style="margin: 200px 0 0 0;" value=" " onclick="clickButton(this);"/>
+        <input id="8" type="button" class="button" style="margin: 200px 0 0 100px;" value=" " onclick="clickButton(this);"/>
+        <input id="9" type="button" class="button" style="margin: 200px 0 0 200px;" value=" " onclick="clickButton(this);"/>
+        <p id="turn">Turn: X</p>
+    </div>
+
+    <script type="text/javascript">
+        var x = [
+            [0,0,0],
+            [0,0,0],
+            [0,0,0]
+        ]
+        var turn = false;
+        var clickCounter = 0;
+        var gameOver = false;
+
+        function clickButton(button) {
+            if (gameOver) { return; }
+            if (button.value ==" ") {
+                if (turn == false) {
+                    button.value = "X";
+                    document.getElementById("turn").textContent = "Turn: O";
+                } else {
+                    button.value = "O";
+                    document.getElementById("turn").textContent = "Turn: X";
+                }
+                turn = !turn;
+                clickCounter++;
+                fillArray(button.id);
+            }
+        }
+
+        function fillArray(buttonId) {
+            if (!turn)                                                      //If turn == false
+              x[buttonId -1] = 1;
+            else {
+              x[buttonId -1] = 4;
+            }
+            var score = updateScore();
+            if (score != "") {                                              // If not empty, game is over
+              document.getElementById("turn").textContent = score;          // Update text in 'turn' element
+              gameOver = true;
+            } else if(clickCounter >= 9) {                                  // Cat's tail after 9 clicks
+              document.getElementById("turn").textContent = "Cat's Tail";
+              gameOver = true;
+            }
+        }
+
+        function updateScore() {
+            var t = "";
+            if (x[0] + x[1] + x[2] == 3)
+              t = "O wins!";
+            if (x[0] + x[1] + x[2] == 12)
+              t = "X wins!"
+            if (x[3] + x[4] + x[5] == 3)
+              t = "O wins!"
+            if (x[3] + x[4] + x[5] == 12)
+              t = "X wins!"
+            if (x[6] + x[7] + x[8] == 3)
+              t = "O wins!"
+            if (x[6] + x[7] + x[8] == 12)
+              t = "X wins!"
+
+            if (x[0] + x[3] + x[6] == 3)
+              t = "O wins!";
+            if (x[0] + x[3] + x[6] == 12)
+              t = "X wins!"
+            if (x[1] + x[4] + x[7] == 3)
+              t = "O wins!"
+            if (x[1] + x[4] + x[7] == 12)
+              t = "X wins!"
+            if (x[2] + x[5] + x[8] == 3)
+              t = "O wins!"
+            if (x[2] + x[5] + x[8] == 12)
+              t = "X wins!"
+
+            if (x[0] + x[4] + x[8] == 3)
+              t = "O wins!";
+            if (x[0] + x[4] + x[8] == 12)
+              t = "X wins!"
+            if (x[2] + x[4] + x[6] == 3)
+              t = "O wins!"
+            if (x[2] + x[4] + x[6] == 12)
+              t = "X wins!"
+
+            return t;
+        }
+
+    </script>
+</body>
+</html>
