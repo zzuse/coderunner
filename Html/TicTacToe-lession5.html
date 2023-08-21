@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Tic Tac Toe - Lesson 5</title>
+<meta name="description" content="Tic Tac Toe - Lesson 5. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+  position: absolute;
+  background-color: #1072cc;
+  border-radius: 4px;
+  padding: 5px;
+  width: 300px;
+  height: 420px;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+}
+
+.buttons {
+  position: absolute;
+  margin: 0 0 0 0;
+  border: 2px solid #00bfff;
+  border-style: outset;
+  color: #fff;
+  background-color: #8533ff;
+  cursor: pointer;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.xo {
+  width: 100px;
+  height: 100px;
+  font-size: 45px;
+  line-height: 35px;
+  border-radius: 4px;
+}
+
+#newgame {
+  width: 300px;
+  height: 40px;
+  margin: 380px 0 0 0;
+  font-size: 25px;
+  line-height: 15px;
+  border-radius: 4px;
+  border-style: inset;
+}
+
+#turn {
+  position: absolute;
+  width: 300px;
+  margin: 15px 0 0 0;
+  text-align: center;
+  font-family: "Arial Black", Gadget, sans-serif;
+  color: #fff;
+  font-size: 25px;
+  line-height: 15px;
+}
+
+#winner {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 13px;
+  top: 63px;
+  visibility: hidden;
+}
+
+</style>
+<script src="prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <p id="turn">Turn: X</p>
+
+        <!-- HTML buttons for each X or O button -->
+        <!-- row 1 -->
+        <input id="1" type="button" class="buttons xo" style="margin: 50px 0 0 0;" value=" ">
+        <input id="2" type="button" class="buttons xo" style="margin: 50px 0 0 100px;" value=" ">
+        <input id="3" type="button" class="buttons xo" style="margin: 50px 0 0 200px;" value=" ">
+
+        <!-- row 2 -->
+        <input id="4" type="button" class="buttons xo" style="margin: 150px 0 0 0;" value=" ">
+        <input id="5" type="button" class="buttons xo" style="margin: 150px 0 0 100px;" value=" ">
+        <input id="6" type="button" class="buttons xo" style="margin: 150px 0 0 200px;" value=" ">
+
+        <!-- row 3 -->
+        <input id="7" type="button" class="buttons xo" style="margin: 250px 0 0 0;" value=" ">
+        <input id="8" type="button" class="buttons xo" style="margin: 250px 0 0 100px;" value=" ">
+        <input id="9" type="button" class="buttons xo" style="margin: 250px 0 0 200px;" value=" ">
+
+        <!-- Button for starting a new game -->
+        <input id="newgame" type="button" class="buttons" value="New Game">
+    </div>
+
+    <canvas id="winner"></canvas>
+
+    <script>
+        "use strict";
+        // Set up game variables
+        var x = [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ]
+        var turn = false;
+        var clickCounter = 0;
+        var gameOver = false;
+
+        //Event handlers for 'xo' class buttons and 'newgame' button
+        var buttons = document.getElementsByClassName("xo");
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener("click", clickButton, false);
+        }
+        //  The function for the handled clicks is an inlined
+        //  The function called when clicking on "new game" empties the'x'  playboard array, resets the game variables, and clears the drawing canvas
+        document.getElementById("newgame").addEventListener("click", function() {
+          var buttons = document.getElementsByClassName("xo");
+          for (var i = 0; i < buttons.length; i++) {
+            buttons[i].value = " ";
+          }
+          document.getElementById("turn").textContent = "Turn: X";
+          x.fill(0);
+          turn = false;
+          clickCounter = 0;
+          gameOver = false;
+          document.getElementById("winner").style.visibility = "hidden";    // The "winner" element is technically on top of the buttons; making it invisible allows click events to the buttons
+          var canvas = document.getElementById("winner");                   // "winner" is an HTML5 canvas container
+          var ctx = canvas.getContext("2d");                                // Clear the canvas for a new game
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }, false);
+
+        // This function called when a button is clicked
+        function clickButton(ev) {
+          var button = ev.target;
+          if (gameOver) { return; }                           // Prevent further moves if the game is over
+          if (button.value == " ") {
+            if (!turn) {
+              button.value = "X";
+              document.getElementById("turn").textContent = "Turn: O";
+            } else {
+              button.value = "O"
+              document.getElementById("turn").textContent = "Turn: X";
+            }
+            turn = !turn;
+            clickCounter++;
+            fillArray(button.id);
+          }
+        }
+
+        // Keep track of X and O in each array element
+        function fillArray(buttonId) {
+          if (!turn)
+            x[buttonId -1] = 1;
+          else {
+            x[buttonId -1] = 4;
+          }
+          var score = updateScore();
+          if (score != "") {
+            document.getElementById("turn").textContent = score;
+            gameOver = true;
+            drawWinnerLine();
+          } else if(clickCounter >= 9) {
+            document.getElementById("turn").textContent = "Cat's Tail";
+            gameOver = true;
+          }
+        }
+
+        // Keep track of the score, and see who's won
+        function updateScore() {
+          var t = "";
+
+          // row wins
+          if (x[0] + x[1] + x[2] == 3)  { t = "O wins!"; drawWinnerLine("r1"); }
+          if (x[0] + x[1] + x[2] == 12) { t = "X wins!"; drawWinnerLine("r1"); }
+          if (x[3] + x[4] + x[5] == 3)  { t = "O wins!"; drawWinnerLine("r2"); }
+          if (x[3] + x[4] + x[5] == 12) { t = "X wins!"; drawWinnerLine("r2"); }
+          if (x[6] + x[7] + x[8] == 3)  { t = "O wins!"; drawWinnerLine("r3"); }
+          if (x[6] + x[7] + x[8] == 12) { t = "X wins!"; drawWinnerLine("r3"); }
+
+          // column wins
+          if (x[0] + x[3] + x[6] == 3)  { t = "O wins!"; drawWinnerLine("c1"); }
+          if (x[0] + x[3] + x[6] == 12) { t = "X wins!"; drawWinnerLine("c1"); }
+          if (x[1] + x[4] + x[7] == 3)  { t = "O wins!"; drawWinnerLine("c2"); }
+          if (x[1] + x[4] + x[7] == 12) { t = "X wins!"; drawWinnerLine("c2"); }
+          if (x[2] + x[5] + x[8] == 3)  { t = "O wins!"; drawWinnerLine("c3"); }
+          if (x[2] + x[5] + x[8] == 12) { t = "X wins!"; drawWinnerLine("c3"); }
+
+          // diagonal wins
+          if (x[0] + x[4] + x[8] == 3)  { t = "O wins!"; drawWinnerLine("d1"); }
+          if (x[0] + x[4] + x[8] == 12) { t = "X wins!"; drawWinnerLine("d1"); }
+          if (x[2] + x[4] + x[6] == 3)  { t = "O wins!"; drawWinnerLine("d2"); }
+          if (x[2] + x[4] + x[6] == 12) { t = "X wins!"; drawWinnerLine("d2"); }
+          return t;
+        }
+
+        // Draw a line horizontally, vertically, or diagonally to show who won
+        //  Uses an HTML5 canvas container for the drawing funtion
+        function drawWinnerLine(lineType) {
+          var canvas = document.getElementById("winner");         // Get the "winner" canvas element
+          var ctx = canvas.getContext("2d");                      // Obtain a 2d context, which prepares it for drawing
+          ctx.beginPath();                                        // Set up for drawing
+
+          switch (true) {
+            case (lineType == "r1"):                              // Move the pen and mark a line, either through the rows, columns, or diagonally
+              ctx.moveTo(0,25);
+              ctx.lineTo(300,25);
+              break;
+            case (lineType == "r2"):
+              ctx.moveTo(0,75);
+              ctx.lineTo(300,75);
+              break;
+            case (lineType == "r3"):
+              ctx.moveTo(0,125);
+              ctx.lineTo(300,125);
+              break;
+            case (lineType == "c1"):
+              ctx.moveTo(50,0);
+              ctx.lineTo(50,150);
+              break;
+            case (lineType == "c2"):
+              ctx.moveTo(150,0);
+              ctx.lineTo(150,150);
+              break;
+            case (lineType == "c3"):
+              ctx.moveTo(250,0);
+              ctx.lineTo(250,150);
+              break;
+            case (lineType == "d1"):
+              ctx.moveTo(0,0);
+              ctx.lineTo(300,150);
+              break;
+            case (lineType == "d2"):
+              ctx.moveTo(300,0);
+              ctx.lineTo(0,150);
+              break;
+          }
+
+          ctx.stroke();                                                         // Draw the marked line on the canvas
+          document.getElementById("winner").style.visibility = "visible";       // Make the canvas visible
+        }
+    </script>
+</body>
+</html>
