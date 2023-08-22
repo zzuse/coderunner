@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Zombie Girl Dressup: Basic</title>
+<meta name="description" content="Zombie Girl Dressup: Basic. Version 1.0">
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+    background-color: #1072cc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 750px;
+    height: 800xp;
+    overflow: hidden;
+}
+.background {
+    position:absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+.image {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+    visibility:hidden;
+}
+.button {
+    position: absolute;
+    margin-left: 570px;
+    width: 170px;
+}
+</style>
+<script src="./assets/zombie/prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="backgroundMain" alt="#" class="background" src="./assets/zombie/Zgirl-BaseBackground.jpg">
+        <img id="backgroundTitle" alt="#" class="background" src="./assets/zombie/Zgirl-Title.png">
+        <img id="hairBlonde" alt="#" class="image" src="./assets/zombie/Zgirl-HairBlonde.png">
+        <img id="hairBlack" alt="#" class="image" src="./assets/zombie/Zgirl-HairBlack.png">
+        <img id="shoesMetallic" alt="#" class="image" src="./assets/zombie/Zgirl-ShoesMetallic.png">
+        <img id="shoesSandals" alt="#" class="image" src="./assets/zombie/Zgirl-ShoesSandals.png">
+        <img id="topMetallic" alt="#" class="image" src="./assets/zombie/Zgirl-TopMetallic.png">
+        <img id="topPurple" alt="#" class="image" src="./assets/zombie/ZGirl-TopPurple.png">
+        <img id="jeansBrown" alt="#" class="image" src="./assets/zombie/Zgirl-JeansBrown.png">
+        <img id="skirtJeans" alt="#" class="image" src="./assets/zombie/Zgirl-SkirtJeans.png">
+        <img id="accessoriesBracelet" alt="#" class="image" src="./assets/zombie/Zgirl-AccessoriesBracelet.png">
+        <img id="accessoriesShoppingBag" alt="#" class="image" src="./assets/zombie/Zgirl-AccessoriesShoppingBag.png">
+        <img id="accessoriesGlasses" alt="#" class="image" src="./assets/zombie/Zgirl-AccessoriesGlasses.png">
+
+        <input type="button" class="button" style="margin-top:1em;" value="Show/Hide Blonde Hair" onclick="displayImage('hairBlonde');"/>
+        <input type="button" class="button" style="margin-top:3em;" value="Show/Hide Black Hair" onclick="displayImage('hairBlack');"/>
+        <input type="button" class="button" style="margin-top:5em;" value="Show/Hide Heels" onclick="displayImage('shoesMetallic');"/>
+        <input type="button" class="button" style="margin-top:7em;" value="Show/Hide Sandals" onclick="displayImage('shoesSandals');"/>
+        <input type="button" class="button" style="margin-top:9em;" value="Show/Hide Metallic Top" onclick="displayImage('topMetallic');"/>
+        <input type="button" class="button" style="margin-top:11em;" value="Show/Hide Purple Top" onclick="displayImage('topPurple');"/>
+        <input type="button" class="button" style="margin-top:13em;" value="Show/Hide Pants" onclick="displayImage('jeansBrown');"/>
+        <input type="button" class="button" style="margin-top:15em;" value="Show/Hide Skirt" onclick="displayImage('skirtJeans');"/>
+        <input type="button" class="button" style="margin-top:17em;" value="Show/Hide Bracelet" onclick="displayImage('accessoriesBracelet');"/>
+        <input type="button" class="button" style="margin-top:19em;" value="Show/Hide Bag" onclick="displayImage('accessoriesShoppingBag');"/>
+        <input type="button" class="button" style="margin-top:21em;" value="Show/Hide Glasses" onclick="displayImage('accessoriesGlasses');"/>
+    </div>
+
+    <script>
+        function displayImage(item) {
+            var img = document.getElementById(item);
+            if (img.style.visibility == "visible")
+                img.style.visibility = "hidden";
+            else
+                img.style.visibility = "visible";
+        }
+    </script>
+</body>
+</html>
