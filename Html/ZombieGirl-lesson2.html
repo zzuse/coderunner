@@ -129,7 +129,7 @@
                 if (altText[1] != "") {
                     var images = document.getElementsByClassName('image');
                     for (var i = 0, imglength = images.length; i < imglength; i++) {
-                        var imageAlt = images[i].alt.split(";");
+                        var imgText = images[i].alt.split(";");
                         if (altText[1] == imgText[1] && images[i].style.visibility == "visible") {
                             images[i].style.visibility = "hidden";
                             imageAlt = images[i].alt;
