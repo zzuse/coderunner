@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Zombie Girl Dressup, Lesson 2</title>
+<meta name="description" content="Zombie Girl Dressup, Lesson 2. Version 1.0">
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+    background-color: #1072cc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 750px;
+    height: 800px;
+    overflow: hidden;
+}
+
+.background {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
+.image {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+    visibility: hidden;
+}
+
+.button, .button-all {
+    position: absolute;
+    margin-left: 610px;
+    color:#fff;
+    background-color:#8533ff;
+    font-family:'Helvetica Neue',sans-serif;
+    font-size:14px;
+    line-height:25px;
+    border:0;
+    border-radius:15px;
+    width: 135px;
+    height:25px;
+}
+
+#backgroundTitle {
+  animation: slowBounce 5s infinite;
+  margin-left: 0px;
+  margin-top: 0px;
+  animation-play-state: running;
+}
+
+@keyframes slowBounce {
+    0% {
+        transform: translate3d(0px, 0px, 0px);
+        animation-timing-function: ease-in);
+    }
+    50% {
+        transform: translate3d(0px, 20px, 0px);
+        animation-timing-function: ease-out;
+    }
+    100% {
+        transform: translate3d(0px, 0px, 0px);
+    }
+}
+</style>
+<script src="./prefixfree.min.js"></script>
+
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="backgroundMain" alt="Main Background;background" class="background" src="./assets/zombie/Zgirl-BaseBackground.jpg">
+        <img id="backgroundTitle" alt="#" class="background" src="./assets/zombie/Zgirl-Title.png">
+
+        <!-- Overlay assets/zombie for article of clothing -->
+        <img id="topMetallic" alt="Metallic Top;top" class="image" src="./assets/zombie/Zgirl-TopMetallic.png">
+        <img id="topTied" alt="Tied Top;top" class="image" src="./assets/zombie/Zgirl-TopTied.png">
+        <img id="topTee" alt="Tee Top;top" class="image" src="./assets/zombie/Zgirl-TopTee.png">
+        <img id="topPurple" alt="Purple Top;top" class="image" src="./assets/zombie/ZGirl-TopPurple.png">
+        <img id="shoesMetallic" alt="Metallic Heels;shoes" class="image" src="./assets/zombie/Zgirl-ShoesMetallic.png">
+        <img id="shoesLeather" alt="Leather Heels;shoes" class="image" src="./assets/zombie/Zgirl-ShoesLeather.png">
+        <img id="shoesSandals" alt="Sandals;shoes" class="image" src="./assets/zombie/Zgirl-ShoesSandals.png">
+        <img id="shoesSneakers" alt="Sneakers;shoes" class="image" src="./assets/zombie/Zgirl-ShoesSneakers.png">
+        <img id="jeansBlue" alt="Blue Pants;pants" class="image" src="./assets/zombie/Zgirl-JeansBlue.png">
+        <img id="jeansBrown" alt="Brown Pants;pants;" class="image" src="./assets/zombie/Zgirl-JeansBrown.png">
+        <img id="skirtJeans" alt="Jeans Skirt;skirt" class="image" src="./assets/zombie/Zgirl-SkirtJeans.png">
+        <img id="shoesBoots" alt="Boots;shoes" class="image" src="./assets/zombie/Zgirl-ShoesBoots.png">
+        <img id="accessoriesBelt" alt="Belt;" class="image" src="./assets/zombie/Zgirl-AccessoriesBelt.png">
+        <img id="skirtLace" alt="Lace Skirt;skirt" class="image" src="./assets/zombie/Zgirl-SkirtLace.png">
+        <img id="hairBlonde" alt="Blonde Hair;hair" class="image" src="./assets/zombie/Zgirl-HairBlonde.png">
+        <img id="hairBlack" alt="Black Hair;hair" class="image" src="./assets/zombie/Zgirl-HairBlack.png">
+        <img id="hairLong" alt="Long Hair;hair" class="image" src="./assets/zombie/Zgirl-HairLong.png">
+        <img id="accessoriesBracelet" alt="Bracelet;" class="image" src="./assets/zombie/Zgirl-AccessoriesBracelet.png">
+        <img id="accessoriesShoppingBag" alt="Bag;" class="image" src="./assets/zombie/Zgirl-AccessoriesShoppingBag.png">
+        <img id="accessoriesGlasses" alt="Glasses;" class="image" src="./assets/zombie/Zgirl-AccessoriesGlasses.png">
+
+        <input type="button" class="button-all" style="margin-top:47em;" value="Hide All" onclick="hideAll();"/>
+    </div>
+
+    <script>
+        var innerHTML = "";
+        var position = 1;
+        var images = document.getElementsByClassName('image');
+        for (var i = 0, length = images.length; i < length; i++) {
+            var altText = images[i].alt.split(";");
+            var tstring = "<input type='button' class='button' style='margin-top:"
+                + position + "em;' value='" + altText[0]
+                + "' name='" + altText[0] + ";" + altText[1]
+                + "' onclick=\"displayImage(this, '" + images[i].id +"');\" />"
+            console.log(tstring);
+            innerHTML += tstring;
+            position += 2.15
+            images[i].style.visibility = "hidden";
+        }
+        document.getElementById("mainContent").innerHTML += innerHTML;
+        
+        function displayImage(button, item) {
+            var img = document.getElementById(item);
+            var imageAlt = '';
+            if (img.style.visibility == "visible") {
+                img.style.visibility = "hidden";
+                button.style.backgroundColor = "#8533ff";
+            } else {
+                var altText = img.alt.split(";");
+                if (altText[1] != "") {
+                    var images = document.getElementsByClassName('image');
+                    for (var i = 0, imglength = images.length; i < imglength; i++) {
+                        var imageAlt = images[i].alt.split(";");
+                        if (altText[1] == imgText[1] && images[i].style.visibility == "visible") {
+                            images[i].style.visibility = "hidden";
+                            imageAlt = images[i].alt;
+                        }
+                    }
+                    var buttons = document.getElementsByClassName('button');
+                    for (var i = 0, length = buttons.length; i < length; i++) {
+                        if (imageAlt == buttons[i].name) {
+                            buttons[i].style.backgroundColor = "#8533ff";
+                        }
+                    }
+                }
+                img.style.visibility = "visible";
+                button.style.backgroundColor = "#e600e6";
+            }
+        }
+
+        function hideAll() {
+            var images = document.getElementsByClassName('image');
+            for (var i = 0, length = images.length; i < length; i++) {
+                images[i].style.visibility = "hidden";
+            }
+            var buttons = document.getElementsByClassName('button')
+            for (var i = 0, length = buttons.length; i < length; i++ ) {
+                buttons[i].style.backgroundColor = "#8533ff";
+            }
+
+        }
+    </script>
+</body>
+
+</html>
