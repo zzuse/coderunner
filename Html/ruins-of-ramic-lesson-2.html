@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<!-- See earlier lessons for additional comments -->
+
+<head>
+<meta charset="utf-8">
+<title>ruins of Ramic, Lesson 2 - The Basics</title>
+<meta name="description" content="ruins of Ramic, Lesson 2 - The Basics. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/ruins/ruins-playboard-basic.jpg");
+  background-repeat: no-repeat;
+  border-radius: 2px;
+  padding: 2px;
+  width: 1000px;
+  height: 700px;
+  overflow: hidden;
+}
+
+.card {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 167px;
+  height: 200px;
+  border: 1px solid white;
+  user-select: none;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+#cardback {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 167px;
+  height: 200px;
+  left: 34px;
+  top: 458px;
+  border: 1px solid white;
+  user-select: none;
+  cursor: pointer;
+}
+
+.leftControls {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  left: 35px;
+  width: 170px;
+}
+
+#score {
+  top: 170px;
+  height: 140px;
+}
+
+#score p {
+  margin: 0 auto;
+  padding: 10px 12px;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 0.95em;
+  color: #fff;
+  letter-spacing: 0.25em;
+  line-height: 1.5em;
+  display: inline-block;
+}
+
+#newGameBttn {
+  top: 380px;
+  height: 45px;
+  user-select: none;
+  cursor: pointer;
+}
+
+#help {
+  position: absolute;
+  background-color: #202629;
+  opacity: 0.90;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%,-50%);
+  width: 570px;
+  height: 280px;
+}
+
+#help p {
+  margin: 0 auto;
+  padding: 10px 12px;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 1.65em;
+  color: #fff;
+  display: inline-block;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+
+
+<body>
+    <div id="mainContent">
+        <img id="card1" class="card" style="left:260px; top:35px;" alt="1" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card2" class="card" style="left:440px; top:35px;" alt="1" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card3" class="card" style="left:620px; top:35px;" alt="2" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card4" class="card" style="left:800px; top:35px;" alt="2" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+
+        <img id="card5" class="card" style="left:260px; top:250px;" alt="3" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card6" class="card" style="left:440px; top:250px;" alt="3" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card7" class="card" style="left:620px; top:250px;" alt="4" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card8" class="card" style="left:800px; top:250px;" alt="4" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+
+        <img id="card9" class="card" style="left:260px; top:465px;" alt="5" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card10" class="card" style="left:440px; top:465px;" alt="5" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card11" class="card" style="left:620px; top:465px;" alt="6" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card12" class="card" style="left:800px; top:465px;" alt="6" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+
+        <!-- Score window -->
+        <div id="score" class="leftControls">
+          <p>Tries: <span id="tries"></span></p>
+          <p>Matches: <span id="matches"></span></p>
+          <p id="gameover" style="padding-left:20px; visibility:hidden;">GAME OVER</p>
+        </div>
+
+        <!-- New Game button -->
+        <div id="newGameBttn" class="leftControls" onclick="newGame();"></div>
+
+        <!-- Help popup -->
+        <div id="help">
+          <p>Select any two cards to reveal their hidden symbols. Find symbols that match.</p>
+          <p>Match all six sets and you win.</p>
+          <p>Choose New Game to begin a new game.</p>
+        </div>
+    </div>
+    <script>
+        var matches = 0;
+        var tries = 0;
+        var cardsOpen = 0;
+        var cardsDisplay = ["", ""];
+        var arr = [];
+
+
+        function newGame() {
+            matches = 0;
+            tries = 0;
+            cardsOpen = 0;
+            document.getElementById("gameover").style.visibility = "hidden";
+            document.getElementById("help").style.visibility = "hidden";
+            shuffleCards();
+            updateScore();
+
+            var cards = document.getElementsByClassName("card");
+            for (var i = 0; i < cards.length; i++ ) {
+                cards[i].style.visibility = "visible";
+            }
+        }
+
+        function clickCard(card) {
+            if (card.src.indexOf("ruins-back.jpg") == -1 && cardsOpen == 1) { return; }
+            cardsOpen++;
+            if (cardsOpen < 3) {
+                cardsDisplay[cardsOpen] = card.id;
+                card.src = card.alt;
+                if (cardsOpen == 2) {
+                    tries++;
+                    if (document.getElementById(cardsDisplay[1]).alt == document.getElementById(cardsDisplay[2]).alt) {
+                        document.getElementById(cardsDisplay[1]).style.visibility = "hidden";
+                        document.getElementById(cardsDisplay[2]).style.visibility = "hidden";
+                        cardsOpen = 0;
+                        cardsDisplay.fill("");
+                        matches++;
+                        updateScore();
+                    }
+                }
+            } else {
+                for (var i = 1; i < cardsDisplay.length; i++) {
+                    if (cardsDisplay[i] != "") {
+                        var card = document.getElementById(cardsDisplay[i]);
+                        card.src = "./assets/ruins/ruins-back.jpg";
+                    }
+                }
+                cardsOpen = 0;
+                cardsDisplay.fill("");
+            }
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById("tries").innerText = tries;
+            document.getElementById("matches").innnerText = matches;
+            if (matches == 6) {
+                document.getElementById("gameover").style.visibility = "visible";
+            }
+        }
+
+        // Create a deck of cards in an array, and shuffle them to present a random set each play
+        function shuffleCards() {
+          var starting = 1;
+          while(starting < 26) {          // Create array with numbers 1-25
+            arr.push(starting++);
+          }
+          shuffle(arr);                   // Do an initial shuffle
+          arr.splice(0, 12);              // Trim off all but the last half of numbers
+          shuffle(arr);                   // Do another shuffle
+          arr.splice(6, 20);              // Remove all but the first 6 elements
+          arr = arr.concat(arr);          // Make second set of 6 elements (12 elements total)
+          shuffle(arr);                   // Shuffle the combined sets of numbers twice for a good mix-up
+          shuffle(arr);
+          var cards = document.getElementsByClassName("card");
+          for (var i = 0; i < cards.length; i++) {
+            // Set all cards to show back of card
+            cards[i].src = "./assets/ruins/ruins-back.jpg";
+            // Assign full filename to alt tag of randomized card number
+            document.getElementById("card" + (i+1)).alt = "./assets/ruins/ruins" + arr[i] + ".jpg";
+          }
+        }
+
+        // Generic array shuffle function
+        function shuffle(array) {
+          // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+          var currentIndex = array.length, temporaryValue, randomIndex;
+          while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+          }
+          return array;
+        }
+
+    </script>
+</body>
+
+</html>

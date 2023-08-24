@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<!-- Text like this is formatted as an HTML comment, and is not used by the browser.
+Styles and JavaScript comments use a different method for comments. -->
+
+<head>
+<meta charset="utf-8">
+<title>Ruins of Ramic, Lesson 1 - Game Shell</title>
+<meta name="description" content="Ruins of Ramic, Lesson 1 - Game Shell. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Style sheet for definining the look of the page -->
+<style> 
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/ruins/ruins-playboard-basic.jpg");
+  background-repeat: no-repeat;
+  border-radius: 2px;
+  padding: 2px;
+  width: 1000px;
+  height: 700px;
+  overflow: hidden;
+}
+
+.card {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+    width: 167px;
+    height: 200px;
+    border: 1px solid white;
+    user-select: none;
+    visibility: visible;
+}
+</style>
+</head>
+
+<body>
+    <div id="mainContent">
+        <img id="card1" class="card" style="left:260px; top:35px;" alt="1"   src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card2" class="card" style="left:440px; top:35px;" alt="1"   src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card3" class="card" style="left:620px; top:35px;" alt="2"   src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card4" class="card" style="left:800px; top:35px;" alt="2"   src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+    
+        <img id="card5" class="card" style="left:260px; top:250px;" alt="3"  src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card6" class="card" style="left:440px; top:250px;" alt="3"  src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card7" class="card" style="left:620px; top:250px;" alt="4"  src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card8" class="card" style="left:800px; top:250px;" alt="4"  src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+    
+        <img id="card9" class="card" style="left:260px; top:465px;" alt="5"  src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card10" class="card" style="left:440px; top:465px;" alt="5" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card11" class="card" style="left:620px; top:465px;" alt="6" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+        <img id="card12" class="card" style="left:800px; top:465px;" alt="6" src="./assets/ruins/ruins-back.jpg" onclick="clickCard(this);" />
+    </div>
+
+    <script>
+        function clickCard(card) {
+            console.log("You clicked on: " + card.id);
+            alert("You clicked on: " + card.id + " \n\n(Alert like this is awful.)");
+        }
+    </script>
+</body>
+
+
+</html>
