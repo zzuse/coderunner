@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<!-- See earlier lessons for additional comments -->
+
+<head>
+<meta charset="utf-8">
+<title>Ruins of Ramic, Lesson 5 - Full Animation and Sound</title>
+<meta name="description" content="Ruins of Ramic, Lesson 5 - Full Animation and Sound. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+body {
+  background-color: #999;
+  background-image: url("./assets/ruins/bg.jpg");
+  background-repeat: repeat;
+}
+#mainContent {
+  position: absolute;
+  background-image: url("");        /* nothing specified yet, done in code */
+  background-repeat: no-repeat;
+  border-radius: 2px;
+  padding: 2px;
+  width: 1000px;
+  height: 700px;
+  overflow: hidden;
+}
+
+#cardwell{
+  width: 1000px;
+  height: 700px;
+  margin: 0;
+}
+.card {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  left: 34px;
+  top: 458px;
+  width: 167px;
+  height: 200px;
+  border: 1px solid white;
+  user-select: none;
+  cursor: pointer;
+  visibility: hidden;
+  transition: 0.3s ease-in-out;
+  transition-property: left, top, transform;
+}
+#cardback {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 167px;
+  height: 200px;
+  left: 34px;
+  top: 458px;
+  border: 1px solid white;
+  user-select: none;
+  cursor: pointer;
+}
+
+.leftControls {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  left: 35px;
+  width: 170px;
+}
+#score {
+  top: 170px;
+  height: 140px;
+}
+#score p {
+  margin: 0 auto;
+  padding: 10px 12px;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 0.95em;
+  color: #fff;
+  letter-spacing: 0.25em;
+  line-height: 1.5em;
+  display: inline-block;
+}
+#newGameBttn {
+  top: 380px;
+  height: 45px;
+  user-select: none;
+  cursor: pointer;
+}
+
+#helpBttn {
+  top: 325px;
+  height: 45px;
+  user-select: none;
+  cursor: pointer;
+}
+#helpOuter {
+  position: absolute;
+  margin: 0;
+  width: 1000px;
+  height: 700px;
+  left: 0px;
+  top: 0px;
+  user-select: none;
+  cursor: pointer;
+  visibility: hidden;
+}
+#help {
+  position: absolute;
+  background-color: #202629;
+  opacity: 0.90;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%,-50%);
+  width: 570px;
+  height: 325px;
+}
+#help p {
+  margin: 0 auto;
+  padding: 10px 12px;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 1.65em;
+  color: #fff;
+  display: inline-block;
+}
+
+#splash {
+  position: absolute;
+  margin: 0;
+  width: 1000px;
+  height: 700px;
+  left: 0px;
+  top: 0px;
+  z-index: 1000;
+  visibility: visible;
+}
+
+/* useful add-in class for visualizing placement and size of divs */
+.test {
+  background-color: red;
+  opacity: 0.60;
+  visibility: visible;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+<script src="./assets/sound.js"></script>
+
+<body>
+    <div id="mainContent">
+
+    <!-- Splash screen overlay, for when the page loads.
+      Note in CSS this image is forced to the top of the display stack, but including it here means its loading starts first.
+    -->
+    <img id="splash" class="" alt="" src="./assets/ruins/ruins-splash.jpg" />
+
+    <!-- The "card well" is an overlay image of three cards ready to be dealt out -->
+    <img id="cardwell" class="image" alt="" src="./assets/ruins/ruins-cardwell.png" /> -->
+
+    <!-- Cardback image, strategically placed over the card well -->
+    <img id="cardback" class="cardback" alt="7" src="./assets/ruins/ruins-back.jpg" />
+
+    <!-- Set of 12 cards, three rows of four columns each -->
+    <!-- Row 1 -->
+    <img id="card1" class="card" alt="1"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card2" class="card" alt="1"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card3" class="card" alt="2"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card4" class="card" alt="2"  src="./assets/ruins/ruins-back.jpg" />
+
+    <!-- Row 2 -->
+    <img id="card5" class="card" alt="3"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card6" class="card" alt="3"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card7" class="card" alt="4"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card8" class="card" alt="4"  src="./assets/ruins/ruins-back.jpg" />
+
+    <!-- Row 3 -->
+    <img id="card9" class="card" alt="5"  src="./assets/ruins/ruins-back.jpg" />
+    <img id="card10" class="card" alt="5" src="./assets/ruins/ruins-back.jpg" />
+    <img id="card11" class="card" alt="6" src="./assets/ruins/ruins-back.jpg" />
+    <img id="card12" class="card" alt="6" src="./assets/ruins/ruins-back.jpg" />
+
+    <!-- Score window -->
+    <div id="score" class="leftControls">
+      <p>Tries: <span id="tries"></span></p>
+      <p>Matches: <span id="matches"></span></p>
+      <p id="gameover" style="padding-left:20px; visibility:hidden;">GAME OVER</p>      <!-- initially hidden -->
+    </div>
+
+    <!-- Help and New Game buttons -->
+    <div id="helpBttn" class="leftControls"></div>
+    <div id="newGameBttn" class="leftControls"></div>
+
+    <!-- Div structure for displaying the help overlay -->
+    <div id="helpOuter">
+      <div id="help">
+        <p>Choose New Game to begin a new game.</p>
+        <p>Select any two cards to reveal their hidden symbols. Find symbols that match.</p>
+        <p>Match all six sets and you win.</p>
+        <p>Click anywhere to continue.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    "use strict";                   // Catches more potential errors and displays them in the browser console
+
+    // Set up event listeners
+    var cards = document.getElementsByClassName("card");
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].addEventListener("click", clickCard);
+    }
+    document.getElementById("newGameBttn").addEventListener("click", newGame);
+    document.getElementById("cardback").addEventListener("click", newGame);
+    document.getElementById("helpBttn").addEventListener("click", function() {
+      document.getElementById("helpOuter").style.visibility = "visible";
+    });
+    document.getElementById("helpOuter").addEventListener("click", function() {
+      document.getElementById("helpOuter").style.visibility = "hidden";
+    });
+    document.getElementById("splash").addEventListener("transitionend", function() {
+      document.getElementById("splash").style.visibility = "hidden";
+    });
+
+    // Set up global variables for use throughout code
+    var matches = 0;
+    var tries = 0;
+    var cardsOpen = 0;
+    var cardsDisplay = ["",""]  //new Array(2);
+    var arr = [];
+
+    // Perform this action when the page has fully loaded
+    //  This code waits to see when everything is loaded; checks for 'complete' state every 10 milliseconds
+    window.onload = function(){
+      var readyStateCheckInterval = setInterval(function() {
+        if (document.readyState == "complete") {
+          clearInterval(readyStateCheckInterval);
+          document.getElementById("mainContent").style.backgroundImage = "url('./assets/ruins/ruins-playboard.jpg')";
+          var splash = document.getElementById("splash");
+          splash.style.transition = "opacity 1s linear 1.1s";
+          splash.style.opacity = 0;
+        }
+      }, 10);
+    }
+
+    // Start a new game
+    //   Reset values, hide (or show) relevant elments
+    function newGame() {
+      // Set or reset game variables
+      matches = 0;
+      tries = 0;
+      cardsOpen = 0;
+      document.getElementById("gameover").style.visibility = "hidden";
+
+      // Shuffle cards and update the scoring window
+      shuffleCards();
+      updateScore();
+
+      // Set or reset the cards on the playboard (deal-out)
+      var cards = document.getElementsByClassName("card");
+      for (var i = 0; i < cards.length; i++) {
+        // Uses 'closure' with function-in-function to force passing variables by values
+        //  Call playboardPlace to to the actual placing
+        //  Each place is successively delayed by 80 milliseconds to provide animation effect
+        setTimeout(function(me) {
+          return function() {
+            playboardPlace(me); };
+          }(i), 80 * i);
+      }
+      // Wait until after deal-out to reset transform string to empty
+      setTimeout(function() {
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].style.transform = "";
+        }
+      }, 1400);
+    }
+
+    function playboardPlace(index) {
+      var cards = document.getElementsByClassName("card");
+      var card = cards[index];
+      // Deal-out the cards into their respective places
+      switch (index) {
+        case 0:   card.style.top = "35px";    card.style.left = "260px"; break;
+        case 1:   card.style.top = "35px";    card.style.left = "440px"; break;
+        case 2:   card.style.top = "35px";    card.style.left = "620px"; break;
+        case 3:   card.style.top = "35px";    card.style.left = "800px"; break;
+        case 4:   card.style.top = "250px";   card.style.left = "260px"; break;
+        case 5:   card.style.top = "250px";   card.style.left = "440px"; break;
+        case 6:   card.style.top = "250px";   card.style.left = "620px"; break;
+        case 7:   card.style.top = "250px";   card.style.left = "800px"; break;
+        case 8:   card.style.top = "465px";   card.style.left = "260px"; break;
+        case 9:   card.style.top = "465px";   card.style.left = "440px"; break;
+        case 10:  card.style.top = "465px";  card.style.left = "620px"; break;
+        case 11:  card.style.top = "465px";  card.style.left = "800px"; break;
+      }
+      // Use animation during deal-out, and make cards visible
+      card.style.transform = "scale(1.0) rotate(360deg)";
+      card.style.visibility = "visible";
+    }
+
+    // Do when a card is clicked
+    function clickCard(ev) {
+      if (ev.target.src.indexOf("ruins-back.jpg") == -1 && cardsOpen == 1) { return; }
+      cardsOpen++;
+      if (cardsOpen < 3) {
+        cardsDisplay[cardsOpen] = ev.target.id;
+        ev.target.src = ev.target.alt;
+        ev.target.style.transform = "scale(1.1) rotate(10deg)";
+        if (cardsOpen == 2) {
+          tries++;
+          if (document.getElementById(cardsDisplay[1]).alt == document.getElementById(cardsDisplay[2]).alt) {
+            // Cards match
+            matchSound();
+            setTimeout(function() {
+              document.getElementById(cardsDisplay[1]).style.visibility = "hidden";
+              document.getElementById(cardsDisplay[2]).style.visibility = "hidden";
+              cardsOpen = 0;
+              cardsDisplay.fill("");
+              matches++;
+              updateScore();
+            }, 500);
+          } else {
+            // No match; automatically return cards using a timed function (to allow player to see the cards first)
+            setTimeout(function() { returnCards(); }, 900);
+          }
+        }
+      } else {
+        // No match but user clicked before timeout; return cards
+        returnCards();
+      }
+      updateScore();
+    }
+
+    // Put the pair of selected cards back into place
+    function returnCards() {
+      for (var i = 1; i < cardsDisplay.length; i++) {
+        if (cardsDisplay[i] != "") {
+          var card = document.getElementById(cardsDisplay[i]);
+          card.src = "./assets/ruins/ruins-back.jpg";
+          card.style.transform = "scale(1.0) rotate(0deg)";
+        }
+      }
+      cardsOpen = 0;
+      cardsDisplay.fill("");
+    }
+
+    // Update the score window with tries, matches, and GAME OVER text
+    function updateScore() {
+      document.getElementById("tries").innerText = tries;
+      document.getElementById("matches").innerText = matches;
+      if (matches == 6) {
+        gameOverSound();
+        document.getElementById("gameover").style.visibility = "visible";
+      }
+    }
+
+    // Create a deck of cards in an array, and shuffle them to present a random set each play
+    function shuffleCards() {
+      var starting = 1;
+      while(starting < 26) {          // Create array with numbers 1-25
+        arr.push(starting++);
+      }
+      shuffle(arr);                   // Do an initial shuffle
+      arr.splice(0, 12);              // Trim off all but the last half of numbers
+      shuffle(arr);                   // Do another shuffle
+      arr.splice(6, 20);              // Remove all but the first 6 elements
+      arr = arr.concat(arr);          // Make second set of 6 elements (12 elements total)
+      shuffle(arr);                   // Shuffle the combined sets of numbers twice for a good mix-up
+      shuffle(arr);
+      var cards = document.getElementsByClassName("card");
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].src = "./assets/ruins/ruins-back.jpg";
+        document.getElementById("card" + (i+1)).alt = "./assets/ruins/ruins" + arr[i] + ".jpg";
+      }
+    }
+
+    // Generic array shuffle function
+    function shuffle(array) {
+      // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    }
+
+    // Sound effects use the sound.js library available from here: https://github.com/kittykatattack/sound.js
+    //  Note this library is not the same as the SoundJS lib, which is used in other examples
+    function matchSound() {
+      soundEffect(
+        220,          //frequency
+        0.05,         //attack
+        0.2,          //decay
+        "sine",       //waveform
+        2,            //volume
+        0.8,          //pan
+        0,            //wait before playing
+        600,          //pitch bend amount
+        true,         //reverse
+        100,          //random pitch range
+        0,            //dissonance
+        undefined,    //echo
+        undefined     //reverb
+      );
+    }
+
+    function gameOverSound() {
+      soundEffect(146.8, 0, 0.2, "square", .6, 0, 0);
+      soundEffect(220, 0, 0.2, "square", .6, 0, 0.1);
+      soundEffect(293.6, 0, 0.3, "square", .6, 0, 0.2);
+    }
+
+  </script>
+</body>
+
+</head>
+</html>
