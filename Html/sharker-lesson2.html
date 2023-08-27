@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Sharker, Lesson 2</title>
+<meta name="description" content="Sharker, Lesson 1. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/sharker/sharker-background-simple.jpg");
+  margin: 0;
+  width: 700px;
+  height: 662px;
+  overflow: hidden;
+}
+
+/* Define the sharp and its CSS transition timing */
+#sharker {
+  transition: top 350ms, left 350ms;
+}
+
+/* Shark image uses a spritesheet with 28 "frames" for amimation */
+.shark {
+  position: absolute;
+  margin: 0;
+  width: 55px;
+  height: 150px;
+  top: 590px;
+  left: 324px;
+  background-image: url("./assets/sharker/sharker-spritesheet.png");
+  animation: swim 175ms steps(28) infinite;
+  animation-play-state: paused;
+}
+@keyframes swim {
+ from { background-position:    0px;      }
+   to { background-position:    -1518px;  }
+}
+
+/* Set up styles for the three lanes of traffic */
+.lane {
+  position: absolute;
+  margin: 0;
+  width: 700px;
+  height: 110px;
+  left: 0px;
+  border: 2px solid red;
+}
+#lane1 {  top: 160px;   }
+#lane2 {  top: 315px;   }
+#lane3 {  top: 467px;   }
+
+.car {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 1500ms linear;
+}
+
+</style>
+
+<script type="text/javascript" src="./prefixfree.min.js"></script>
+
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="sharker" class="shark"></div>
+
+        <!-- Define three lanes of traffic -->
+        <div id="lane1" class="lane">
+          <img id="car1" class="car" style="left:-235px;" alt="" src="./assets/sharker/car5.png" />
+        </div>
+
+        <div id="lane2" class="lane">
+          <img id="car2" class="car" style="left:-235px;" alt=""  src="./assets/sharker/car7.png" />
+        </div>
+
+        <div id="lane3" class="lane">
+          <img id="car3" class="car" style="left:-235px;" alt=""  src="./assets/sharker/car10.png" />
+        </div>
+
+    </div>
+
+    <script>
+        "use strict";
+        var movement = {
+            vMove: 0,
+            hMove: 0,
+            trans: 400
+        }
+
+        var gameSettings = {
+            maxCars : 10
+        }
+
+        var sharker = document.getElementById("sharker");
+        sharker.addEventListener('transitionend', sharkerTransEnded, false);
+        sharker.style.transition = "top" + movement.trans + "ms, left " + movement.trans + "ms";
+
+        window.onload = function() {
+            var readyStateCheckInterval = setInterval(function() {
+                if (document.readyState == "complete") {
+                    clearInterval(readyStateCheckInterval);
+                    console.log("game started");
+                    gameStart();
+                }
+            }, 10);
+        }
+
+        var timers = {
+            lane1,
+            lane2,
+            lane3
+        }
+
+        function gameStart() {
+            var cars = document.getElementsByClassName("car");
+            for (var i = 0; i < cars.length; i++) {
+                cars[i].addEventListener('transitionend', transitionEnded, false);
+                cars[i].style.left = 0 - parseInt(window.getComputedStyle(cars[i], null).width) + "px";
+            }
+            setTimeout (function(){ timers.lane1 = setInterval(function() { moveCar(1); }, 1500); }, 300);
+            setTimeout (function(){ timers.lane2 = setInterval(function() { moveCar(2); }, 1600); }, 100);
+            setTimeout (function(){ timers.lane3 = setInterval(function() { moveCar(3); }, 1800); }, 700);
+        }
+
+        function moveCar(lane) {
+            var lane = document.getElementById("lane" + lane);
+            var car = lane.getElementsByTagName("img")[0];
+            var carNumber = getRandomInt(1, gameSettings.maxCars);
+            car.src = "./assets/sharker/car" + carNumber + ".png";
+
+            car.style.transition = "left 1500ms linear";
+            car.style.left = "700px";
+            console.log (lane.id + ":" + car.id);
+        }
+
+
+        document.addEventListener('keydown', function(event) {
+            const keyName = event.key;
+
+            if(event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 ||event.keyCode == 40) {
+                event.preventDefault();
+            }
+            switch (keyName.toLowerCase()) {
+                case "w":
+                case "arrowup":
+                    moveSharker(1, 0);
+                    break;
+                case "s":
+                case "arrowdown":
+                    moveSharker(-1,0);
+                    break;
+                case "a":
+                case "arrowleft":
+                    moveSharker(0, 1);
+                    break;
+                case "d":
+                case "arrowright":
+                    moveSharker(0, -1);
+                    break;
+            }
+        }, false);
+
+        function moveSharker(vMove, hMove) {
+            var left = parseInt(window.getComputedStyle(sharker, null).left);
+            var top = parseInt(window.getComputedStyle(sharker, null).top);
+
+            if(movement.vMove + vMove >=0 && movement.vMove + vMove <=4) {
+                movement.vMove = movement.vMove + vMove;
+                sharker.style.top = (595 - (movement.vMove * 147)) + "px";
+                document.getElementById("sharker").style.animationPlayState = "running";
+            }
+
+            if (movement.vMove != 4 &&
+                movement.hMove + hMove >= -2 &&
+                movement.hMove + hMove <= 2) {
+                movement.hMove = movement.hMove + hMove;
+                sharker.style.left = (331 - (movement.hMove * 125)) + "px";
+                document.getElementById("sharker").style.animationPlayState = "running";
+            }
+
+            if (movement.vMove == 0 || movement.vMove == 4 || movement.hMove == -2 || movement.hMove == 2) {
+                setTimeout(function() {
+                    sharker.style.animationPlayState = "paused"; 
+                }, movement.trans);
+            }
+
+        }
+
+        function sharkerTransEnded(ev) {
+            sharker.style.animationPlayState = "paused";
+        }
+
+        function transitionEnded(ev) {
+            var car = ev.target;
+            car.style.transition = "none";
+            car.offsetHeight;
+            car.style.left = 0 - parseInt(window.getComputedStyle(car, null).width) + "px";
+        }
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    </script>
+</body>
+</html>
