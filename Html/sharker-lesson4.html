@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Sharker, Lesson 4</title>
+<meta name="description" content="Sharker, Lesson 4. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+#mainContent {
+    position: absolute;
+    background-image: url("./assets/sharker/sharker-background-help.jpg");
+    margin: 0;
+    width: 700px;
+    height: 662px;
+    overflow: hidden;
+}
+
+#crowd {
+    position:absolute;
+    margin: 0;
+    width: 700px;
+    height: 110px;
+    top: 15px;
+}
+
+.people {
+    position: absolute;
+    margin: 0;
+    visibility: hidden;
+}
+
+#sharker {
+    transition: top 450ms, left 450ms, transform 150ms;
+}
+
+.shark {
+    position:absolute;
+    margin: 0;
+    width: 55px;
+    height:150px;
+    top: 590px;
+    left: 324px;
+    background-image: url("./assets/sharker/sharker-spritesheet.png");
+    animation: swim 175ms steps(28) infinite;
+    animation-play-state: paused;
+}
+@keyframes swim {
+    from {background-position: 0px;}
+    to {background-position: -1518px;}
+}
+
+.lane {
+    position: absolute;
+    margin: 0;
+    width: 700px;
+    height:110px;
+    left: 0px;
+}
+#lane1 {  top: 160px;   }
+#lane2 {  top: 315px;   }
+#lane3 {  top: 467px;   }
+
+.car {
+    position: absolute;
+    margin: auto;
+    left: -235px;
+    top: 0;
+    transition: left 1500ms linear;
+}
+
+.arrow {
+    position: absolute;
+    height: 38px;
+    width: 40px;
+}
+#arrowleft { top: 52px; left: 583px; }
+#arrowright { top: 52px; left: 655px; }
+#arrowup { top: 8px; left: 618px; }
+#arrowdown { top: 98px; left: 618px; }
+
+#helpscreen {
+    position: absolute;
+    margin 0;
+    width: 700px;
+    height: 662px;
+    visibility: hidden;;
+}
+
+#helpbttn {
+    position: absolute;
+    width: 55px;
+    height: 35px;
+    top: 610px;
+    left: 625px;
+}
+</style>
+
+<script type="text/javascript" src="./prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div id="crowd">
+            <img id="people1" class="people" style="left:65px;" alt="" src="./assets/sharker/people1.png" />
+            <img id="people2" class="people" style="left:180px;" alt="" src="./assets/sharker/people3.png" />
+            <img id="people3" class="people" style="left:320px;" alt="" src="./assets/sharker/people5.png" />
+            <img id="people4" class="people" style="left:430px;" alt="" src="./assets/sharker/people7.png" />
+        </div>
+
+        <div id="sharker" class="shark" ></div>
+        <div id="lane1" class="lane">
+            <img id="car1" class="car" style="left:-235px;" alt="" src="./assets/sharker/car3.png" />
+        </div>
+        <div id="lane2" class="lane">
+            <img id="car2" class="car" style="left:700px;" alt="" src="./assets/sharker/car11.png" />
+        </div>
+        <div id="lane3" class="lane">
+            <img id="car3" class="car" style="left:-235px;" alt="" src="./assets/sharker/car10.png" />
+        </div>
+
+        <div id="arrowleft" class="arrow"> </div>
+        <div id="arrowright" class="arrow"> </div>
+        <div id="arrowup" class="arrow"> </div>
+        <div id="arrowdown" class="arrow"> </div>
+
+        <div id="helpbttn"></div>
+        <img id="helpscreen" alt="" src="./assets/sharker/sharker-help.jpg"/>
+    </div>
+
+    <script type="text/javascript">
+        "use strict";
+
+        var gameSettings = {
+            vMove: 0,
+            hMove: 0,
+            swimTrans: 450,
+            carTrans: 1450,
+            maxCars: 10,
+            maxPeople: 8,
+            carHits: 0,
+            peopleHits: 0,
+            lane1Timer: null,
+            lane2Timer: null,
+            lane3Timer: null
+        }
+        var sharker = document.getElementById("sharker");
+        sharker.addEventListener('transitionend', sharkerTransEnded, false);
+        sharker.style.transition = "top " + gameSettings.sharkerTrans + "ms, left " + gameSettings.sharkerTrans + "ms, transform 150ms";
+
+        document.getElementById("arrowup").addEventListener("click", function(){moveSharker(1, 0)});
+        document.getElementById("arrowdown").addEventListener("click", function(){moveSharker(-1, 0)});
+        document.getElementById("arrowleft").addEventListener("click", function(){moveSharker(0, 1)});
+        document.getElementById("arrowright").addEventListener("click", function(){moveSharker(0, -1)});
+        document.getElementById("helpbttn").addEventListener("click", function(){
+            document.getElementById("helpscreen").style.visibility = "visible";
+        });
+        document.getElementById("helpscreen").addEventListener("click", function(){
+            document.getElementById("helpscreen").style.visibility = "hidden";
+        });
+
+        document.addEventListener('keydown', function (event) {
+            const keyName = event.key;
+            if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+              event.preventDefault();
+            }
+            switch (keyName.toLowerCase()) {
+              case "w":
+              case "arrowup":           // 38 = ArrowUp
+                moveSharker(1, 0);
+                break;
+              case "s":
+              case "arrowdown":         // 40 = ArrowDown
+                moveSharker(-1, 0);
+                break;
+              case "a":
+              case "arrowleft":         // 37 = ArrowLeft
+                moveSharker(0, 1);
+                break;
+              case "d":
+              case "arrowright":        // 39 = ArrowLeft
+                moveSharker(0, -1);
+                break;
+            }
+          }, false);
+
+          window.onload = function() {
+              var readyStateCheckInterval = setInterval(function() {
+                if (document.readyState == "complete") {
+                  clearInterval(readyStateCheckInterval);
+                  randomizePeople();
+                  gameStart();
+                }
+              }, 10);
+            }
+         function randomizePeople () {
+              var peopleArr = [];
+              while (peopleArr.length < 4) {
+                var people = getRandomInt(1, 8);    // Randomly select person 1 to 8
+                if ( peopleArr.indexOf(people) < 0 ) { peopleArr.push(people); }
+              }
+              for (var i = 0; i < peopleArr.length; i++) {
+                if (getRandomInt(0, 1)) {
+                  var person = document.getElementById("people" + (i+1));
+                  person.src = "./assets/sharker/people" + peopleArr[i] + ".png";
+                  person.style.left = (44 + (i * 125)) + "px";
+                  person.style.visibility = "visible";
+                }
+              }
+            }
+
+         function gameStart() {
+              var cars = document.getElementsByClassName("car");
+              for (var i = 0; i < cars.length; i++) {
+                cars[i].addEventListener('transitionend', carTransitionEnded, false);
+                cars[i].style.left = 0 - parseInt(window.getComputedStyle(cars[i], null).width) + "px";
+              }
+              setTimeout (function(){ gameSettings.lane1Timer = setInterval(function() {
+                moveCar(1); }, gameSettings.carTrans + 350); },
+                getRandomInt(100, 500));
+              setTimeout (function(){ gameSettings.lane2Timer = setInterval(function() {
+                moveCar(2); }, gameSettings.carTrans + 200); },
+                getRandomInt(150, 300));
+              setTimeout (function(){ gameSettings.lane3Timer = setInterval(function() {
+                moveCar(3); }, gameSettings.carTrans + 50); },
+                getRandomInt(20, 200));
+              animationFrame();
+         }
+
+         function moveSharker (vMove, hMove) {
+            var left = parseInt(window.getComputedStyle(sharker, null).left);
+            var top = parseInt(window.getComputedStyle(sharker, null).top);
+            document.getElementById("sharker").style.animationPlayState = "running";
+            if (gameSettings.vMove + vMove >= 0 && gameSettings.vMove + vMove <= 4) {
+              gameSettings.vMove = gameSettings.vMove + vMove;
+              sharker.style.top = (595 - (gameSettings.vMove * 147) ) + "px";
+            }
+            if (gameSettings.vMove != 4 &&
+              gameSettings.hMove + hMove >= -2 &&
+              gameSettings.hMove + hMove <= 2) {
+              gameSettings.hMove = gameSettings.hMove + hMove;
+              sharker.style.left = (331 - (gameSettings.hMove * 125) ) + "px";
+            }
+            if (gameSettings.vMove == 0 || gameSettings.vMove == 4 || gameSettings.hMove == -2 || gameSettings.hMove == 2) {
+              setTimeout(function() { sharker.style.animationPlayState = "paused"; }, gameSettings.swimTrans);
+            }
+         }
+
+         function moveCar (laneNum) {
+              var lane = document.getElementById("lane" + laneNum);
+              var car = lane.getElementsByTagName("img")[0];
+              var carNumber = getRandomInt(1, gameSettings.maxCars);
+              car.src = "./assets/sharker/car" + carNumber + ".png";
+              car.style.transition = "none";
+              car.offsetHeight;
+              car.style.transition = "left " + gameSettings.carTrans + "ms linear";
+              if (laneNum == 2) {
+                car.style.transform = "rotate(180deg)";
+                car.style.left = 0 - parseInt(window.getComputedStyle(car, null).width) + "px";
+              } else {
+                car.style.transform = "rotate(0deg)";
+                car.style.left = "700px";
+              }
+         }
+
+         // Detect when shark is hit by a car; setup spin animation when hit
+         //   If collision, return shark to starting point at bottom of game board
+         function animationFrame() {
+           var shark = {
+             x:      parseInt(window.getComputedStyle(sharker, null).left),
+             y:      parseInt(window.getComputedStyle(sharker, null).top),
+             width:  parseInt(window.getComputedStyle(sharker, null).width),
+             height: parseInt(window.getComputedStyle(sharker, null).height)
+           };
+           if ( gameSettings.vMove != 4) {
+             // Track the bounding rectangles of all the cars, and compare to the
+             //   bounding rectangle of the shark
+             var cars = document.getElementsByClassName("car");
+             for (var i = 0; i < cars.length; i++) {
+               var target = {};
+               var thisLane = document.getElementById("lane" + (i+1));
+               var laneOffsetY = parseInt(window.getComputedStyle(thisLane, null).top)
+               target.x = parseInt(window.getComputedStyle(cars[i], null).left);
+               target.y = parseInt(window.getComputedStyle(cars[i], null).top) + laneOffsetY;
+               target.width = parseInt(window.getComputedStyle(cars[i], null).width);
+               target.height = parseInt(window.getComputedStyle(cars[i], null).height);
+               if (isCollide(shark, target)) {
+                 gameSettings.carHits++;
+                 sharker.style.transform = "rotate(360deg)";
+                 sharker.style.top = "590px";
+                 gameSettings.vMove = 0;
+               }
+             }
+           } else {
+             // Check if shark has "collided" with people;
+             //    On collision, consider that person eaten; remove person and increase shark's score
+             var people = document.getElementsByClassName("people");
+             for (var i = 0; i < people.length; i++) {
+               var target = {};
+               target.x = parseInt(window.getComputedStyle(people[i], null).left);
+               target.y = parseInt(window.getComputedStyle(people[i], null).top);
+               target.width = parseInt(window.getComputedStyle(people[i], null).width);
+               target.height = parseInt(window.getComputedStyle(people[i], null).height);
+               if (isCollide(shark, target)) {
+                 if (people[i].style.visibility == "visible") {
+                   people[i].style.visibility = "hidden";
+                   gameSettings.peopleHits++;
+                 }
+               }
+             }
+           }
+           setTimeout (function() { window.requestAnimationFrame(animationFrame); }, 1000/10);
+         }
+
+         function isCollide(a, b) {
+           return !(
+             ((a.y + a.height) < (b.y)) ||
+             (a.y > (b.y + b.height)) ||
+             ((a.x + a.width) < b.x) ||
+             (a.x > (b.x + b.width))
+           );
+         }
+
+         // Pause the shark swim animation when the movement transition has ended
+         //   If shark has been hit, rotate image back to starting position
+         function sharkerTransEnded(ev) {
+           sharker.style.animationPlayState = "paused";
+           if (sharker.style.transform == "rotate(360deg)") {
+             sharker.style.width = "54px";
+             sharker.style.transform = "rotate(0deg)";
+           }
+         }
+
+         function carTransitionEnded(ev) {
+           var car = ev.target;
+           car.style.transition = "none";
+           car.offsetHeight;
+           if (car.parentNode.id == "lane2") {
+             car.style.left = "700px";
+           } else {
+             car.style.left = 0 - parseInt(window.getComputedStyle(car, null).width) + "px";
+           }
+         }
+
+         function getRandomInt(min, max) {
+           return Math.floor(Math.random() * (max - min + 1)) + min;
+         }
+    </script>
+
+</body>
+</html>
