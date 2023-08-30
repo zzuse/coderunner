@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Space Depot Object Matchup</title>
+<meta name="description" content="Space Depot Object Matchup. Version 1.0" >
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="Creative Commons ShareAlike 4.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    background-color: #526b69;
+    cursor: pointer;
+}
+
+#mainContent {
+    position: absolute;
+    background-color: #4d0000;
+    background-image: url('./assets/depot/space-depot-main.jpg');
+    background-repeat: no-repeat;
+    background-size: 1244px 700px;
+    background-position: center top;
+    border-radius: 2px;
+    width: 1244px;
+    height: 705px;
+    padding-top: 30px;
+    overflow: hidden;
+}
+
+#textContent {
+    position: absolute;
+    background-color: #004d99;
+    border-radius: 10px;
+    padding: 10px;
+    width: 350px;
+    height: 200px;
+    left: 550px;
+    top: 130px;
+	font-size: 1.5em;
+    color: white;
+	overflow: hidden;
+    opacity: 0.75;
+	visibility: hidden;
+}
+
+#panel-slide {
+  position: absolute;
+  margin-left: 1234px;
+  margin-top: -30px;
+  width: 400px;
+  height: 700px;
+  overflow: hidden !important;
+  background-color: #29293d;
+  opacity: 0.8;
+  transition: left 0.2s ease-in 0s;
+  left: 0;
+}
+
+#panel-openclose {
+  position: absolute;
+  margin-left: 1205px;
+  margin-top: -30px;
+  opacity: 1;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.panel-button {
+  position: absolute;
+  padding: 2px;
+  width: 360px;
+  height: 20px;
+  margin-left: 15px;
+  font-size: 0.85em;
+  color: #fff;
+  background-color: #800080;
+  border: 3px solid #aaa;
+  border-radius: 3px;
+}
+.up {
+  border-style: outset;
+}
+.down {
+  border-style: inset;
+}
+.used {
+  color: #888;
+  background-color: #aaa;
+}
+
+.bottom-text {
+  position: absolute;
+  border-radius: 0px;
+  padding: 2px 5px;
+  height: 20px;
+  margin-top: 705px;
+  font-size: 0.9em;
+  color: white;
+  cursor: not-allowed;
+	overflow: hidden;
+}
+#ticker {
+	background-color: #004d99;
+	width: 950px;
+  margin-left: 5px;
+
+}
+#score {
+  background-color: #004d99;
+	width: 100px;
+	margin-left: 970px;
+}
+#time {
+  background-color: #004d99;
+	width: 140px;
+	margin-left: 1085px;
+}
+
+.inner {
+	position: absolute;
+	overflow: hidden;
+	border: 1px;
+}
+.inner p {
+  visibility:hidden;
+}
+
+.image {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: -30px;
+  opacity: 1;
+  visibility: hidden;
+}
+
+</style>
+
+<script src="./prefixfree.min.js"></script>
+<script src="./assets/depot/soundjs-NEXT.combined.js"></script>
+
+</head>
+
+<body onload="init()">
+    <div id="mainContent">
+        <div id="chair" class="inner" style="left:245px; top:600px; height:100px; width:105px;"><p> {"id":"chair","matchText":"Furniture for Mister Spock","resultText":"Fiberglass from the 60s rules!","topLevel":"true"} </p></div>
+        <div id="littlerobot" class="inner" style="left:136px; top:3px; height:83px; width:116px;"><p> {"id":"littlerobot","matchText":"With just one wheel how does it turn?","resultText":"It turns very well, thank you!","topLevel":"true"} </p></div>
+        <div id="xenomorph" class="inner" style="left:259px; top:1px; height:120px; width:57px;"><p> {"id":"xenomorph","matchText":"Game over, man. Game over!","resultText":"Until the next sequel!","topLevel":"true"} </p></div>
+        <div id="mech" class="inner" style="left:125px; top:441px; height:120px; width:80px;"><p> {"id":"mech","matchText":"Daddy says you have 10 seconds to comply!","resultText":"Mech result text","topLevel":"true"} </p></div>
+        <div id="lampbot" class="inner" style="left:321px; top:300px; height:180px; width:132px;"><p> {"id":"lampbot","matchText":"It's a robot! It's a lamp! It's a lampbot!","resultText":"What other name would it have?!","topLevel":"true"} </p></div>
+        <div id="bricklandspeeder" class="inner" style="left:354px; top:575px; height:119px; width:218px;"><p> {"id":"bricklandspeeder","matchText":"If Luke Skywalker were a minifig","resultText":"Leggo my wamprat!","topLevel":"true"} </p></div>
+        <div id="r1d1" class="inner" style="left:344px; top:484px; height:110px; width:73px;"><p> {"id":"r1d1","matchText":"Anakin's middle school project","resultText":"Named it R1D1, of course","topLevel":"true"} </p></div>
+        <div id="rocket" class="inner" style="left:582px; top:307px; height:228px; width:69px;"><p> {"id":"rocket","matchText":"Buck rogers flew one a lot like this","resultText":"But that was in the 25th Century","topLevel":"true"} </p></div>
+        <div id="saucer" class="inner" style="left:761px; top:550px; height:150px; width:356px;"><p> {"id":"saucer","matchText":"Mass transit for Little Green Men","resultText":"And Little Green Women!","topLevel":"true"} </p></div>
+        <div id="missile" class="inner" style="left:1050px; top:21px; height:560px; width:144px;"><p> {"id":"missile","matchText":"Space travel for the 1950s set","resultText":"Dig them tail fins, man!","topLevel":"true"} </p></div>
+        <div id="enterprise" class="inner" style="left:1px; top:220px; height:275px; width:90px;"><p> {"id":"enterprise","matchText":"Solution to any problem: eject the warp core","resultText":"And why don't they ever have a spare?","topLevel":"true"} </p></div>
+        <div id="martians" class="inner" style="left:591px; top:538px; height:75px; width:138px;"><p> {"id":"martians","matchText":"Kaylee saved us from these","resultText":"Masrtians please just go home!","topLevel":"true"} </p></div>
+        <div id="satellite" class="inner" style="left:648px; top:31px; height:71px; width:455px;"><p> {"id":"satellite","matchText":"It's a solar powered x-ray atomic laser!","resultText":"Or just an ordinary cable TV satellite","topLevel":"true"} </p></div>
+        <div id="satelliteA" class="inner" style="left:863px; top:100px; height:120px; width:37px;"><p> {"id":"satellite","matchText":"","resultText":"","topLevel":"false"} </p></div>
+        <div id="discovery" class="inner" style="left:433px; top:124px; height:55px; width:398px;"><p> {"id":"discovery","matchText":"Open the pod bay doors, Hal!","resultText":"I'm dyin' out here!!","topLevel":"true"} </p></div>
+        <div id="protector" class="inner" style="left:131px; top:250px; height:195px; width:180px;"><p> {"id":"protector","matchText":"Never give up! Never surrender!","resultText":"It's the NTE-3120: NTE=Not The Enterprise","topLevel":"true"} </p></div>
+        <div id="protectorA" class="inner" style="left:195px; top:387px; height:102px; width:114px;"><p> {"id":"protector","matchText":"","resultText":"","topLevel":"false"} </p></div>
+        <div id="viper" class="inner" style="left:8px; top:130px; height:86px; width:247px;"><p> {"id":"viper","matchText":"The darling of the Colonial Fleet","resultText":"Vipers, get them Cylons!","topLevel":"true"} </p></div>
+        <div id="viperB" class="inner" style="left:92px; top:210px; height:40px; width:194px;"><p> {"id":"viper","matchText":"","resultText":"","topLevel":"false"} </p></div>
+        <div id="jetpack" class="inner" style="left:256px; top:493px; height:107px; width:83px;"><p> {"id":"jetpack","matchText":"Aren't we all supposed to have these by now?","resultText":"Rocketeer had nothing on this!","topLevel":"true"} </p></div>
+        <div id="lightcycles" class="inner" style="left:379px; top:77px; height:43px; width:116px;"><p> {"id":"lightcycles","matchText":"Inspired by the real-life 1976 game","resultText":"The game was called Blockade","topLevel":"true"} </p></div>
+        <div id="recognizer" class="inner" style="left:421px; top:435px; height:133px; width:151px;"><p> {"id":"recognizer","matchText":"Greetings, programs!","resultText":"The first one was better than the sequel, right?","topLevel":"true"} </p></div>
+        <div id="clock" class="inner" style="left:542px; top:255px; height:45px; width:46px;"><p> {"id":"clock","matchText":"Anyone know what time it is? Anyone really care?","resultText":"Okay, that's not from a movie.","topLevel":"true"} </p></div>
+        <div id="television" class="inner" style="left:579px; top:62px; height:56px; width:66px;"><p> {"id":"television","matchText":"We control the horizontal. We control the vertical.","resultText":"Even if it was always in black &amp; white","topLevel":"true"} </p></div>
+        <div id="coffeemaker" class="inner" style="left:635px; top:615px; height:82px; width:46px;"><p> {"id":"coffeemaker","matchText":"What, they don't make coffee in space?","resultText":"This was Mister Spock's Mister Coffee","topLevel":"true"} </p></div>
+        <div id="lavalamp" class="inner" style="left:1165px; top:335px; height:112px; width:40px;"><p> {"id":"lavalamp","matchText":"Do they really make these with real lava?","resultText":"They wouldn't have called them lavalamps otherwise!","topLevel":"true"} </p></div>
+        <div id="interocitor" class="inner" style="left:878px; top:365px; height:178px; width:169px;"><p> {"id":"interocitor","matchText":"You could talk to Metaluna with one of these babies","resultText":"Interocitors: TVs for triangle people","topLevel":"true"} </p></div>
+        <div id="leglamp" class="inner" style="left:470px; top:300px; height:120px; width:44px;"><p> {"id":"leglamp","matchText":"It was a major award","resultText":"Secret: Nehi never had these-it was all made up by Jean Shepherd","topLevel":"true"} </p></div>
+        <div id="hipgun" class="inner" style="left:315px; top:180px; height:56px; width:32px;"><p> {"id":"hipgun","matchText":"Is a hip gun only for hippies?","resultText":"The world will never know.","topLevel":"true"} </p></div>
+        <div id="blaster" class="inner" style="left:309px; top:251px; height:50px; width:49px;"><p> {"id":"blaster","matchText":"Han really did shoot first!","resultText":"No amount of editing can change that...","topLevel":"true"} </p></div>
+        <div id="disintoray" class="inner" style="left:801px; top:262px; height:33px; width:56px;"><p> {"id":"disintoray","matchText":"We used to call this a disinto-raygun","resultText":"Er, at least in scifi comics from the 50s!","topLevel":"true"} </p></div>
+        <div id="raypistol" class="inner" style="left:894px; top:286px; height:69px; width:67px;"><p> {"id":"raypistol","matchText":"An ordinary ray pistol, the kind you can get at any store","resultText":"Just $9,456,169.95!","topLevel":"true"} </p></div>
+        <div id="aliensrifle" class="inner" style="left:699px; top:245px; height:45px; width:71px;"><p> {"id":"aliensrifle","matchText":"Just what you need to fight those xenomorphs","resultText":"Aliens rifle text","topLevel":"true"} </p></div>
+        <div id="lightspear" class="inner" style="left:498px; top:188px; height:40px; width:269px;"><p> {"id":"lightspear","matchText":"Tarzan's lightsabre","resultText":"Would be on a spear, of course.","topLevel":"true"} </p></div>
+        <div id="trekpilotphaser" class="inner" style="left:888px; top:232px; height:50px; width:65px;"><p> {"id":"trekpilotphaser","matchText":"Everyone forgets they had these phasers in the first pilot","resultText":"They're from the first Star Trek pilot","topLevel":"true"} </p></div>
+        <div id="disruptor" class="inner" style="left:976px; top:115px; height:81px; width:62px;"><p> {"id":"disruptor","matchText":"Klingons don't leave home without one","resultText":"They buy them at Disruptors-R-Us","topLevel":"true"} </p></div>
+        <div id="lightsaber" class="inner" style="left:99px; top:564px; height:53px; width:145px;"><p> {"id":"lightsaber","matchText":"Really a 1940s Graflex flash tube","resultText":"And these used to sell used for $20.","topLevel":"true"} </p></div>
+        <div id="methane" class="inner" style="left:994px; top:199px; height:153px; width:42px;"><p> {"id":"methane","matchText":"Pressurized cow farts","resultText":"Well, that's what methane is!","topLevel":"true"} </p></div>
+        <div id="shortbox" class="inner" style="left:4px; top:625px; height:76px; width:213px;"><p> {"id":"shortbox","matchText":"Bigger than a shoebox, smaller than the house in Dune","resultText":"Short box result text","topLevel":"true"} </p></div>
+        <div id="roundcan" class="inner" style="left:1123px; top:540px; height:154px; width:118px;"><p> {"id":"roundcan","matchText":"Just your basic canister","resultText":"Hopefully you picked the round one!","topLevel":"true"} </p></div>
+        <div id="retrohelmet" class="inner" style="left:532px; top:1px; height:44px; width:94px;"><p> {"id":"retrohelmet","matchText":"What a spaceman wore in 1952","resultText":"A fishbowl over his head!","topLevel":"true"} </p></div>
+        <div id="cylon" class="inner" style="left:412px; top:9px; height:45px; width:50px;"><p> {"id":"cylon","matchText":"By Your Command","resultText":"80s Cylons were soooo cool!","topLevel":"true"} </p></div>
+        <div id="trekchess" class="inner" style="left:481px; top:2px; height:45px; width:50px;"><p> {"id":"trekchess","matchText":"Checkmate in seven moves","resultText":"3D chess was actually invented in 1907, not on Star Trek.","topLevel":"true"} </p></div>
+        <div id="stormtrooper" class="inner" style="left:81px; top:31px; height:49px; width:46px;"><p> {"id":"stormtrooper","matchText":"This isn't the Stormtrooper you're looking for","resultText":"What a giveaway clue!","topLevel":"true"} </p></div>
+        <div id="gasmask" class="inner" style="left:483px; top:231px; height:39px; width:46px;"><p> {"id":"gasmask","matchText":"Are you my mummy?","resultText":"Poor kid really did need a Doctor!","topLevel":"true"} </p></div>
+        <div id="brain" class="inner" style="left:2px; top:8px; height:49px; width:46px;"><p> {"id":"brain","matchText":"Donovan had one of these","resultText":"Brains, that is.","topLevel":"true"} </p></div>
+        <div id="jacobsladder" class="inner" style="left:94px; top:382px; height:144px; width:35px;"><p> {"id":"jacobsladder","matchText":"Jacob climbed one of these","resultText":"Must have been a shocking experience!","topLevel":"true"} </p></div>
+        <div id="virusvial" class="inner" style="left:36px; top:501px; height:124px; width:43px;"><p> {"id":"virusvial","matchText":"Resident icky cannister","resultText":"Viruses are made of these.","topLevel":"true"} </p></div>
+        <div id="stargate" class="inner" style="left:661px; top:331px; height:208px; width:212px;"><p> {"id":"stargate","matchText":"For the best in instantaneous travel across the cosmos","resultText":"Well, there goes the neighborhood!","topLevel":"true"} </p></div>
+        <div id="stargateA" class="inner" style="left:730px; top:538px; height:30px; width:120px;"><p> {"id":"stargate","matchText":"","resultText":"","topLevel":"false"} </p></div>
+
+        <img id="bot" alt="" class="image" src="#">
+
+        <!-- Create slide-out panel -->
+        <div id="panel-slide"></div>
+        <img id="panel-openclose" alt="" src="./assets/depot/button-open.png">
+
+    </div>
+
+    <div id="textContent">&nbsp;</div>
+    <div id="ticker" class="bottom-text">Matches = 5 points. Misses = -5 points! So pick carefully.</div>
+    <div id="score" class="bottom-text">Score: 0</div>
+    <div id="time" class="bottom-text">Time: 0</div>
+
+    <script>
+        var botName = "Max";
+        var botGender = "him";
+    
+        // Set variables and objects for game play
+        var totalItems = 16;
+        var text = "        It's " + botName + "'s first day on the job. Help " + botGender + " match the orders with the items in the spaceport depot.";
+        var Counter = 0;
+        var match;
+        var timerClock;
+        var score = {
+          total: 0,
+          matches: 0,
+          misses: 0,
+          startTime: 0,
+          endTime: 0,
+          elapsed: 0,
+          gameOver: false
+        };
+    
+        // Get common elements for use later in script
+        var textBox = document.getElementById("textContent");
+        var panel = document.getElementById("panel-slide");
+    
+        var bot = document.getElementById("bot");
+        bot.src = "./assets/depot/" + botName.toLowerCase() + ".png";
+        bot.style.zIndex="1";    // Be sure robot is on top of all other elements
+        bot.addEventListener("click", function(){ gameStart(this)} );
+        bot.addEventListener( 'webkitTransitionEnd', function() {gameStarted();}, false );
+        bot.addEventListener( 'transitionend', function() {gameStarted();}, false );
+        bot.style.visibility = "visible";
+    
+        document.getElementById("textContent").addEventListener("click", function(){ gameStart(this)} );
+        document.getElementById("panel-openclose").addEventListener("click", slide);
+
+        function slide() {
+            var panelButton = document.getElementById("panel-openclose");
+            var computedStyle = window.getComputedStyle(panel, null);
+            if (parseInt(computedStyle.left) == 0) {
+              document.getElementById("ticker").innerHTML = '';
+              panel.style.left = "-390px";
+              panel.style.transition = "left 0.1s ease-in 0s";
+              panelButton.src = "./assets/depot/button-close.png";
+              panelButton.style.left = "-375px";
+              panelButton.style.top = "690px";
+            } else {
+              panel.style.left = "0px";
+              panel.style.transition = "left 0.1s ease-in 0s";
+              panelButton.src = "./assets/depot/button-open.png";
+              panelButton.style.left = "0px";
+              panelButton.style.top = "30px";
+            }
+        }
+        function selectItem(item) {
+          switch (true) {
+            case (item.className.indexOf("used") > -1):
+              break;
+            default:
+              match = item;
+              if (typeof(match) != undefined) {
+                var temp = match.id.substring(1);
+                var p = document.getElementById(temp).getElementsByTagName("p")[0];
+                var obj = JSON.parse(p.innerHTML);
+                document.getElementById("ticker").innerHTML = "Look for: <i>" + obj.matchText + "</i>";
+              }
+              slide();
+              break;
+          }
+        }
+
+        // Begin the opening screen after page and all sounds loaded
+        function playSound(event) {
+          console.log("Preloaded:", event.id, event.src);
+          if (event.id == "click") {
+            textBox.style.visibility = "visible";
+            animationLoop();
+          }
+        }
+
+        // Animate writing of text at opening screen
+        function animationLoop() {
+          if (Counter <= text.length) {
+            textBox.innerHTML = text.substring(Counter, 0);
+            if (text.substring(Counter, Counter+1) != " ") {
+              createjs.Sound.play("click").volume = 0.4;
+            }
+            setTimeout(animationLoop, 100);
+          } else {
+            createjs.Sound.play("ding");
+            textBox.innerHTML += "<br /><br />Click on " + botName + " to begin.";
+          }
+          Counter += 1;
+        }
+
+        // Start game
+        function gameStart() {
+          Counter = text.length;
+          var bot = document.getElementById("bot");
+          bot.style.opacity = "0.0";
+          bot.style.transition = "opacity .75s ease-in-out";
+          textBox.style.opacity = "0.0";
+          textBox.style.transition = "opacity .75s ease-in-out";
+          document.getElementById("ticker").innerHTML = "To choose an item to match, click the arrow in the upper-right."
+        }
+
+        // Game has started; hide robot and other startup elements; show panel
+        function gameStarted() {
+          console.log ("Game has started");
+          document.getElementById("bot").style.visibility = "hidden";
+          document.getElementById("textContent").style.visibility = "hidden";
+          document.getElementById("panel-openclose").style.visibility = "visible";
+          timerClock = setInterval(timerClock, 1000);
+          score.startTime = new Date();
+        }
+
+        // Show elapsed time (tgriggered by timer)
+        function timerClock() {
+            var d = new Date();
+            var elapsed = Math.floor((d - score.startTime + 20) / 1000);
+            document.getElementById("time").innerHTML = "Time: " + elapsed + " secs.";
+        }
+
+        // Event handler when a room object is clicked
+        function divclicked(div) {
+          console.log (div.id);
+          var p = div.getElementsByTagName("p")[0];
+          if (typeof(match) == 'undefined') {
+            document.getElementById("ticker").innerHTML = "First choose an item by opening the panel.";
+            return;
+          }
+          // Compare clicked-on object with with its riddle text; play corresponding sound
+          //    "boing" is match; "splat" if no match
+          if (typeof p != 'undefined') {            // if not undefined (empty p-tag)
+            var obj = JSON.parse(p.innerHTML);
+            if (match.id.lastIndexOf("_" + obj.id, 0) === 0) {
+              createjs.Sound.play("boing");
+              document.getElementById("ticker").innerHTML = "That's a match!";
+              match.className = "panel-button used";
+              updateScore(5);
+            } else {
+              createjs.Sound.play("splat");
+              document.getElementById("ticker").innerHTML = "Sorry, no match. You lost 5 points.";
+              updateScore(-5);
+              console.log (score.misses);
+            }
+          } else {  // Play typewriter sound
+            createjs.Sound.play("click");
+          }
+          match = undefined;
+        }
+
+        // Update score with matches and misses
+        function updateScore(scoreVal) {
+          score.total += scoreVal;
+          document.getElementById("score").innerHTML = "Score: " + score.total;
+          if (scoreVal == 5) {
+            score.matches += 1;
+          } else {
+            score.misses += 1;
+          }
+          gameOver();
+        }
+
+        // Check when game is over. Game is over when score.matches equals totalItems (e.g. 16)
+        function gameOver() {
+          if (score.matches == totalItems) {
+            score.gameOver = true;
+            var d = new Date();
+            var elapsed = Math.floor((d - score.startTime + 20) / 1000);
+            window.clearInterval(timerClock);
+            document.getElementById("ticker").innerHTML = "Game Over! You picked "
+              + score.matches
+              + " correct item(s), and "
+              + score.misses
+              + " incorrect item(s), in "
+              + elapsed + " seconds.";
+          }
+        }
+
+        function init() {
+          randomizeRiddles();  // Randomize riddles in sliding panel;
+
+          // Load and register sounds
+          if (!createjs.Sound.initializeDefaultPlugins()) {
+            console.log ("Error loading SoundJS");
+          } else {
+          	createjs.Sound.addEventListener("fileload", playSound); // add an event listener for when load is completed
+            createjs.Sound.alternateExtensions = ["mp3"];
+            createjs.Sound.registerSounds(
+              [ {id: "click",  src: "typewriter.ogg"},
+                {id: "ding",   src: "typewriter-ding.ogg"},
+                {id: "boing",  src: "boing.ogg"},
+                {id: "splat",  src: "splat.ogg"} ],
+                "./assets/depot/");
+          }
+        }
+
+        function randomizeRiddles() {
+          // Get andom collection of 16 image elements for use in riddles
+          // Get the associated riddle text (contained in <p> element, and)
+          //   parse as JSON object data
+          arr = [];
+          var buttons = document.getElementsByClassName('inner');
+          for (var i = 0; i < buttons.length; i++) {
+            var p = buttons[i].getElementsByTagName("p")[0];
+            if (p.innerHTML != '') {
+             var obj = JSON.parse(p.innerHTML);
+             obj.masterId = buttons[i].id;
+             if (obj.topLevel === "true")   // Only add topLevel=true elements to object
+               arr.push(obj);
+            }
+          }
+          shuffle(arr);                     // Shuffle elements to randomize their order
+
+          // Insert additional HTML to the panel-slide DIV container
+          //   This HTML is a collection of riddle buttons selected at random
+          var innerHTML = "";
+          var position = 1;
+          for (var i = 0; i < totalItems; i++) {
+           if (arr[i] != '') {
+             var obj = arr[i];
+             var tstring = "<div id='_" + obj.masterId + "' class='panel-button up' style='margin-top:"
+                + position + "em;' /> " + obj.matchText + "</div>";
+                innerHTML += tstring;
+                position += 2.15;
+            }
+          }
+          document.getElementById("panel-slide").innerHTML = innerHTML;
+
+          // Add event listeners for each riddle button in the sliding panel
+          var riddleButtons =  document.getElementsByClassName('panel-button');
+          for (var i = 0; i < riddleButtons.length; i++) {
+              riddleButtons[i].addEventListener( 'click', function(){ selectItem(this); }, false );
+          }
+
+          // Add event listeners for each object in the depot
+          var junk = document.getElementsByClassName('inner');
+          for (var i = 0; i < junk.length; i++) {
+              junk[i].addEventListener( 'click', function() { divclicked(this); }, false );
+          }
+
+        }
+
+        function shuffle(array) {
+         // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+         var currentIndex = array.length, temporaryValue, randomIndex;
+         while (0 !== currentIndex) {
+           randomIndex = Math.floor(Math.random() * currentIndex);
+           currentIndex -= 1;
+           temporaryValue = array[currentIndex];
+           array[currentIndex] = array[randomIndex];
+           array[randomIndex] = temporaryValue;
+         }
+         return array;
+        }
+    </script>
+
+</body>
+
+</html>
