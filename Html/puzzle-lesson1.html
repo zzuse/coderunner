@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>15 of 16 Puzzle: Lesson 1 - Basic</title>
+<meta name="description" content="15 of 16 Puzzle: Lesson 1. Version 1.0">
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="Creative Commons Share Alike 3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Style sheet for definining the basic look of the page -->
+<style>
+#mainContent {
+    background-color: #1072cc;
+    border-radius: 4px;
+    padding: 5px;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+}
+.background {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+.image {
+    position: absolute;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+.button, .no-button {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #00bfff;
+    border-style: outset;
+    color:#fff;
+    background-color:#8533ff;
+
+    font-family:'Helvetica Neue',sans-serif;
+    font-size:25px;
+    line-height:35px;
+    border-radius:4px;
+}
+.no-button {
+  visibility:hidden;
+}
+</style>
+<script src="./prefixfree.min.js"></script>
+
+</head>
+
+<body>
+    <div id="mainContent">
+        <input id="tile1" type="button" class="button" style="margin: 0 0 0 0;" value="1" onclick="moveTile(this);"/>
+        <input id="tile2" type="button" class="button" style="margin: 0 0 0 100px;" value="2" onclick="moveTile(this);"/>
+        <input id="tile3" type="button" class="button" style="margin: 0 0 0 200px;" value="3" onclick="moveTile(this);"/>
+        <input id="tile4" type="button" class="button" style="margin: 0 0 0 300px;" value="4" onclick="moveTile(this);"/>
+
+        <!-- row 2 -->
+        <input id="tile5" type="button" class="button" style="margin: 100px 0 0 0;" value="5" onclick="moveTile(this);"/>
+        <input id="tile6" type="button" class="button" style="margin: 100px 0 0 100px;" value="6" onclick="moveTile(this);"/>
+        <input id="tile7" type="button" class="button" style="margin: 100px 0 0 200px;" value="7" onclick="moveTile(this);"/>
+        <input id="tile8" type="button" class="button" style="margin: 100px 0 0 300px;" value="8" onclick="moveTile(this);"/>
+
+        <!-- row 3 -->
+        <input id="tile9" type="button" class="button" style="margin: 200px 0 0 0;" value="9" onclick="moveTile(this);"/>
+        <input id="tile10" type="button" class="button" style="margin: 200px 0 0 100px;" value="10" onclick="moveTile(this);"/>
+        <input id="tile11" type="button" class="button" style="margin: 200px 0 0 200px;" value="11" onclick="moveTile(this);"/>
+        <input id="tile12" type="button" class="button" style="margin: 200px 0 0 300px;" value="12" onclick="moveTile(this);"/>
+
+        <!-- row 4 -->
+        <input id="tile13" type="button" class="button" style="margin: 300px 0 0 0;" value="13" onclick="moveTile(this);"/>
+        <input id="tile14" type="button" class="button" style="margin: 300px 0 0 100px;" value="14" onclick="moveTile(this);"/>
+        <input id="tile15" type="button" class="button" style="margin: 300px 0 0 200px;" value="15" onclick="moveTile(this);"/>
+        <input id="tile16" type="button" class="no-button" style="margin: 300px 0 0 300px;" value="16" onclick="moveTile(this);"/>
+    </div>
+
+    <script type="text/javascript">
+
+        var playboard = [
+            ['', '', '', ''],
+            ['', '', '', ''],
+            ['', '', '', ''],
+            ['', '', '', '']
+        ]
+
+        var arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+        shuffle(arr);
+        var tileCount = 0;
+        for (var i = 0, length = playboard.length; i < length; i++) {
+            for (var j = 0, lengthElem = playboard[i].length; j < lengthElem; j++) {
+                var tile = document.getElementById("tile" + arr[tileCount]);
+                tile.style.marginLeft = j + "00px";
+                tile.style.marginTop = i + "00px";
+                playboard[j][i] = "tile" + arr[tileCount];
+                tileCount++;
+            }
+        }
+
+        function moveTile(tile) {
+            var rowcol = getRowColumn(tile);
+            canMove(tile, rowcol["col"], rowcol["row"]);
+        }
+
+        function canMove(tile, col, row) {
+            var button = document.getElementById(tile)
+            if (row > 0 && playboard[col][row - 1] == 'tile16')
+                swapTiles(col, row, col, row - 1);
+            if (row < 3 && playboard[col][row + 1] == 'tile16')
+                swapTiles(col, row, col, [row+1]);
+            if (col > 0 && playboard[col - 1][row] == 'tile16')
+                swapTiles(col, row, [col - 1], [row]);
+            if (col < 3 && playboard[col + 1][row] == 'tile16')
+                swapTiles(col, row, [col + 1], [row]);
+        }
+
+        function swapTiles(sourceCol, sourceRow, targetCol, targetRow) {
+            var tileSource = document.getElementById(playboard[sourceCol][sourceRow]);
+            var tileTarget = document.getElementById(playboard[targetCol][targetRow]);
+            var tempTargetTop = tileTarget.style.marginTop;
+            var tempTargetLeft = tileTarget.style.marginLeft;
+
+            playboard[targetCol][targetRow] = tileSource.id;
+            playboard[sourceCol][sourceRow] = tileTarget.id;
+
+            tileTarget.style.marginTop = tileSource.style.marginTop;
+            tileTarget.style.marginLeft = tileSource.style.marginLeft;
+            tileSource.style.marginTop = tempTargetTop;
+            tileSource.style.marginLeft = tempTargetLeft;
+        }
+
+        // Get the row and column of the specified tile (returns a two-element array, row/column)
+        function getRowColumn(tile){
+          var rc = new Array();
+          switch(tile.style.marginTop) {
+            case "0px":
+              rc['row'] = 0;
+              break;
+            case "100px":
+              rc['row'] = 1;
+              break;
+            case "200px":
+              rc['row'] = 2;
+              break;
+            case "300px":
+              rc['row'] = 3;
+              break;
+          }
+          switch(tile.style.marginLeft) {
+            case "0px":
+              rc['col'] = 0;
+              break;
+            case "100px":
+              rc['col'] = 1;
+              break;
+            case "200px":
+              rc['col'] = 2;
+              break;
+            case "300px":
+              rc['col'] = 3;
+              break;
+          }
+          return rc;
+        }
+
+        // Low-level array shuffle routine
+        function shuffle(array) {
+          // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+          var currentIndex = array.length, temporaryValue, randomIndex;
+          while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+          }
+          return array;
+        }
+    </script>
+</body>
+</html>
