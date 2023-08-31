@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>15 of 16 Puzzle: Lesson 2 - Using Images</title>
+<meta name="description" content="15 of 16 Puzzle: Lesson 2.  Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="Creative Commons Share Alike 3.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Style sheet for definining the basic look of the page -->
+<style>
+#mainContent {
+    background-color: #1072cc;
+    border-radius: 4px;
+    padding: 5px;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+}
+img {
+  position: absolute;
+  border: 1px solid #00bfff;
+  object-fit: none;
+  object-position: 0 0;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 99px;
+  height: 99px;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+
+<!-- Start of visible page -->
+    <body>
+         <div id="mainContent">
+             <!-- Images for each tile. Note the src image is not defined; it is added for each image in code later -->
+             <!-- row 1 -->
+             <img id="tile1" src="#" style="margin: 0 0 0 0;" alt="1" onclick="moveTile(this);"/>
+             <img id="tile2" src="#" style="margin: 0 0 0 100px;" alt="2" onclick="moveTile(this);"/>
+             <img id="tile3" src="#" style="margin: 0 0 0 200px;" alt="3" onclick="moveTile(this);"/>
+             <img id="tile4" src="#" style="margin: 0 0 0 300px;" alt="4" onclick="moveTile(this);"/>
+             <!-- row 2 -->
+             <img id="tile5" src="#" style="margin: 100px 0 0 0;" alt="5" onclick="moveTile(this);"/>
+             <img id="tile6" src="#" style="margin: 100px 0 0 100px;" alt="6" onclick="moveTile(this);"/>
+             <img id="tile7" src="#" style="margin: 100px 0 0 200px;" alt="7" onclick="moveTile(this);"/>
+             <img id="tile8" src="#" style="margin: 100px 0 0 300px;" alt="8" onclick="moveTile(this);"/>
+             <!-- row 3 -->
+             <img id="tile9" src="#" style="margin: 200px 0 0 0;" alt="9" onclick="moveTile(this);"/>
+             <img id="tile10" src="#" style="margin: 200px 0 0 100px;" alt="10" onclick="moveTile(this);"/>
+             <img id="tile11" src="#" style="margin: 200px 0 0 200px;" alt="11" onclick="moveTile(this);"/>
+             <img id="tile12" src="#" style="margin: 200px 0 0 300px;" alt="12" onclick="moveTile(this);"/>
+             <!-- row 4 -->
+             <img id="tile13" src="#" style="margin: 300px 0 0 0;" alt="13" onclick="moveTile(this);"/>
+             <img id="tile14" src="#" style="margin: 300px 0 0 100px;" alt="14" onclick="moveTile(this);"/>
+             <img id="tile15" src="#" style="margin: 300px 0 0 200px;" alt="15" onclick="moveTile(this);"/>
+             <img id="tile16" src="#" style="margin: 300px 0 0 300px; visibility:hidden;" alt="16"/>      <!-- invisible empty tile -->
+         </div>
+
+         <script type="text/javascript">
+             var playboard = [
+                  ['', '', '', ''],
+                  ['', '', '', ''],
+                  ['', '', '', ''],
+                  ['', '', '', '']
+                ]
+             var backgrounds = ["bg.jpg", "depot.jpg", "moon.jpg", "ogre.jpg"];
+             var bg = Math.floor((Math.random() * 4));
+             var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+             shuffle(arr);
+
+             var images = document.getElementsByTagName("img");
+             var tileCount = 0
+             for (var i = 0, length = playboard.length; i < length; i++) {
+               for (var j = 0, lengthElem = playboard[i].length; j < lengthElem; j++) {
+                 var tile = document.getElementById("tile" + arr[tileCount]);
+                 tile.style.marginLeft = j + "00px";
+                 tile.style.marginTop = i + "00px";
+                 images[tileCount].src = "./assets/" + backgrounds[bg];
+                 images[tileCount].style.objectPosition = (-j + "00px ") + (-i + "00px");
+                 playboard[j][i] = "tile" + arr[tileCount];
+                 tileCount++;
+               }
+             }
+
+             function moveTile(tile){
+                 var rowcol = getRowColumn(tile);
+                 canMove(tile, rowcol["col"], rowcol["row"]);
+             }
+
+             // Verifies if a tile can be moved up, down, right, or left (can only be one of these, or none of these)
+             function canMove(tile, col, row){
+               var button = document.getElementById(tile)
+               if (row > 0 && playboard[col][row - 1] == 'tile16')
+                 swapTiles(col, row, col, row - 1);                  // move up
+               if (row < 3 && playboard[col][row + 1] == 'tile16')
+                   swapTiles(col, row, col, [row + 1]);              // move down
+               if (col > 0 && playboard[col -1][row] == 'tile16')
+                 swapTiles(col, row, [col - 1], [row]);              // move left
+               if (col < 3 && playboard[col + 1][row] == 'tile16')
+                 swapTiles(col, row, [col + 1], [row]);              // move right
+             }
+
+             // Swap clicked-on tile with the invisible empty tile
+             function swapTiles(sourceCol, sourceRow, targetCol, targetRow) {
+               var tileSource = document.getElementById(playboard[sourceCol][sourceRow]);
+               var tileTarget = document.getElementById(playboard[targetCol][targetRow]);
+               var tempTargetTop = tileTarget.style.marginTop;
+               var tempTargetLeft = tileTarget.style.marginLeft;
+
+               playboard[targetCol][targetRow] = tileSource.id;
+               playboard[sourceCol][sourceRow] = tileTarget.id;
+
+               tileTarget.style.marginTop = tileSource.style.marginTop;
+               tileTarget.style.marginLeft = tileSource.style.marginLeft;
+               tileSource.style.marginTop = tempTargetTop;
+               tileSource.style.marginLeft = tempTargetLeft;
+             }
+
+             // Get the row and column of the specified tile (returns a two-element array, row/column)
+             function getRowColumn(tile){
+               var rc = new Array();
+               switch(tile.style.marginTop) {
+                 case "0px":
+                   rc['row'] = 0;
+                   break;
+                 case "100px":
+                   rc['row'] = 1;
+                   break;
+                 case "200px":
+                   rc['row'] = 2;
+                   break;
+                 case "300px":
+                   rc['row'] = 3;
+                   break;
+               }
+               switch(tile.style.marginLeft) {
+                 case "0px":
+                   rc['col'] = 0;
+                   break;
+                 case "100px":
+                   rc['col'] = 1;
+                   break;
+                 case "200px":
+                   rc['col'] = 2;
+                   break;
+                 case "300px":
+                   rc['col'] = 3;
+                   break;
+               }
+               return rc;
+             }
+
+             // Low-level array shuffle routine
+             function shuffle(array) {
+               // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+               var currentIndex = array.length, temporaryValue, randomIndex;
+               while (0 !== currentIndex) {
+                 randomIndex = Math.floor(Math.random() * currentIndex);
+                 currentIndex -= 1;
+                 temporaryValue = array[currentIndex];
+                 array[currentIndex] = array[randomIndex];
+                 array[randomIndex] = temporaryValue;
+               }
+               return array;
+             }
+         </script>
+    </body>
+</html>
