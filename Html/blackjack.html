@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Ghoul's Blackjack</title>
+<meta name="description" content="Ghoul's Blackjack.  Version 1.0">
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="Creative Commons Share Alike 3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+
+body {
+    background-color: #999;
+    background-image: url("./assets/blackjack/bg1.png");
+    background-repeat: repeat;
+}
+
+#mainContent {
+    background-image: url("./assets/blackjack/backdrop.png");
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    padding: 5px;
+    width: 1000px;
+    height: 700px;
+    position:absolute;
+    overflow: hidden;
+}
+
+.card {
+    position:absolute;
+    border: 3px solid #444;
+    border-radius: 10px;
+    object-fit: none;
+    object-position: 0 0;
+    width: 155px;
+    height: 215px;
+    margin-left: 10px;
+    background-color: gray;
+    visibility: hidden;
+}
+
+@font-face {
+    font-family: 'Exquisite Corpse';
+    src: url('./assets/blackjack/ExquisiteCorpse.ttf');
+}
+
+.score {
+    position: absolute;
+    width: 120px;
+    height: 45px;
+}
+p, h1 {
+    font-family: 'Exquisite Corpse', non-serif;
+    color: #ffcccc;
+    margin: 0;
+    padding: 0;
+    font-size: 1.75em;
+    letter-spacing: 0.1em;
+    text-shadow: 2px 2px 2px #000;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 45px;
+    font-weight:normal;
+}
+.button, .button-small {
+    border: none;
+    position: absolute;
+    width: 230px;
+    height:55px;
+    background-color: transparent;
+    background-repeat:no-repeat;
+    outline: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+.button-small {
+  width: 150px;
+  height:55px;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+
+<body>
+    <div id="mainContent">
+        <div class="score" style="margin: 380px 0 0 313px;">
+            <h1 id="dealerScore">-</h1>
+        </div>
+        <div class="score" style="margin: 380px 0 0 478px;">
+          <h1 id="youScore">-</h1>
+        </div>
+
+        <div class="score" style="margin: 235px 0 0 260px; width:400px;">
+          <h1 id="dealStatus">&nbsp;</h1>
+        </div>
+
+        <input type="button" class="button" style="margin: 375px 0 0 25px;" value="&nbsp;" onclick="newGame();"/>
+        <input type="button" class="button-small" style="margin: 375px 0 0 660px;" value="&nbsp;" onclick="hitMe();"/>
+        <input type="button" class="button-small" style="margin: 375px 0 0 830px;" value="&nbsp;" onclick="stand();"/>
+    </div>
+
+    <script>
+        var gameOver = false;
+        var dealer = new Object();
+        var you = new Object();
+        setStartValues();
+    
+        var arr = [];
+        var baseOffset = 10
+        var currentCard = 1;
+        var innerHTML = "";
+        for (var i = 0, length = 14; i < length; i++) {
+          tstring = "<img id='card" + (i + 1) + "'"
+          + " src='./assets/blackjack/cards.png' class='card' />";
+          innerHTML += tstring
+        }
+        document.getElementById("mainContent").innerHTML += innerHTML;
+
+        function newGame() {
+          gameOver = false;
+          currentCard = 1;
+          setStartValues();
+          shuffleCards();
+
+          document.getElementById("dealerScore").innerHTML = "-";
+          document.getElementById("youScore").innerHTML = "0";
+          document.getElementById("dealStatus").innerHTML = "Hit Me or Hold";
+          var cards = document.getElementsByClassName("card");
+          for (var i = 0, length = cards.length; i < length; i++) {
+            cards[i].style.visibility = "hidden";
+            cards[i].style.marginTop = "0px";
+            cards[i].style.marginLeft = "0px";
+            cards[i].style.objectPosition = "0 0";
+          }
+          getCard(1);
+          getCard(0);
+          getCard(1);
+          getCard(0);
+        }
+
+        function hitMe() {
+            getCard(1);
+            if (you.totalScore > 21) {
+              document.getElementById("dealStatus").innerHTML = "you bust";
+              endGame();
+              return;
+            }
+            getCard(0);
+            if (dealer.totalScore > 21) {
+              document.getElementById("dealStatus").innerHTML = "dealer busts";
+              showHole();
+              endGame();
+              return;
+            }
+        }
+
+        function getTotals() {
+          switch (true) {
+            case (dealer.totalScore > 21):
+              document.getElementById("dealStatus").innerHTML = "dealer busts";
+              dealer.bust = true;
+              gameOver = true;
+              break;
+            case (you.totalScore > 21):
+              document.getElementById("dealStatus").innerHTML = "you bust";
+              you.bust = true;
+              gameOver = true;
+              break;
+            case ((dealer.totalScore < 22) && (dealer.totalScore > you.totalScore)):
+              document.getElementById("dealStatus").innerHTML = "dealer wins";
+              break;
+            case ((you.totalScore < 22) && (you.totalScore > dealer.totalScore)):
+              document.getElementById("dealStatus").innerHTML = "you win";
+              break;
+            case (dealer.totalScore == you.totalScore):
+              document.getElementById("dealStatus").innerHTML = "tie game";
+              break;
+            case (currentCard > 12):
+              document.getElementById("dealStatus").innerHTML = "draw";
+              break;
+            default:
+              document.getElementById("dealStatus").innerHTML = "X";    // should not show
+          }
+        }
+
+        function showHole () {
+          var image = document.getElementById("card2");
+          image.src = "./assets/blackjack/cards.png"
+          displayCard(0, image, dealer.offset, dealer.suit, true);
+        }
+
+        function stand() {
+          endGame();
+          getTotals();
+        }
+
+        function endGame() {
+          while (dealer.totalScore < 17 && !gameOver) {
+            getCard(0);
+          }
+          gameOver = true;
+          document.getElementById("dealerScore").innerHTML = dealer.totalScore;
+          document.getElementById("youScore").innerHTML = you.totalScore;
+          showHole();
+        }
+
+        function getCard(player) {
+          if (gameOver) return;
+          if (player == 0) {
+            if (dealer.hold) {
+              return;
+            }
+            var topMargin = 10;
+            var leftMargin = dealer.margin;
+          } else {
+            if (you.hold || you.bust) {
+              return;
+            }
+            var topMargin = 470;
+            var leftMargin = you.margin;
+          }
+
+          var image = document.getElementById("card" + currentCard);
+          image.style.marginTop = topMargin + "px";
+          image.style.marginLeft = leftMargin + "px";
+
+          var cardVal = (arr[currentCard] % 13);
+          var offset = baseOffset + (cardVal * 168);
+          var suit = arr[currentCard] % 4;
+
+          if (image.id == "card2") {
+            dealer.cardVal = cardVal;
+            dealer.offset = offset;
+            dealer.suit = suit;
+            image.src = "./assets/blackjack/cardback.png";
+          }
+
+          displayCard(player, image, offset, suit, false);
+          currentCard++;
+          image.style.visibility = "visible"
+
+          score(player, cardVal);
+          addAces(player);
+          if (player == 0 && dealer.totalScore > 16 && dealer.totalScore < 22) {
+            dealer.hold = true;
+            document.getElementById("dealStatus").innerHTML = "dealer holds";
+          }
+          if (player == 0 && you.totalScore > 21) {
+            document.getElementById("dealStatus").innerHTML = "you bust";
+            you.bust = true;
+            gameOver = true;
+          }
+          document.getElementById("youScore").innerHTML = you.totalScore;
+        }
+
+        function addAces(player) {
+          var cardsScore = 0;
+          var numAces = 0;
+          if (player == 0) {
+            var totalScore = dealer.score;
+            numAces = dealer.aces;
+          } else {
+            var totalScore = you.score;
+            numAces = you.aces;
+          }
+          if (numAces > 0) {
+            for (var i = 0, length = numAces; i < length; i++) {
+              if ((totalScore + 11) < 22)
+                totalScore = totalScore + 11;
+              else
+                totalScore = totalScore + 1;
+            }
+          }
+          if (player == 0) {
+            dealer.totalScore = totalScore;
+          } else {
+            you.totalScore = totalScore;
+          }
+        }
+
+        function displayCard(player, image, offset, suit, hole) {
+          switch(suit) {
+            case 0:
+              vertPos = -4;
+              break;
+            case 1:
+              vertPos = -245;
+              break;
+            case 2:
+              vertPos = -490;
+              break;
+            case 3:
+              vertPos = -730;
+              break;
+          }
+          var position = (-offset + "px") + " " + (vertPos + "px");   // 1st = h, 2nd = v
+          if (!hole && image.id != "card2")
+            image.style.objectPosition = position;
+          if (hole)
+            image.style.objectPosition = position;
+
+          if (player == 0)
+            dealer.margin += 165;
+          else
+            you.margin += 165;
+        }
+
+        function score(player, cardVal) {
+          var card = (cardVal % 13) + 1;
+          var ace = 0;
+          switch(true) {
+            case (card > 10):
+              var cardValue = 10;
+              break;
+            case (card == 1):
+              var cardValue = 0;
+              ace = 1;
+              break;
+            default:
+              var cardValue = card;
+              break
+          }
+          if (player == 0) {
+            dealer.score = dealer.score + cardValue;
+            dealer.aces = dealer.aces + ace;
+          } else {
+            you.score = you.score + cardValue;
+            you.aces = you.aces + ace;
+          }
+        }
+
+        function doMath(input) {
+          var card = (input % 13) + 1;
+          if (card > 10)
+            return 10;
+          else
+            return card;
+        }
+
+        function setStartValues() {
+          dealer.margin = 5;
+          dealer.score = 0;
+          dealer.totalScore = 0;
+          dealer.aces = 0;
+          dealer.hold = false;
+          dealer.bust = false;
+          dealer.cardVal = 0;
+          dealer.offset = 0;
+          dealer.suit = -1;
+
+          you.margin = 5;
+          you.score = 0;
+          you.totalScore = 0;
+          you.aces = 0;
+          you.hold = false;
+          you.bust = false;
+        }
+
+        function shuffleCards() {
+          arr = [];
+          var starting = 1;
+          while(starting < 53){
+            arr.push(starting++);
+          }
+          shuffle(arr);
+        }
+
+        function shuffle(array) {
+          // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+          var currentIndex = array.length, temporaryValue, randomIndex;
+          while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+          }
+          return array;
+        }
+    </script>
+</body>
+</html>
