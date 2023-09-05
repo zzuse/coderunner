@@ -87,6 +87,7 @@ img {
              }
 
              function moveTile(tile){
+                 console.log(tile);
                  var rowcol = getRowColumn(tile);
                  canMove(tile, rowcol["col"], rowcol["row"]);
              }
