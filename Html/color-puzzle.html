@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8" />
+<title>Color Puzzle</title>
+<meta name="description" content="Color Puzzle. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+  position: absolute;
+  background-color: lightgray;
+  width: 600px;
+  height: 300px;
+  user-select: none;
+  overflow: hidden;
+}
+
+.box {
+  position: absolute;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  top: 450px;
+}
+.destBox {
+  border: 1px solid darkgray;
+  top: 100px;
+}
+.colorBox {
+  border: 1px solid darkgray;
+  top: 200px;
+}
+#cbox1, #dbox1  { left: 20px;  }
+#cbox2, #dbox2  { left: 120px; }
+#cbox3, #dbox3  { left: 220px; }
+#cbox4, #dbox4  { left: 320px; }
+#cbox5, #dbox5  { left: 420px; }
+#cbox6, #dbox6  { left: 520px; }
+
+p {
+  color: white;
+  padding: 10px;
+}
+
+</style>
+<script src="assets/rainbowvis.js"></script>
+</head>
+
+<body>
+  <div id="mainContent">
+    <div id="dbox1" class="box destBox"></div>
+    <div id="dbox2" class="box destBox"></div>
+    <div id="dbox3" class="box destBox"></div>
+    <div id="dbox4" class="box destBox"></div>
+    <div id="dbox5" class="box destBox"></div>
+    <div id="dbox6" class="box destBox"></div>
+
+    <div id="cbox1" class="box colorBox"></div>
+    <div id="cbox2" class="box colorBox"></div>
+    <div id="cbox3" class="box colorBox"></div>
+    <div id="cbox4" class="box colorBox"></div>
+    <div id="cbox5" class="box colorBox"></div>
+    <div id="cbox6" class="box colorBox"></div>
+    <p id="result">Move the colors from the bottom boxes to the top boxes, <br />in spectrum order (red to blue).</p>
+  </div>
+
+  <script>
+
+    // Create an object with two members, and define null starting values to both
+    var colorbox = {
+      currentColor:     null,
+      currentDest:      null
+    };
+
+    // Set up all 12 boxes with lightgray start color, and assign an onclick handler to each
+    var boxes = document.getElementsByClassName("box");
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].style.backgroundColor = "lightgray";
+      boxes[i].addEventListener("click", boxClick);
+    }
+
+    // Get a range of color gradients using the rainbowvis.js library
+    //  Try other variations here to change the type and spread of the spectrum
+    var rainbow = new Rainbow();            // Default range: 0-100
+    //rainbow.setSpectrum("red", "blue");   // Try this for a result with reds to blues
+    var start = getRandomInt(10, 50);       // Get a randomized starting value
+    var inc = getRandomInt(2, 8);           // Get a randomized incrementing value
+
+    // Display setup values in console for testing purposes
+    console.log ("Start value %s", start);
+    console.log ("Increment value %s", inc);
+
+    // Prepare a new array and push six colors obtained from rainbowvis into the elements
+    var colors = new Array();
+    for (var i = start; i < (start + (6 * inc)); i+=inc) {
+      // Result is a hex value; examples: f2ff00, 00fc03, 00bf40
+      colors.push("#" + rainbow.colourAt(i)); // Push value into array
+      console.log (rainbow.colourAt(i));      // Print in console for testing purposes
+    }
+
+    var cRand = colors.slice();               // Make a direct copy of the colors array
+    shuffle(cRand);                           // Shuffle color order using cRand array
+                                              // Keep the original colors array for later comparison
+
+    // Apply background color to the bottom row (source) of boxes
+    document.getElementById("cbox1").style.backgroundColor = cRand[0];
+    document.getElementById("cbox2").style.backgroundColor = cRand[1];
+    document.getElementById("cbox3").style.backgroundColor = cRand[2];
+    document.getElementById("cbox5").style.backgroundColor = cRand[4];
+    document.getElementById("cbox4").style.backgroundColor = cRand[3];
+    document.getElementById("cbox6").style.backgroundColor = cRand[5];
+
+    // Handler for box click event
+    function boxClick(ev) {
+      if (ev.target.className.indexOf("colorBox") > -1) {
+        colorbox.currentColor = ev.target.id;           // Get ID of clicked-on box
+      }
+
+      // If box is a destination box, get the source color, apply it to the tempColor variable
+      //   and swap the colors between source-destination
+      if (ev.target.className.indexOf("destBox") > -1) {
+        var tempColor = document.getElementById(colorbox.currentColor).style.backgroundColor;
+        ev.target.style.backgroundColor = tempColor;
+        document.getElementById(colorbox.currentColor).style.backgroundColor = "lightgray";
+      }
+
+      // Determine if all color (source) boxes have been played
+      //   Set colorFlag to true if there are remaining boxes with color
+      var colorFlag = false;
+      var colorBoxes = document.getElementsByClassName("colorBox");
+      for (var i = 0; i < colorBoxes.length; i++) {
+        if (colorBoxes[i].style.backgroundColor != "lightgray") {
+          colorFlag = true;
+        }
+      }
+
+      // If colorFlag == false, see if the player has arranged the colors in spectrum order
+      if (!colorFlag) {
+        var goodGame = true;
+        var destBoxes = document.getElementsByClassName("destBox");
+        for (var i = 0; i < destBoxes.length; i++) {
+          // Show results in console for testing purposes
+          console.log (convertToHex(destBoxes[i].style.backgroundColor) + ":" + colors[i]);
+          if (convertToHex(destBoxes[i].style.backgroundColor) != colors[i]) {      // Compares destination boxes with original array of colors
+            goodGame = false;
+          }
+        }
+
+        // If goodGame == true, then colors are in spectrum order
+        if (goodGame) {
+          document.getElementById("result").innerText = "Good Game! Reload to start again.";
+        } else {
+          document.getElementById("result").innerText = "Sorry! Reload to try again.";
+        }
+        console.log (goodGame);       // Show goodGame results in console for testing purposes
+      }
+    }
+
+    // Generic converter for changing a string value to a hexadecimal CSS color value
+    function convertToHex(str){
+      // http://rickluna.com/wp/2012/10/setting-css-background-colors-via-javascript-rgb-triplet-vs-hex/
+      var raw = str.match(/(\d+)/g);
+      var hexr = parseInt(raw[0]).toString(16);
+      var hexg = parseInt(raw[1]).toString(16);
+      var hexb = parseInt(raw[2]).toString(16);
+      hexr = hexr.length == 1 ? '0' + hexr: hexr;   // These are JavaScript ternary expressions,
+      hexg = hexg.length == 1 ? '0' + hexg: hexg;   //   and provide a compact way to do if-then tests.
+      hexb = hexb.length == 1 ? '0' + hexb: hexb;   //   Read more here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+      var hex = '#' + hexr + hexg + hexb;
+      return hex;
+    }
+
+    // Generic array shuffler
+    function shuffle(array) {
+      // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    }
+
+    // Generic random number generator
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+  </script>
+</body>
+</html>
