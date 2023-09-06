@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Kaylee Saves the World</title>
+<meta name="description" content="Kaylee Saves the World. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+body {
+  background-color: #526b69;
+  cursor: default;
+}
+#mainContent {
+  position: absolute;
+  background-color: #526b69;
+  background-image: url('./assets/kaylee/kaylee-splashscreen.jpg');
+  background-repeat: no-repeat;
+  background-size: 931px 700px;
+  background-position: center top;
+  border-radius: 2px;
+  height: 700px;
+  width: 931px;
+  padding-top: 0px;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  opacity: 1;
+  visibility: hidden;
+}
+
+.outer {
+  position: absolute;
+  overflow: hidden;
+  visibility: hidden;
+}
+.inner {
+  position: absolute;
+  overflow: hidden;
+}
+.inner p {
+  visibility: hidden;
+}
+
+.reset-bg {
+  background: none;
+  opacity: 1;
+}
+
+/* Used for testing (to see DIVs) */
+.show-bg {
+  background-color: red;
+  opacity: 0.60;
+  visibility: visible;
+}
+
+/* Info box in upper right corner */
+#infoBox {
+  position: absolute;
+  left: 716px;
+  top: 0px;
+  height: 170px;
+  width: 200px;
+  padding: 45px 0px 0px 10px;
+  background: none;
+  overflow: hidden;
+  visibility: hidden;
+}
+.info-text {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 600;
+  font-size: 1.2em;
+  color: #fff;
+  letter-spacing: 0.20em;
+  position: absolute;
+  overflow: hidden;
+}
+#paused {               /* Flashing P A U S E D text */
+  position: absolute;
+  font-size: 1em;
+  text-align: center;
+  left: 724px;
+  top: 220px;
+  height: 50px;
+  width: 200px;
+  letter-spacing: 0.60em;
+  color: #ff6633;
+  text-shadow: 2px 2px 3px #000;
+  animation: pulse 3s infinite;
+  animation-play-state: running;
+  visibility: hidden;
+}
+@keyframes pulse {
+  0% {    opacity: 1; animation-timing-function: ease-in); }
+  50% {   opacity: 0.2; animation-timing-function: ease-out; }
+  100% {  opacity: 1; }
+}
+
+/* Point-of-view ray pistol animation, uses spritesheet */
+#pov {
+  position: absolute;
+  overflow: hidden;
+  object-fit: none;
+  object-position: -0px 0;
+  margin-left: 275px;
+  margin-top: 560px;
+  height: 150px;
+  width: 385px;
+  visibility: hidden;
+}
+.povKickBack {              /* Quick "kick" when pistol fires, for feedback */
+  animation: kick .2s 1;
+  margin-left: 0px;
+  margin-top: 0px;
+  animation-play-state: running;
+}
+@keyframes kick {
+  0% {
+    transform: translate3d(0px, 0px, 0px);
+    animation-timing-function: ease-in);
+  }
+  50% {
+    transform: translate3d(0px, 20px, 0px);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    transform: translate3d(0px, 0px, 0px);
+  }
+}
+
+/* Limit the area of the playboard that can accept a laser shot */
+#killzone {
+  height: 590px;
+  width: 931px;
+}
+
+/* Image effects for "dissolving" aliens */
+.dissolver {
+  position:absolute;
+  overflow: hidden;
+  margin-left: 0px;
+  margin-top: 0px;
+}
+.dissolver img {
+  position: absolute;
+  transition: opacity .4s ease-in-out;
+}
+.dissolver img.transparent {
+  opacity: 0;
+}
+.fadeOut {
+  opacity: 0;
+  transition: opacity .4s ease-in-out;
+}
+.fade {
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+/* Alien move transition classes */
+.move {
+  transition: margin-top 4s;
+  margin-top: 250px;
+}
+.slide-lr {
+  transition: margin-left 4s;
+  transition-delay: 1s;
+  margin-left: 0px;
+}
+.slide-ud {
+  transition: margin-top 4s;
+  transition-delay: 1s;
+  margin-left: 0px;
+}
+
+.blast {
+  position:absolute;
+  width: 44px;
+  height: 46px;
+  background-image: url("./assets/kaylee/blast.png");
+  animation: play .4s steps(6) 1;
+}
+
+@keyframes play {
+   from { background-position:    0px; }
+     to { background-position: -267px; }
+}
+
+#standingBigLSlideOuter { height: 335px;width: 150px; left: 0px;top: 250px; }
+#standingBigLSlide { height: 335px; width: 100px; margin-left: -105px; margin-top: 0px; }
+
+/* Note: (scale:-1,1) makes mirror image */
+#standingSmallLSlideOuter { height: 170px; width: 300px; left: -30px; top: 350px; }
+#standingSmallLSlide { height: 170px; width: 50px; margin-left: -105px; margin-top: 0px; transform: scale(-1, 1); }
+
+#blueCarRSlideOuter { height: 95px; width: 250px; left: 415px; top: 420px; }
+#blueCarRSlide { height: 95px; width: 120px; margin-left: 0px; margin-top: 0px; }
+
+#blueCarLSlideOuter { height: 95px; width: 250px; left: 260px; top:420px; }
+#blueCarLSlide { height: 95px; width: 120px; margin-left: 0px; margin-top: 0px; left:120px }
+
+#buildingRDropdownOuter { height: 350px; width: 50px; left: 850px; top: 250px; }
+#buildingRDropdown { height: 170px; width: 50px; margin-left: 0px; margin-top: -175px; }
+
+#blueVanPopupOuter { height: 200px; width: 50px; left: 525px; top: 165px; }
+#blueVanPopup { height: 170px; width: 50px; margin-left: 0px; margin-top: 300px; transform: scale(-1, 1); }
+
+#vanwhiteSlideOuter { height: 89px; width: 290px; left: 35px; top: 370px; }
+#vanwhiteSlide { height: 89px; width: 290px; margin-left: 0px; margin-top: 40px; transform: scale(-1, 1); }
+
+</style>
+<script type="text/javascript" src="./prefixfree.min.js"></script>
+<script type="text/javascript" src="./assets/soundjs-NEXT.combined.js"></script>
+</head>
+
+<body onload=init()>
+  <div id="mainContent">
+    <!-- Preload gameboard images so they're ready for play -->
+    <img id="gameboard" class="image" alt="" src="./assets/kaylee/kaylee-mainscene.jpg" />
+    <img id="info" class="image" alt="" src="./assets/kaylee/kaylee-infobox.png" />
+
+    <!-- Martians land on the building in upper left -->
+    <!-- The building is also overlaid on top so the Martian ship can appear to land on
+       top (actually "behind" the separate building) -->
+    <img id="martian-machine" class="image" style="top:-200px;" alt="" src="./assets/kaylee/kaylee-martianmachine.png" />
+    <img id="black-building" class="image" alt="" src="./assets/kaylee/kaylee-blackbuilding.png" />
+
+    <!-- Some elements of the scene are overlaid in duplicate, to allow aliens to pop out from behind them -->
+    <img id="building-corner" class="image" alt="" src="./assets/kaylee/kaylee-building-corner.png" />
+
+    <!-- Spritesheet of POV laser gun. The animation tracks the position of the mouse. -->
+    <div id="povBox" class="povKickBack" style="visibility: hidden;"><img id="pov" alt="" src='./assets/kaylee/kaylee-pov-sheet.png' /></div>
+
+    <!-- Some additional overlaid scene elements (currently no Martians set to pop out behind these;
+      consider these for your future expansion )-->
+    <img id="carred" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-carred.png" />
+    <img id="fence" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-fence.png" />
+    <img id="trashbin" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-trashbin.png" />
+
+    <div id="blueVanPopupOuter" class="outer reset-bg">
+      <div id="blueVanPopup" class="inner dissolver">
+        <img id="blueVanPopup-plain" class="plain" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-plain.png" />
+        <img id="blueVanPopup-dissolve" class="dissolve transparent" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-dissolve.png" />
+        <p> {"zone":"1","height":"170","width":"50","marginLeft":"0","marginTop":"300","position":"0","delay":"2200","movement":"u","pointsHit":"60","pointsMiss":"-6"} </p>
+      </div>
+    </div>
+    <img id="vanblue" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-vanblue.png" />
+
+    <div id="vanwhiteSlideOuter" class="outer reset-bg">
+      <div id="vanwhiteSlide" class="inner dissolver reset-bg">
+        <img id="vanwhiteSlide-plain" class="plain" style="width:100px;" alt="120px" src="./assets/kaylee/kaylee-slidinghome-plain.png" />
+        <img id="vanwhiteSlide-dissolve" class="dissolve transparent" style="width:100px;" alt="120px" src="./assets/kaylee/kaylee-slidinghome-dissolve.png" />
+        <p> {"zone":"1","height":"89","width":"100","marginLeft":"0","marginTop":"0","position":"-120","delay":"2000","movement":"l","pointsHit":"30","pointsMiss":"-3"} </p>
+      </div>
+    </div>
+      <img id="vanwhite" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-vanwhite.png" />
+
+    <div id="blueCarRSlideOuter" class="outer reset-bg">
+      <div id="blueCarRSlide" class="inner dissolver reset-bg">
+        <img id="blueCarRSlide-plain" class="plain" style="width:120px;" alt="120px" src="./assets/kaylee/kaylee-guncrouch-plain.png" />
+        <img id="blueCarRSlide-dissolve" class="dissolve transparent" style="width:120px;" alt="120px" src="./assets/kaylee/kaylee-guncrouch-dissolve.png" />
+        <p> {"zone":"1","height":"95","width":"120","marginLeft":"0","marginTop":"0","position":"120","delay":"2000","movement":"r","pointsHit":"30","pointsMiss":"-3"} </p>
+      </div>
+    </div>
+    <div id="blueCarLSlideOuter" class="outer reset-bg">
+      <div id="blueCarLSlide" class="inner dissolver">
+        <img id="blueCarLSlide-plain" class="plain" style="width:120px;" alt="120px" src="./assets/kaylee/kaylee-guncrouch-plain.png" />
+        <img id="blueCarLSlide-dissolve" class="dissolve transparent" style="width:120px;" alt="120px;" src="./assets/kaylee/kaylee-guncrouch-dissolve.png" />
+        <p> {"zone":"1","height":"95","width":"120","marginLeft":"0","marginTop":"0","position":"-120","delay":"2000","movement":"l","pointsHit":"40","pointsMiss":"-4"} </p>
+      </div>
+    </div>
+    <img id="carblue" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-carblue.png" />
+
+    <img id="metaltrashcan" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-metaltrashcan.png" />
+    <div id="buildingRDropdownOuter" class="outer reset-bg">
+      <div id="buildingRDropdown" class="inner dissolver">
+        <img id="buildingRDropdown-plain" class="plain" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-plain.png" />
+        <img id="buildingRDropdown-dissolve" class="dissolve transparent" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-dissolve.png" />
+        <p> {"zone":"1","height":"170","width":"50","marginLeft":"0","marginTop":"-175","position":"175","delay":"2200","movement":"d","pointsHit":"50","pointsMiss":"-5"} </p>
+      </div>
+    </div>
+
+    <div id="standingSmallLSlideOuter" class="outer reset-bg">
+      <div id="standingSmallLSlide" class="inner dissolver">
+        <img id="standingSmallLSlide-plain" class="plain" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-plain.png" />
+        <img id="standingSmallLSlide-dissolve" class="dissolve transparent" style="width:50px;" alt="50px" src="./assets/kaylee/kaylee-gunstand-dissolve.png" />
+        <p> {"zone":"1","height":"170","width":"50","marginLeft":"-105","marginTop":"0","position":"250","delay":"2200","movement":"r","pointsHit":"20","pointsMiss":"-2"} </p>
+      </div>
+    </div>
+
+    <div id="standingBigLSlideOuter" class="outer reset-bg">
+      <div id="standingBigLSlide" class="inner dissolver">
+        <img id="standingBigLSlide-plain" class="plain" style="" alt="100px" src="./assets/kaylee/kaylee-gunstand-plain.png" />
+        <img id="standingBigLSlide-dissolve" class="dissolve transparent" style="" alt="100px" src="./assets/kaylee/kaylee-gunstand-dissolve.png" />
+        <p> {"zone":"1","height":"335","width":"100","marginLeft":"-105","marginTop":"0","position":"50","delay":"1800","movement":"r","pointsHit":"10","pointsMiss":"-1"} </p>
+      </div>
+    </div>
+
+    <!-- Some more additional overlaid scene elements; add your own Martians here -->
+    <img id="utilitybox" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-utilitybox.png" />
+    <img id="concretetrashcan" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-concretetrashcan.png" />
+    <img id="buildingCorner" class="image" style="height: 700px;" alt="" src="./assets/kaylee/kaylee-building-corner.png" />
+
+    <!-- The killzone is an invisible DIV that accepts mouse input for aiming the laser pistol and firing a shot.
+      It extends from just above the POV laser pistol, to the top of the game board.-->
+    <div id="killzone" class="inner" style="background:none;" onmousemove="mouseMove(event);" onclick="mouseClick(event);"></div>
+
+    <!-- Infobox contains rudimentary game play data, such as total score. -->
+    <div id="infoBox" class="info-text">
+      <p id="scoreTotal" class="info-text" style="top:40px;">Total: 500</p>
+      <p id="scoreHits" class="info-text" style="top:90px;">Hits: 1000</p>
+      <p id="scoreMisses" class="info-text" style="top:140px;">Misses: 2000</p>
+    </div>
+    <div id="paused" class="inner info-text" >PAUSED</div>
+
+    <!-- Hot spots for buttons -->
+    <div id="startButton" class="inner" style="left:700px; top:23px; height:80px; width:190px;" onclick="startGame();"></div>
+    <div id="playPause" class="inner" style="left:17px; top:640px; height:42px; width:160px;" onclick="controlBtn('playPause');"></div>
+
+    <!-- Container of laser blast. During game play the .blast style is applied to this DIV to create
+      the blast effect. -->
+    <div id="blastIt" class=""></div>
+
+  </div>
+
+  <script>
+  var settings = {
+    sound:            true,
+    volume:           100,
+    soundStorage:     null,
+    explosionVolume:  0.7,
+    shotSize:         10,
+    maxAliens:        3,
+    gameloopSpeed:    2200,         // General speed of game loop repeat; should about the same as the longest "putback" delay (set per alien in JSON metadata)
+    showOuterDivs:    "hidden"
+  };
+  settings.soundStorage = localStorage.getItem('kayleesound');
+  //console.log (settings.soundStorage);      // Uncomment for testing
+  if (settings.soundStorage !== null) {
+    settings.sound = (settings.soundStorage == 'true');    // store Boolean of retrieved result
+  }
+
+  // Set up event listener for "dissolving" the aliens when they are hit by a laser blast
+  var images = document.getElementsByClassName("dissolve");
+  for (var i = 0; i < images.length; i++) {
+    document.getElementById(images[i].id).addEventListener("transitionend", fadeOut, false);
+  }
+
+  // Set up event listener to land the Martian ship after starting a game
+  var element = document.getElementById("martian-machine");
+  element.addEventListener("transitionend", aliensLanded, false);
+
+  // Set up arrays for aliens and alien containers, and objects for holding metadata
+  var containers = [];
+  var shuffledAliens = [];
+  var tagsObj = {};
+  var dissolvers = document.getElementsByClassName("dissolver");
+  for (var i = 0; i < dissolvers.length; i++) {
+    var element = dissolvers[i];
+    element.style.visibility = "hidden";
+    var parent = document.getElementById(element.parentNode.id);
+    var p = element.getElementsByTagName("p")[0];
+    if (typeof p != 'undefined' && p.innerHTML != '') {
+      var tags = p.innerHTML;     // Fetch metadata string
+    } else {
+      var tags = "";
+    }
+    var obj = JSON.parse(tags);   // Parse metadata string into object
+    parent.style.visibility = settings.showOuterDivs;
+    // Define default values for each alien container
+    containers.push( {                            // Add a new object to the array
+      id:           element.id,
+      parent:       parent,
+      marginLeft:   parseInt(window.getComputedStyle(element, null).marginLeft),
+      marginTop:    parseInt(window.getComputedStyle(element, null).marginTop),
+      left:         parseInt(window.getComputedStyle(element, null).left),
+      top:          parseInt(window.getComputedStyle(element, null).top),
+      x:            parseInt(window.getComputedStyle(element, null).marginLeft) + parseInt(window.getComputedStyle(parent, null).left),
+      y:            parseInt(window.getComputedStyle(element, null).marginTop) + parseInt(window.getComputedStyle(parent, null).top),
+      width:        parseInt(window.getComputedStyle(element, null).width),
+      height:       parseInt(window.getComputedStyle(element, null).height),
+      visibility:   element.style.visibility,
+      tags:         tags,         // String version of metadata tags
+      tagsJSON:     obj,          // JSON parsed metadata tags
+      zone:         obj.zone,     // Zones aren't currently implemented, but could be used to define different parts of the gameboard for showing/hiding aliens
+      position:     obj.position,
+      delay:        obj.delay,
+      movement:     obj.movement,
+      pointsHit:    obj.pointsHit,
+      pointsMiss:   obj.pointsMiss,
+      zapped:       false,
+      returning:    false
+    } );
+    tagsObj[element.id] = i;
+    shuffledAliens.push(element.id);
+  }
+
+  // Track the score (object)
+  // Some of these (like max, power, gameOver) are not currently implemented
+  var score = {
+    now:      0,
+    shots:    0,
+    max:      0,
+    hits:     0,
+    misses:   0,
+    power:    0,
+    canShoot: false,
+    won:      false,
+    gameOver: false
+  };
+
+  // Explosion metrics (object)
+  // Object for holding the (variable-sized) laser blast image, to determine if it collides inside the rectangle for an alien
+  var shot = {
+    x:        0,
+    y:        0,
+    width:    0,
+    height:   0
+  };
+
+  // Main game loop function, "pops out" different aliens at random
+  var loopIteration = 0;
+  var loopInterval;
+  function gameLoop () {
+    console.log ("gameloop iteration: " + loopIteration++);
+    shuffledAliens = shuffle(shuffledAliens);               // Randomize/re-randomized the available aliens
+    var numAliens = getRandomInt(0, settings.maxAliens);    // Show 0 to the max number of aliens at one time
+    for (var i = 0; i < numAliens + 1; i++) {               // For each alien selected
+      if (i != 0 && document.getElementById(shuffledAliens[i]).style.visibility == "hidden") {
+        // Popout only if not already visible
+        firePopout (shuffledAliens[i]);
+      }
+    }
+  }
+
+  function controlBtn(action) {
+    createjs.Sound.play("click");
+    switch (action) {
+      case "playPause":
+        document.getElementById('paused').style.visibility = "hidden";
+        if (loopInterval === null) {
+          console.log ("timer restarted");
+          gameLoop();
+          loopInterval = setInterval(function() { gameLoop() }, settings.gameloopSpeed);
+        } else {
+          document.getElementById('paused').style.visibility = "visible";
+          clearInterval(loopInterval);
+          loopInterval = null;
+          console.log ("timer stopped");
+        }
+      break;
+    }
+  }
+
+  // Trigger an alien to show itself
+  // divName is the DIV ID of the alien to show; it is determined at random from inside the gameLoop
+  function firePopout (divName) {
+    var obj = containers[ tagsObj[divName] ];         // Get reference to an alien
+    alienPopout (divName, obj.position, obj.delay);
+  }
+
+  // Show an alien
+  function alienPopout (divName, position, returnDelay) {
+    var element = document.getElementById(divName)
+    containers[ tagsObj[element.id] ].returning = false;
+    element.style.visibility = "visible";
+    containers[ tagsObj[element.id] ].zapped = false;
+    var tags = searchArray(containers, divName).tags;
+    var obj = JSON.parse(tags);
+    if (obj.movement == 'd' || obj.movement == 'u') {       // is up/down movement alien
+      element.className = "inner slide-ud dissolver";
+      element.style.marginTop = position + "px";
+      element.style.transition = "margin-top .8s";
+    } else {                                                // else is right/left movement alien
+      element.className = "inner slide-lr dissolver";
+      element.style.marginLeft = position + "px";
+      element.style.transition = "margin-left .8s";
+    }
+    // Hide the alien after its "putaway" delay
+    var timer = setTimeout(function() { returnAlien (element) }, returnDelay);        // COMMMENT to prevent put away
+  }
+
+  // Put away an alien
+  function returnAlien(element) {
+    //console.log ("returning: " + containers[ tagsObj[element.id] ].id);
+    containers[ tagsObj[element.id] ].returning = true;
+    if (!containers[ tagsObj[element.id] ].zapped) {        // Check if the alien has been fully zapped
+      score.misses += 1;
+      updateScore(containers[ tagsObj[element.id] ].pointsMiss);
+      returnPosition(element);
+    } else {
+    }
+    // Set visibility=hidden after 350ms of returning the alien to its hiding place
+    var timer = setTimeout(function() { element.style.visibility = "hidden" }, 350);
+  }
+
+  // Track mouse move and click for firing the laser pistol
+  function mouseMove(e) {
+    var tempX = e.offsetX;
+    if (tempX < 1) {tempX = 1;}
+    var num = tempX;                      // Lines separate to show you the math
+    var X = num.map(0, 931, 1, 17);
+    var Y = Math.floor(17 - X);
+    var xpos = 384 * Y;
+    document.getElementById('pov').style.objectPosition = -xpos + "px 0px";
+  }
+
+  function mouseClick(e) {
+    if (!score.canShoot) { return; }
+    var div = document.getElementById(e.target.id);
+    var tempX = e.offsetX;
+    var tempY = e.offsetY;
+    var num = tempY;
+    var delay = num.map(0, 550, 500, 0);
+    var size = num.map(0, 550, .3, 1.5);
+    createjs.Sound.play("blast");
+    var pov = document.getElementById("pov");
+    pov.className = "";
+    pov.offsetWidth = blastIt.offsetWidth;  // triggers reflow
+    pov.className = "povKickBack";          // restarts animation
+    var timer = setTimeout(function() { doBlast (tempX, tempY, size) }, delay);
+  }
+
+  // Start laser blast animation at the mouse position
+  // The size parameter defines the size of the image, based on its vertical
+  //   placement on the gameboard. The higher the blast, the farther away it
+  //   it said to be, so the smaller the blast image.
+  function doBlast(tempX, tempY, size) {
+    settings.explosionVolume = size;
+    var blastIt = document.getElementById('blastIt');
+    tempX = tempX - 23;                     // Adjust for center of blast
+    tempY = tempY - 27;
+    blastIt.style.marginLeft = (tempX) + "px";
+    blastIt.style.marginTop = (tempY) + "px";
+    blastIt.style.transform = "scale(" + size + ", " + size + ")";
+    blastIt.className = "";
+    blastIt.offsetWidth = blastIt.offsetWidth;  // triggers reflow
+    blastIt.className = "blast";                // restarts animation
+    shot = {
+      x:      tempX,
+      y:      tempY,
+      width:  10,
+      height: 10
+    };
+  }
+
+  // If alien was zapped, set up the transition between plain and dissolved IMGs
+  function trans(divName) {
+    var element = document.getElementById(divName);
+    if (containers[ tagsObj[element.id] ].zapped) {
+      var element = document.getElementById(divName);
+      var plain = element.getElementsByTagName("img")[0];
+      var dissolve = element.getElementsByTagName("img")[1];
+      plain.className = "dissolve transparent";
+      dissolve.className = "";
+      createjs.Sound.play("zap");
+    }
+  }
+
+  // End-of-transition function alters opacity of alien IMGs to create a dissolve effect
+  function fadeOut(event) {
+    var element = document.getElementById(event.target.id);
+    var opacity = window.getComputedStyle(element, null).opacity;
+    if (opacity == '1') {
+      element.style.transition = 'opacity 0.5s';
+      element.className = "fadeOut";
+      var timer = setTimeout(function() {
+        makeHide (event.target)                 // Call makeHide after 500ms
+      }, 500);
+    }
+  }
+
+  // Hides the dissolved alien, and sets it back up for the next popout
+  function makeHide(dissolve) {
+    var plain = dissolve.parentNode.childNodes[0].nextSibling;
+    var parent = dissolve.parentNode;
+    dissolve.className = "dissolve transparent";
+    plain.className = "";
+    plain.style.width = plain.alt;
+    parent.style.visibility = "hidden";
+    returnPosition(parent);
+  }
+
+  // After putaway, return an alien to its default position using stored metadata
+  function returnPosition(element) {
+    var tags = searchArray(containers, element.id).tags;
+    var obj = JSON.parse(tags);
+    switch (true) {
+      case (obj.movement == 'u'):
+        element.style.marginTop = obj.marginTop + "px";
+        break;
+      case (obj.movement == 'd'):
+        element.style.marginTop = obj.marginTop + "px";
+        break;
+      case (obj.movement == 'r'):
+        element.style.marginLeft = obj.marginLeft + "px";
+        break;
+      case (obj.movement == 'l'):
+        element.style.marginLeft = obj.marginLeft + "px";
+        break;
+    }
+  }
+
+  // Fire a laser blast, and determine if the blast area collides with an alien
+  // Note that the blast area diminishes with distance -- the higher up the gameboard,
+  //   the farther away the blast is considered to occur.
+  function explosion(event) {
+    var blastIt = document.getElementById('blastIt');
+    var dissolvers = document.getElementsByClassName ("dissolver");
+    // Repeat for each possible alien currently visible
+    for (var i = 0; i < dissolvers.length; i++) {
+      if (dissolvers[i].style.visibility == "visible") {
+        var div = document.getElementById(dissolvers[i].id);
+        var parent = document.getElementById(div.parentNode.id);
+        var xPos = parseInt(window.getComputedStyle(div, null).marginLeft) + parseInt(window.getComputedStyle(parent, null).left)  + parseInt(window.getComputedStyle(div, null).left);
+        var yPos = parseInt(window.getComputedStyle(div, null).marginTop) + parseInt(window.getComputedStyle(parent, null).top)  + parseInt(window.getComputedStyle(div, null).top);
+        containers[i].x = xPos - 10;
+        containers[i].y = yPos - 20;
+        shot.width = settings.shotSize;
+        shot.height = settings.shotSize;
+        // Check if blast collides with an alien
+        if (isCollide(shot, containers[i]) && containers[i].returning == false) {
+          score.hits += 1;
+          updateScore(containers[i].pointsHit);
+          containers[i].zapped = true;
+          trans(containers[i].id);
+        }
+      }
+    }
+    document.getElementById('blastIt').style.marginLeft = "-50px";
+    createjs.Sound.play("explode").volume = settings.explosionVolume - 0.3;
+  }
+
+  // Determine if one rectangle (e.g. blast image) is within the bounds of another rectangle (e.g. an alien)
+  function isCollide(a, b) {
+    return !(
+      ((a.y + a.height) < (b.y)) ||
+      (a.y > (b.y + b.height)) ||
+      ((a.x + a.width) < b.x) ||
+      (a.x > (b.x + b.width))
+    );
+  }
+
+  // Set up the game elements at start; mostly entails hiding and showing specific elements
+  function startGame() {
+    document.getElementById("gameboard").style.visibility = "visible";
+    document.getElementById("black-building").style.visibility = "visible";
+    document.getElementById("martian-machine").style.visibility = "visible";
+    document.getElementById("pov").style.visibility = "visible";
+
+    document.getElementById("fence").style.visibility = "visible";
+    document.getElementById("vanwhite").style.visibility = "visible";
+    document.getElementById("vanblue").style.visibility = "visible";
+    document.getElementById("carred").style.visibility = "visible";
+    document.getElementById("carblue").style.visibility = "visible";
+    document.getElementById("buildingCorner").style.visibility = "visible";
+    document.getElementById("trashbin").style.visibility = "visible";
+    document.getElementById("metaltrashcan").style.visibility = "visible";
+    document.getElementById("concretetrashcan").style.visibility = "visible";
+    document.getElementById("utilitybox").style.visibility = "visible";
+
+    document.getElementById("info").style.visibility = "visible";           // box overlay
+    document.getElementById("infoBox").style.visibility = "visible";        // box text
+    document.getElementById("scoreTotal").style.visibility = "visible";
+    document.getElementById("scoreHits").style.visibility = "visible";
+    document.getElementById("scoreMisses").style.visibility = "visible";
+    document.getElementById("scoreTotal").style.visibility = "visible";
+    document.getElementById("startButton").style.visibility = "hidden";
+
+    createjs.Sound.play("landing");     // Start landing sound and CSS transition animation
+    document.getElementById('martian-machine').style.transition = 'margin-top 5.5s';
+    document.getElementById('martian-machine').className = "image move";
+    updateScore(0);
+    console.log("new game");
+  }
+
+  // Update the score (show overall total, hits, misses)
+  function updateScore(val) {
+    score.now += parseInt(val);
+    document.getElementById("scoreTotal").innerHTML = "Total:" + score.now;
+    document.getElementById("scoreHits").innerHTML = "Hits:" + score.hits;
+    document.getElementById("scoreMisses").innerHTML = "Misses:" + score.misses;
+  }
+
+  // Load sounds on page load
+  function init() {
+    var element = document.getElementById("blastIt");
+    element.addEventListener("animationend", explosion, false);
+    if (!createjs.Sound.initializeDefaultPlugins()) {
+      console.log ("Error loading SoundJS");
+    } else {
+    	createjs.Sound.addEventListener("fileload", playSound); // Event listener for when load is completed
+      createjs.Sound.alternateExtensions = ["mp3"];
+      createjs.Sound.registerSounds(
+        [ {id: "blast",     src: "laser-blast.ogg"},
+          {id: "explode",   src: "explosion.ogg"},
+          {id: "zap",       src: "electric-zap.ogg"},
+          {id: "click",     src: "click.ogg"},
+          {id: "landing",   src: "ufo-landing.ogg"} ],
+          "./assets/kaylee/");
+    }
+  }
+
+  // Listener target for starting a new game
+  // First iteration of aliens, and starting of game loop, occurs when the aliens gave landed
+  function aliensLanded() {
+    score.canShoot = true;
+    console.log("Aliens have landed");
+    gameLoop();
+    loopInterval = setInterval(function() { gameLoop() }, settings.gameloopSpeed);
+  }
+
+  // For debugging: show sounds as they are loaded
+  function playSound(event) {
+    console.log("Preloaded:", event.id, event.src);
+  }
+
+  // General functions below
+  // ===========================================
+
+  // Determine if if an object is contained in an array
+  function searchArray(findInArray, key) {
+    var obj = findInArray.filter(function (obj) {
+      return obj.id === key;
+    })[0];
+    return (obj);
+  }
+
+  // Generic function or mapping one set of values into a second set
+  // Used in this came to correlate mouse position with shot "distance"
+  Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+    return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+
+  // Generic function for getting a random number
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // Generic function for shuffling the values in an array
+  function shuffle(array) {
+    // stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  }
+  </script>
+
+</body>
+</html>
