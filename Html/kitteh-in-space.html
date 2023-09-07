@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Kitteh In Space!</title>
+<meta name="description" content="Kitteh In Space! Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Style sheet for definining the look of the page -->
+    <style>
+    body {
+      background-color: #010d12;
+    }
+    
+    /* Main play board */
+    #mainContent {
+      position: absolute;
+      background-color: #010d12;
+      border-radius: 0px;
+      margin: 35px 0;
+      padding: 0;
+      width: 1200px;
+      height: 500px;
+      overflow: hidden;
+    }
+    
+    .background {
+      background-image: url("./assets/kitteh/KittehStarBGExtraWide-500px.jpg");
+      background-repeat: repeat-x;
+      margin: 0;
+      padding: 0;
+      width: 9200px;
+      height: 500px;
+      overflow: hidden;
+      position: absolute;
+      animation: backdrop_roll linear 130s infinite 2s;
+      display: block;
+      animation-play-state: paused;
+    }
+    
+    @keyframes backdrop_roll {
+      from { right: 0px; }
+      to { right: 8000px; }
+    }
+    
+    /* Base Kitteh image */
+    .kitteh {
+      position: absolute;
+      user-select: none;
+      width: 248px;
+      height: 150px;
+      left: 20px;
+      top: 200px;
+      padding: 0;
+      visibility: visible;
+    }
+    /* Kitteh overlay image (ship component only)*/
+    .kittehoverlay {
+      position: absolute;
+      margin: 0;
+      width: 248px;
+      height: 150px;
+      visibility: hidden;
+    }
+    /* Starting animation setup style for Kitteh  */
+    .kittehstart {
+      top: 200px;
+      animation: hoverup ease-in-out 2000ms 1;
+      animation-play-state: paused;
+    }
+    @keyframes hoverup {
+      from { top: 700px; }
+      50% { top: 100px;}
+      to { top: 300px; }
+    }
+    
+    /* General class for any type of target (rocks, balloons, etc.)
+       Objects use a spin (clockwise or counter-clockwise) animation
+    */
+    .target {
+      position: absolute;
+      pointer-events: none;
+      margin-left: 0px;
+      margin-top: 0px;
+      width: 70px;
+      height: 70px;
+      visibility: hidden;
+    }
+    .spinccw { animation: spinccw 4s linear infinite; }
+    .spincw { animation: spincw 4s linear infinite; }
+    @keyframes spincw { 100% { transform:rotate(360deg); } }
+    @keyframes spinccw { 100% { transform:rotate(-360deg); } }
+    
+    /* Display laser beam blast animation; uses six frame spritesheet */
+    .blast {
+      background-image: url("./assets/kitteh/laser-beam.png");
+      position: absolute;
+      margin-left: 100px;
+      margin-top: 0px;
+      width: 400px;
+      height: 25px;
+      opacity: 1;
+      visibility: hidden;
+      overflow: hidden;
+      object-fit: none;
+      object-position: -0px 0;
+      animation: play .2s steps(6) infinite;
+      transition: opacity 225ms linear;
+    }
+    @keyframes play {
+     from { background-position:    0px; }
+       to { background-position: -2400px; }
+    }
+    
+    /* General style for collision objects, water or "hit" (rock, paint can, etc.)
+       Display result of collision with short animation
+       (water.png spritesheet for balloon, hit.png spritesheet for any other)
+    */
+    .params {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      left: 200px;
+      top: 500px;           /* Hide just below play field */
+      width: 100px;
+      height: 100px;
+      object-position: -0px 0;
+      animation: hitAni .4s steps(6) infinite;
+      overflow: hidden;
+    }
+    #water {
+      background-image: url("./assets/kitteh/water.png");
+      opacity: 1;
+    }
+    #hit {
+      background-image: url("./assets/kitteh/hit.png");
+      opacity: 1;
+    }
+    @keyframes hitAni {
+       from { background-position:    20px; }
+         to { background-position: -534px; }
+    }
+    .hit {
+      opacity: 0;
+      transition: opacity 600ms linear;
+    }
+    
+    /* General class style for SVG paths */
+    .path {
+      stroke-dasharray: 10;
+      stroke: black;
+      stroke-width: 1;
+      fill: none;
+    }
+    
+    /* Generic style for all curves */
+    .curves {
+      position: absolute;
+      overflow: hidden;
+      margin-left: 0px;
+      margin-top: 0px;
+      width: 1200px;
+      height: 500px;
+    }
+    
+    /* <p> tag within curves DIV is used to hold textual data; hide it from view */
+    .curves p {
+      visibility:hidden;
+    }
+    
+    /* Set background play field */
+    .full-image {
+      position: absolute;
+      margin-left: 0px;
+      margin-top: 0px;
+      width: 1200px;
+      height: 500px;
+    }
+    
+    /* Define hot spots for control buttons */
+    #start-game-button {
+      position: absolute;
+      margin-top: 270px;
+      margin-left: 0px;
+      width: 225px;
+      height: 230px;
+    }
+    
+    #close-help-button {
+      position: absolute;
+      margin-top: 355px;
+      margin-left: 1030px;
+      width: 140px;
+      height: 60px;
+    }
+    
+    #buttons {
+      position: absolute;
+      left: 1090px;
+      top: 400px;
+      width: 105px;
+      height: 100px;
+      overflow: hidden;
+      visbility: hidden;
+      display: none;
+    }
+    .button {
+      position: absolute;
+      color:#fff;
+      background-color:#8533ff;
+      font-family:'Helvetica Neue',sans-serif;
+      font-size:14px;
+      line-height:25px;
+      border:0;
+      border-radius:15px;
+      margin-left: 0px;
+      margin-top: 0px;
+      width: 105px;
+      height:25px;
+    }
+    
+    /* Define text overlay for score */
+    .score {
+      position: absolute;
+      left: 1090px;
+      top: 0px;
+      width: 100px;
+      height: 115px;
+      color: #fff;
+      background-color: #8533ff;
+      font-family: 'Helvetica Neue',sans-serif;
+      font-size: 15px;
+      line-height: 22px;
+      border: 0;
+      padding: 6px 8px;
+      border-radius: 15px;
+      visibility: hidden;
+    }
+    
+    /* Define game over popup overlay */
+    #gameover {
+      position: absolute;
+      left: 450px;
+      top: 200px;
+      width: 300px;
+      height: 75px;
+      color: #fff;
+      background-color: #8533ff;
+      font-family: 'Helvetica Neue',sans-serif;
+      font-size: 40px;
+      line-height: 0px;
+      text-align: center;
+      padding: 0;
+      border-radius: 15px;
+      opacity: .85;
+      visibility: hidden;
+    }
+    
+    </style>
+    <script src="./assets/soundjs-NEXT.combined.js"></script>
+    <script src="./prefixfree.min.js"></script>
+    <script src="./assets/kitteh/pathtrack-kitteh.js"></script>
+</head>
+
+<body onload="init()">
+
+    <div id="mainContent" onclick="mouseClick(event);" onmousemove="mouseMove(event);">
+  <div id="background" class="background"></div>
+
+  <!-- Define 10 curves zones for 10 separate SVG paths
+       SVG follows different paths for obstacles to travel over
+  -->
+    <div id="curve1" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1300,116 C289,469 107,13 -100,10" />
+      </svg>
+      <p>7</p>    <!-- Default speed parameter stored in <p> tag -->
+    </div>
+
+    <div id="curve2" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1300,101 C340,129 107,13 -100,10" />
+      </svg>
+      <p>7</p>
+    </div>
+
+    <div id="curve3" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1300,289 C289,469 214,321 -100,374" />
+      </svg>
+      <p>7</p>
+    </div>
+
+    <div id="curve4" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1300,50 C252,328 144,352 -100,493" />
+      </svg>
+      <p>7</p>
+    </div>
+
+    <div id="curve5" class="curves">
+      <svg class="curves">
+        <path class="path"  d="M855,485 c 0,0 -42,-188 -183,-294 -140,-105 -764,3 -764,3" />
+      </svg>
+      <p>7</p>
+    </div>
+
+    <div id="curve6" class="curves">
+      <svg class="curves">
+        <path class="path" d="M872,-17 c 0,0 -42,188 -183,294 -140,105 -764,-3 -764,-3" />
+      </svg>
+      <p>7</p>
+    </div>
+
+    <div id="curve7" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1300,298 c-12,5 -213,210 -324,222 C 846,532 790,409 703,415 616,420 593,542 487,539 380,536 208,319 157,328 c -50,8 -202,34 -303,51" />
+      </svg>
+      <p>8</p>
+    </div>
+
+    <div id="curve8" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1305,165 c-13,4 -234,186 -346,185 C 847,350 805,222 718,218 630,214 595,332 489,318 383,304 235,69 184,72 133,76 -27,45 -128,191" />
+      </svg>
+      <p>8</p>
+    </div>
+
+    <div id="curve9" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1340,122 c-135,21 -138,390 -241,375 C 1047,463 973,443 913,411 862,348 719,175 951,238 1134,287 831,424 787,420 719,429 658,397 594,381 555,367 226,273 434,179 715,116 548,348 424,392 353,418 286,294 216,333 136,374 185,392 86,388 -63,406 -89,349 -122,352" />
+      </svg>
+      <p>10</p>
+    </div>
+
+    <div id="curve10" class="curves">
+      <svg class="curves">
+        <path class="path" d="M1353,379 C 1218,358 1202,37 1098,52 1047,87 973,107 913,139 862,201 719,375 951,311 1134,263 831,125 787,130 719,120 658,153 594,169 555,183 226,277 434,371 715,434 548,201 424,158 353,132 286,256 216,216 136,175 186,180 82,153 -66,149 -89,201 -122,198" />
+      </svg>
+      <p>10</p>
+    </div>
+
+    <!-- Laser blast animation -->
+    <div id="blast" class="blast"></div>
+
+    <!-- Kitteh and spaceship, plus four overlays that stack up as ship is hit by obstacles-->
+    <div id="kitteh" class="kitteh kittehstart">
+      <img id="kittehbase" class="kittehoverlay" style="visibility:visible;" alt="" src="./assets/kitteh/kitteh-base.png">
+      <img id="kittehshell1" class="kittehoverlay" alt="" src="./assets/kitteh/kitteh-shell1.png">
+      <img id="kittehshell2" class="kittehoverlay" alt="" src="./assets/kitteh/kitteh-shell2.png">
+      <img id="kittehshell3" class="kittehoverlay" alt="" src="./assets/kitteh/kitteh-shell3.png">
+      <img id="kittehshell4" class="kittehoverlay" alt="" src="./assets/kitteh/kitteh-shell4.png">
+    </div>
+
+    <!-- Collision effect animations, either for water or hard object -->
+    <div id="hit" class="hit params"></div>
+    <div id="water" class="hit params"></div>
+
+    <!-- Obstacles (all types, including balloons)-->
+    <img id="obstacle0" class="target spinccw" alt="rock" src="./assets/kitteh/rock1.png">
+    <img id="obstacle1" class="target spincw" alt="rock" src="./assets/kitteh/rock2.png">
+    <img id="obstacle2" class="target spinccw" alt="rock" src="./assets/kitteh/rock3.png">
+    <img id="obstacle3" class="target spincw" alt="rock" src="./assets/kitteh/rock4.png">
+    <img id="obstacle4" class="target spinccw" alt="rock" src="./assets/kitteh/rock5.png">
+    <img id="obstacle5" class="target spincw" alt="rock" src="./assets/kitteh/rock6.png">
+    <img id="obstacle6" class="target spinccw" alt="rock" src="./assets/kitteh/rock7.png">
+    <img id="obstacle7" class="target spincw" alt="rock" src="./assets/kitteh/rock8.png">
+    <img id="obstacle8" class="target spinccw" alt="rock" src="./assets/kitteh/rock9.png">
+    <img id="obstacle9" class="target spincw" alt="rock" src="./assets/kitteh/rock10.png">
+    <img id="obstacle10" class="target spinccw" alt="paint" src="./assets/kitteh/paint1.png">
+    <img id="obstacle11" class="target spincw" alt="paint" src="./assets/kitteh/paint2.png">
+    <img id="obstacle12" class="target spinccw" alt="paint" src="./assets/kitteh/paint3.png">
+    <img id="obstacle13" class="target spincw" alt="paint" src="./assets/kitteh/paint4.png">
+    <img id="obstacle14" class="target spinccw" alt="paint" src="./assets/kitteh/paint5.png">
+    <img id="obstacle15" class="target spincw" alt="paint" src="./assets/kitteh/paint6.png">
+    <img id="obstacle16" class="target spincw" alt="balloon" src="./assets/kitteh/balloon1.png">
+    <img id="obstacle17" class="target spinccw" alt="balloon" src="./assets/kitteh/balloon2.png">
+    <img id="obstacle18" class="target spincw" alt="balloon" src="./assets/kitteh/balloon3.png">
+
+    <!-- Hot spots for control buttons -->
+    <div id="buttons" class="buttons">
+      <input id="pause-button" type="button" class="button" style="margin-top:2.3em;" value="Pause" onclick="gameControl('pause');"/>
+      <input id="help-open-button" type="button" class="button" style="margin-top:4.5em;" value="Help" onclick="gameControl('openHelp');"/>
+    </div>
+
+    <!-- Score and game over overlays -->
+    <div id="gameover" class=""><p>GAME OVER!</p></div>
+    <div id="score" class="score"></div>
+
+    <!-- Additional screen overlays, splash, help, and associated buttons -->
+    <img id="splash" class="full-image" style="visibility:visible;" alt="" src="./assets/kitteh/kitteh-splash-screen.jpg">
+    <div id="start-game-button"></div>
+    <img id="help" class="full-image" style="visibility:hidden;" alt="" src="./assets/kitteh/kitteh-help-screen.jpg">
+    <div id="close-help-button"></div>
+
+
+</div>
+<script>
+    "use strict";
+
+    // General game play variables stored in central object
+    var gameSettings = {
+      interval:     1500,           // Basic game loop timer
+      duration:     120,            // In seconds
+      tracks:       10,
+      started:      false,
+      running:      false,
+      gameOver:     false,
+      hoverPaused:  true
+    }
+
+    // Set up game for play: visibility of objects, event listeners, initial object psitions
+    document.getElementById("kitteh").style.visibility = "visible";
+    document.getElementById("blast").addEventListener("transitionend", resetBlast, false);
+    document.getElementById("kitteh").addEventListener("dragstart", function(){ return false; }, false);
+    document.getElementById("start-game-button").addEventListener("click", setupGame, false);
+    document.getElementById("background").addEventListener("animationstart", startGame, false);
+    var bu = document.getElementById("hit");                  // CSS spritesheet animation of fiery collision
+    bu.addEventListener("transitionend", function(e){
+      bu.style.opacity = 1;
+      bu.style.top= "500px";        // Hide just below play field
+    }, false);
+    var wa = document.getElementById("water");                // CSS spritesheet animation of water splash
+    wa.addEventListener("transitionend", function(e){
+      wa.style.opacity = 1;
+      wa.style.top= "500px";        // Hide just below play field
+    }, false);
+
+    // Attach event listener for keyboard control -- up, down, spacebar
+    document.addEventListener('keydown', function (event) {
+      const keyName = event.key;
+      if (event.keyCode == 40 || event.keyCode == 38 || event.keyCode == 32) {
+        event.preventDefault();
+      }
+      var accel = 0;
+      if (event.altKey)      // If Alt key is pressed move in larger steps
+        accel = 20;
+      else
+        accel = 12;
+      switch (keyName.toLowerCase()) {
+        case "w":
+        case "arrowup":
+          moveShip(-accel);
+          break;
+        case "s":
+        case "arrowdown":
+          moveShip(accel);
+          break;
+        case " ":
+          fireTargets();
+          break;
+      }
+    }, false);
+
+    // Game variables and objects
+    var hover;
+    var loopInterval;
+    var gameTimer;
+    var scorecard = {
+      hits:         0,
+      washes:       0,
+      zaps:         0,
+      bodyLevel:    0,
+      elapsed:      0,
+      remaining:    0,
+      loopCount:    0
+    }
+    // Objects for holding bounding rectangles of space ship, objects, and laser shot
+    //   Used to determine object collision
+    var shot = {
+      x:        0,
+      y:        0,
+      width:    0,
+      height:   0,
+      origin:   165,    // Starting point of laser beam
+      distance: 350,    // Ending point of laser beam (no collission beyond this point)
+      active:   false
+    };
+    var target = {
+      x:        0,
+      y:        0,
+      width:    0,
+      height:   0
+    }
+    var obj = {
+      x:        0,
+      y:        0,
+      width:    0,
+      height:   0
+    }
+    var kitt = document.getElementById("kitteh");
+    var ship = {
+      x:        parseInt(window.getComputedStyle(kitt, null).left),
+      y:        parseInt(window.getComputedStyle(kitt, null).top),
+      width:    parseInt(window.getComputedStyle(kitt, null).width),
+      height:   parseInt(window.getComputedStyle(kitt, null).height),
+      curY:     parseInt(window.getComputedStyle(kitt, null).top)
+    }
+
+    // Create track paths for obstacle targets; see pathtrack-kitteh.js
+    //   Assign default settings to each track (these will change during play)
+    var targets = [];
+    var targetItems = document.getElementsByClassName("target");
+    for (var i = 0; i < targetItems.length; i++) {
+      targets.push(new PathTrack("curve1", 7, "obstacle" + i));
+    }
+
+    // Set up game to begin:
+    //  Begin hover sound, animate spaceship up, begin background scolling
+    function setupGame() {
+      createjs.Sound.play("click");
+      createjs.Sound.play("hover-start").volume = 0.4;
+      document.getElementById("kitteh").style.animationPlayState = "running";
+      var element = document.getElementById("background");
+      element.style.position = "relative";
+      element.style.animationPlayState = "running";
+      scoring(0);
+      document.getElementById("score").style.visibility = "visible";
+      document.getElementById("splash").style.visibility = "hidden";
+      document.getElementById("help").style.visibility = "hidden";
+      document.getElementById("score").style.visibility = "visibile";
+      document.getElementById("buttons").style.display = "block";
+      document.getElementById("close-help-button").addEventListener("click", function(){ gameControl('closeHelp'); }, false);
+    }
+
+    // Begin a new game: play hover sound in a loop, run and then repeat game loop, update score at gameTimer intervals
+    function startGame() {
+      gameSettings.started = true;
+      hover = createjs.Sound.play("hover", {loop:'infinite'});
+      hover.volume = 0.4;
+      gameSettings.running = true;
+      gameLoop();
+      loopInterval = setInterval(function() { gameLoop() }, gameSettings.interval);
+      gameTimer = setInterval(function() {
+        if (gameSettings.running) {
+          scorecard.elapsed++;
+          updateScoreboard();
+        }
+      }, 1000);
+    }
+
+    // Main game loop: controls timing and placement of objects on tracks
+    function gameLoop() {
+      if (gameSettings.gameOver) { pauseAni(); }                        // Exit game loop if game over or paused
+      if (!gameSettings.running) { return; }
+      var target = getRandomInt(0, targets.length-1);
+      if (targets[target].getImage().style.visibility != "visible") {   // Only use a track not already in use
+        if (targets[target].active == false) {
+          var curve = "curve" + getRandomInt(1, gameSettings.tracks);   // Get a curve track at random
+          var speed = parseInt(document.getElementById(curve).getElementsByTagName("p")[0].innerHTML);  // Get default speed for this track
+          targets[target].setTrack(curve);      // Set the curve to used
+          targets[target].setSpeed(speed);      // Set the speed
+          targets[target].animateDo();          // Initiate animation
+        }
+      }
+    }
+
+    // Move ship up or down based on mouse or keyboard
+    function moveShip(distance) {
+      ship.curY += distance;
+      if (ship.curY < -10) {ship.curY = -10;}
+      if (ship.curY > 355) {ship.curY = 355;}
+      document.getElementById("kitteh").style.top = ship.curY + "px";
+    }
+
+    // If using the mouse to move the ship, calculate new location of ship
+    function mouseMove(e) {
+      if (gameSettings.running) {
+        var tempY = e.clientY;
+        var Y = tempY.map(0, 500, -40, 350);
+        ship.curY = Y;
+        document.getElementById("kitteh").style.top = Y + "px";
+      }
+    }
+
+    // On mouse click calculate location of mouse
+    function mouseClick(e) {
+      if (gameSettings.running) {
+        var tempY = e.clientY;
+        var Y = tempY.map(0, 500, -40, 350);
+        document.getElementById("kitteh").style.top = Y + "px";
+        fireTargets();
+      }
+    }
+
+    /* Fire laser cannon based on current location of ship
+       Detect if there's a collision with laser and an object
+       If a collision, destroy the object
+       Note: Collision of objects against Kitteh's ship is handled in PathTrack function,
+         in separate js file, which also handles the animation of the obstacles along
+         their SVG tracks.
+    */
+    function fireTargets() {
+      if (!gameSettings.running) { return; }
+      var targets = document.getElementsByClassName ("target");
+      createjs.Sound.play("beamer").volume = 0.5;
+      for (var i = 0; i < targets.length; i++) {
+        shot.active = true;
+        var img = document.getElementById(targets[i].id);
+        var xPos = parseInt(window.getComputedStyle(img, null).left);
+        var yPos = parseInt(window.getComputedStyle(img, null).top);
+        var kitteh = document.getElementById("kitteh");
+        var tempX = shot.origin;
+        var tempY = parseInt(window.getComputedStyle(kitteh, null).top) + 108;
+
+        // Laser parameters for calculating hit of object
+        shot.x = tempX;
+        shot.y = tempY;
+        shot.width = shot.distance;
+        shot.height = 10;
+
+        // Target parameters for calculating hit of object
+        target.x = parseInt(window.getComputedStyle(img, null).left);
+        target.y = yPos;
+        target.width = parseInt(window.getComputedStyle(img, null).width);
+        target.height = parseInt(window.getComputedStyle(img, null).height);
+
+        // Control of visible laser shot
+        var blast = document.getElementById("blast");
+        blast.style.left = tempX + "px";
+        blast.style.top = tempY + "px";
+        blast.style.visibility = "visible";
+        blast.className = "blast";
+        blast.style.opacity = 0;
+
+        // Determine if target area is inside laser beam area
+        if (isCollide(shot, target)) {
+          if (img.style.visibility == "visible") {
+            img.style.visibility = "hidden";
+            if (img.alt.indexOf("balloon") == -1) {
+              scorecard.zaps++;
+              updateScoreboard();
+            }
+            console.log (img.id + ' destroyed');
+          }
+        } else {
+          //console.log (img.id + ' miss');
+        }
+      }
+    }
+
+    // General function for testing if the rectangle boundaries of one object
+    //   are anywhere inside the rectangle of another object
+    function isCollide(a, b) {
+      return !(
+        ((a.y + a.height) < (b.y)) ||
+        (a.y > (b.y + b.height)) ||
+        ((a.x + a.width) < b.x) ||
+        (a.x > (b.x + b.width))
+      );
+    }
+
+    // Reset the laser blast to hide it
+    function resetBlast(ev) {
+      var blast = document.getElementById("blast");
+      blast.style.visibility = "hidden";
+      blast.style.opacity = 1;
+      blast.className = '';
+    }
+
+    // Update current score in overlay
+    function scoring(hitValue) {
+      var overlays = document.getElementsByClassName("kittehoverlay");
+      for (var i = 1; i < overlays.length; i++) {
+        document.getElementById("kittehshell" + i).style.visibility = "hidden";
+      }
+      // Add or remove spaceship hulls based on damage level
+      scorecard.bodyLevel = scorecard.bodyLevel + hitValue;
+      if (scorecard.bodyLevel > 4)
+        scorecard.bodyLevel = 4;
+      if (scorecard.bodyLevel < 0)
+        scorecard.bodyLevel = 0;
+      if (scorecard.bodyLevel != 0) {
+        var id = "kittehshell" + scorecard.bodyLevel;
+        document.getElementById(id).style.visibility = "visible";
+      }
+      updateScoreboard();
+    }
+
+    function updateScoreboard() {
+      var score = document.getElementById("score");
+      var timeRemaining = gameSettings.duration - scorecard.elapsed;
+      if (timeRemaining <= 0) {
+        timeRemaining = 0;
+        gameTimer = null;
+        gameSettings.gameOver = true;
+        document.getElementById("gameover").style.visibility = "visible";
+      }
+      score.innerHTML = "Hits: " + scorecard.hits + "<br />"
+        + "Washes: " + scorecard.washes + "<br />"
+        + "Level: " + scorecard.bodyLevel + "<br />"
+        + "Zaps: " + scorecard.zaps + "<br />"
+        + "Time: " + (timeRemaining + " sec");
+    }
+
+    // Load sounds on page completion
+    function init() {
+      if (!createjs.Sound.initializeDefaultPlugins()) {
+        console.log ("Error loading SoundJS");
+      } else {
+      	createjs.Sound.addEventListener("fileload", playSound); //Event listener triggers when sounds load
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.registerSounds(
+          [ {id: "click",       src: "click.ogg"},
+            {id: "beamer",      src: "beamer.ogg"},
+            {id: "hover",       src: "hover.ogg"},
+            {id: "hover-start", src: "hover-start.ogg"},
+            {id: "hit",         src: "hit.ogg"},
+            {id: "splash",      src: "splash.ogg"}
+             ],
+            "./assets/kitteh/");
+      }
+    }
+    function playSound(event) {
+      //For testing
+      //console.log("Preloaded:", event.id, event.src);
+    }
+
+    // Control game based on control buttons pressed
+    function gameControl(cmd) {
+      createjs.Sound.play("click");     // Play a click when a button is pressed
+      switch (cmd) {
+        case "pause":
+          if (gameSettings.started) {
+            if (gameSettings.running) {
+              document.getElementById("pause-button").value = "Unpause";
+              pauseAni();
+            } else {
+              document.getElementById("pause-button").value = "Pause";
+              setTimeout(function() { unpauseAni(); }, 100);
+            }
+          }
+          break;
+        case "openHelp":
+          document.getElementById("background").style.position = "absolute";
+          document.getElementById("help").style.visibility = "visible";
+          document.getElementById("buttons").style.display = "none";
+          pauseAni();
+          break;
+        case "closeHelp":
+          document.getElementById("background").style.position = "relative";
+          document.getElementById("help").style.visibility = "hidden";
+          document.getElementById("buttons").style.display = "block";
+          setTimeout(function() { unpauseAni(); }, 100);
+          break;
+      }
+    }
+
+    // Pause and unpause the animation if Pause/Unpause button is clicked
+    function pauseAni() {
+      document.getElementById('background').style.animationPlayState = "paused";
+      if (gameSettings.started) {
+        hover.paused = true;
+        gameSettings.hoverPaused = true;
+        gameSettings.running = false;
+      }
+    }
+    function unpauseAni() {
+      document.getElementById('background').style.animationPlayState = "running";
+      if (gameSettings.started) {
+        hover.paused = false;
+        gameSettings.hoverPaused = false;
+        gameSettings.running = true;
+      }
+    }
+
+    // General function for mapping the range of one value into another range
+    Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+      return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    // General function for getting a randomly generated number
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    </script>
+</body>
+</html>
