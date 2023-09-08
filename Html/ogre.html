@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Ogre!</title>
+<meta name="description" content="Ogre! Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+#mainContent {
+  position: absolute;
+  background-color: #fafad2;
+  border-radius: 0px;
+  margin: 35px 0;
+  padding: 0;
+  width: 750px;
+  height: 250px;
+  border: 2px solid #006400;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#bg {
+  position: absolute;
+  margin: 0;
+  left: 20px;
+  opacity: .45;
+}
+
+#ogre {
+  position: absolute;
+  background-image: url("./assets/ogre.png");
+  margin 0;
+  left: 0px;
+  top: 170px;
+  width: 84px;
+  height: 80px;
+  object-fit: none;
+  object-position: -0px 0;
+  animation: play 2s steps(19) infinite;
+}
+
+@keyframes play {
+ from { background-position: -1520px; }
+   to { background-position: 0px; }
+}
+.path {
+  stroke-dasharray: 10;
+  stroke: black;
+  stroke-width: 0;
+  fill: none;
+}
+
+/* Curves style, one for each SVG path */
+.curves {
+  position: absolute;
+  overflow: hidden;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 750px;
+  height: 250px;
+}
+
+/* Rock style for rock; uses animation to make the rock spin*/
+.rock {
+  position: absolute;
+  pointer-events: none;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 20px;
+  height: 20px;
+  visibility: hidden;
+}
+.spinccw { animation: spinccw 4s linear infinite; }
+@keyframes spinccw { 100% { transform:rotate(-360deg); } }
+
+/* Scoring text */
+p {
+  position: absolute;
+  margin: 0;
+  top: 10px;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 0.8em;
+  color: #006400;
+}
+#info   { left: 5px;    }
+#score  { left: 610px;  }
+
+</style>
+<!-- Load js libraries: auto prefixing, PathTrack SVG track-following function -->
+<script src="./prefixfree.min.js"></script>
+<script src="./pathtrack-ogre.js"></script>
+
+
+</head>
+
+<body>
+
+    <div id="mainContent">
+        <img id="bg" alt="" src="./assets/ogre-bg.png">
+
+        <div id="curve1" class="curves">
+          <svg class="curves">
+            <path class="path" d="M0,188 C91,7 396,-6 375,197" />
+          </svg>
+        </div>
+    
+        <div id="curve2" class="curves">
+          <svg class="curves">
+            <path class="path" d="M0,188 C91,7 396,-6 425,197" />
+          </svg>
+        </div>
+    
+        <div id="curve3" class="curves">
+          <svg class="curves">
+            <path class="path" d="M0,188 C91,7 396,-6 500,197" />
+          </svg>
+        </div>
+    
+        <div id="curve4" class="curves">
+          <svg class="curves">
+            <path class="path" d="M0,188 C91,7 396,-6 575,197" />
+          </svg>
+        </div>
+    
+        <div id="curve5" class="curves">
+          <svg class="curves">
+            <path class="path" d="M0,188 C91,7 396,-6 650,197" />
+          </svg>
+        </div>
+    
+        <div id="ogre"></div>
+    
+        <img id="rock" class="rock spinccw" alt="rock" src="./assets/rock.png">
+        <p id="info">Click anywhere to hurl a rock!</p>
+        <p id="score">
+          Ogres left: 0<br />
+          Hits: 0
+        </p>
+    </div>
+    <script>
+    "use strict";
+
+    // Add click listener to throw a rock
+    document.getElementById("mainContent").addEventListener("click", throwRock);
+
+    // Set up objects to test rectangle bounds for rock and ogre, in order to detect collisions
+    var obj = {
+      x:        0,
+      y:        0,
+      width:    0,
+      height:   0
+    }
+    var target = {
+      x:        0,
+      y:        170,
+      width:    40,
+      height:   80,
+      curX:     0,
+      hit:      false
+    }
+
+    // Object for game play storage variables
+    var game = {
+      ogres:    6,
+      hits:     0,
+      over:     false,
+      speed:    20
+    }
+
+    var timerID;
+    var ogre = document.getElementById("ogre");
+
+    // Define a new track using some default settings
+    var rock = new PathTrack("curve2", 7, "rock");
+    resetOgre();
+
+    // Generalized object detection routine; tests when the rectangle of one
+    //   object is anywhere inside another object's rectangle
+    function isCollide(a, b) {
+      return !(
+        ((a.y + a.height) < (b.y)) ||
+        (a.y > (b.y + b.height)) ||
+        ((a.x + a.width) < b.x) ||
+        (a.x > (b.x + b.width))
+      );
+    }
+
+    // Add a new ogre to the game board
+    //   Only one ogre is allowed on the board at a time
+    function walk() {
+      if (target.hit == true) {
+        ogre.style.visibility = "hidden";
+        clearInterval(timerID);
+        resetOgre();
+        return;
+      }
+      var left = parseInt(ogre.style.left);
+      if (left > 280) {
+        ogre.style.left = parseInt(ogre.style.left) - 1 + "px";
+      } else {
+        clearInterval(timerID);
+        resetOgre();
+      }
+    }
+
+    // Throw a rock along a randomized SVG curve, using a randomized speed (speed = between 5 and 12)
+    function throwRock() {
+      if (rock.active) return;
+      var curve = "curve" + getRandomInt(1, 5);
+      var speed = getRandomInt(5, 12);
+      console.log (curve);                // Show the curve selected at random
+      rock.setTrack(curve);
+      rock.setSpeed(speed);
+      rock.animateDo();
+    }
+
+    // Place another ogre on the game board if there are any left
+    //   If no more ogres, remove click event, and show tally score
+    function resetOgre() {
+      game.ogres--;
+      updateScore();
+      if (game.ogres == 0) {
+        document.getElementById("mainContent").removeEventListener("click", throwRock);
+        game.over = true;
+        document.getElementById("info").innerText = "Game Over!";
+        ogre.style.visibility = "hidden";
+        return;
+      }
+      target.hit = false;
+      ogre.style.left = "740px";
+      ogre.style.visibility = "visible";
+      timerID = setInterval(walk, game.speed);
+    }
+
+    // Update the screen text with the score
+    function updateScore() {
+      document.getElementById("score").innerHTML = "Ogres left: " +
+        game.ogres + "<br />" +
+        "Hits: " + game.hits;
+    }
+
+    // Generalized random number generator
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    </script>
+</body>
+</html>

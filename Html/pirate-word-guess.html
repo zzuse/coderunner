@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Pirate's Cove Word Guess</title>
+<meta name="description" content="Pirate's Cove Word Guess. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="Creative Commons ShareAlike 4.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+body {
+  background-color: #526b69;
+  cursor: default;
+}
+
+#mainContent {
+  position: absolute;
+  background-color: #4d0000;
+  background-image: url('./assets/pirate/pirate-opening.jpg');
+  background-repeat: no-repeat;
+  background-size: 551px 700px;
+  background-position: center top;
+  border-radius: 2px;
+  height: 700px;
+  width: 551px;
+  padding-top: 0px;
+  overflow: hidden;
+}
+
+.text {
+  position: absolute;
+  padding: 2px 5px;
+  font-size: 0.9em;
+  color: white;
+	overflow: hidden;
+}
+#word {
+  margin-top: 68px;
+  margin-left: 106px;
+  height: 45px;
+	width: 330px;
+  visibility: hidden;
+}
+#word p {
+  margin: 0 auto;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2.5em;
+  font-weight: bold;
+  letter-spacing: 0.20em;
+}
+#score {
+  margin-top: 463px;
+  margin-left: 30px;
+  height: 75px;
+	width: 130px;
+  padding: 4px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1.0em;
+  visibility: hidden;
+}
+#keyboard {
+  position: absolute;
+  margin-top: 130px;
+  margin-left: 78px;
+  height: 125px;
+	width: 395px;
+  visibility:hidden;
+}
+
+.inner {
+	border: 1px;
+  position: absolute;
+  overflow: hidden;
+}
+
+#message {
+  position: absolute;
+  margin-top: 265px;
+  margin-left: 120px;
+  height: 60px;
+  width: 300px;
+  line-height: 60px;
+	padding: 4px;
+  border-radius: 4px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #892a00;
+  box-shadow: 5px 5px 2px -1px #dbdad9;
+  opacity: 0.75;
+  overflow: hidden;
+  visibility: hidden;
+}
+#message p {
+  margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1.2em;
+  color: #fff;
+  letter-spacing: 0.20em;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+#options {
+  position: absolute;
+  margin-top: 300px;
+  margin-left: 140px;
+  height: 70px;
+  width: 248px;
+	padding: 4px;
+  border-radius: 4px;
+  background-color: #892a00;
+  box-shadow: 5px 5px 2px -1px #dbdad9;
+  opacity: 0.75;
+  overflow: hidden;
+  visibility: hidden;
+}
+#options p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .9em;
+  font-weight: 600;
+  color: #fff;
+}
+
+.letters {
+  position: absolute;
+  cursor: pointer;
+	border: 1px;
+  width: 28px;
+  height: 32px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: white;
+  padding-left: 10px;
+}
+
+.letter-used {
+  color: gray;
+}
+
+.image {
+  position: absolute;
+  margin-left: 0px;
+  margin-top: 0px;
+  opacity: 1;
+  visibility: hidden;
+}
+</style>
+
+<script src="./prefixfree.min.js"></script>
+<script src="./assets/soundjs-NEXT.combined.js"></script>
+<script src="./assets/pirate/wordlist.js"></script>
+</head>
+
+<body onload="init()">
+    <div id="mainContent">
+        <img id="base" class="image" style="width:551px; height:700px;" alt="" src="./assets/pirate/pirate-gameboard.jpg" />
+        <img id="_concern" class="image" alt="" src="./assets/pirate/_concern.png" />
+        <img id="_worry" class="image" alt="" src="./assets/pirate/_worry.png" />
+        <img id="_upset" class="image" alt="" src="./assets/pirate/_upset.png" />
+        <img id="hair" class="image" alt="" src="./assets/pirate/hair.png" />
+        <img id="scarf" class="image" alt="" src="./assets/pirate/scarf.png" />
+        <img id="eyepatch" class="image" alt="" src="./assets/pirate/eyepatch.png" />
+        <img id="hat" class="image" alt="" src="./assets/pirate/hat.png" />
+        <img id="foil" class="image" alt="" src="./assets/pirate/foil.png" />
+        <img id="sword" class="image" alt="" src="./assets/pirate/sword.png" />
+
+        <!-- Load other image elements of game -->
+        <div id="startButton" class="inner" style="left:350px; top:605px; height:80px; width:190px;" onclick="startGame();"></div>
+        <div id="playNewGame" class="inner" style="left:25px; top:600px; height:45px; width:155px;" onclick="controlBtn('playNewGame');"></div>
+        <div id="playOptions" class="inner" style="left:25px; top:648px; height:45px; width:155px;" onclick="controlBtn('playOptions');"></div>
+        <div id="word" class="text"><p>&nbsp;</p></div>
+        <div id="score" class="text">&nbsp;</div>
+
+        <div id="message" class="overlay"><p>&nbsp;</p></div>
+
+        <!-- Prepare user interface for options popup overlay -->
+        <div id="options" class="overlay">
+          <p style="position:absolute; margin:5px;">Difficulty:</p>
+          <select id="difficultyLevel" style="position:absolute; margin-top:8px; margin-left:100px;">
+            <option>4 letter words</option>
+            <option>5 letter words</option>
+            <option>6 letter words</option>
+            <option>7 letter words</option>
+            <option>8 and 9 letter words</option>
+          </select>
+          <input style="position:absolute; margin-top:47px; margin-left:5px;" id="soundOption" name="soundOption" type="checkbox" checked="checked">
+          <p style="position:absolute; margin-top:43px; margin-left:30px;" >Sound</p>
+          <input type="button" class="button" style="position:absolute; margin-top:43px; margin-left:204px;" value="OK" onclick="controlBtn('closeOptions');"/>
+        </div>
+        <div id="keyboard" class="inner">
+            <script>
+
+              var keyboardString = "";
+              var curChar = 65;
+              var xPos = 15;
+              var yPos = 5;
+                for (var i = 0; i < 9; i++) {insertDiv();}
+              xPos = 15;
+              yPos = 45;
+                for (var i = 0; i < 9; i++) {insertDiv();}
+              xPos = 35;
+              yPos = 80;
+                for (var i = 0; i < 8; i++) {insertDiv();}
+              keyboard.innerHTML += keyboardString;
+              function insertDiv() {
+                var tstring = "<div id='" + curChar + "' class='inner letters' style='"
+                  + "margin-left:" + xPos
+                  + "px;margin-top:" + yPos
+                  + "px;' onclick=\"tryLetter(this);\">" + String.fromCharCode(curChar) + "</div>";
+                keyboardString += tstring;
+                xPos += 41;
+                curChar++;
+              }
+            </script>
+        </div>
+    </div>
+    <script>
+    // Set variables and objects for game play
+    var score = {
+      tries: 0,
+      max: 0,
+      match: 0,
+      miss: 0,
+      won: false,
+      gameOver: false
+    };
+    var difficulty = 1;
+    var sound = true;
+    var wordArr;
+    var maskArr;
+    var myWord;
+
+    // Set up local storage for saving game options
+    var soundStorage = localStorage.getItem('pirate-word-sound');
+    var difficultyStorage = localStorage.getItem('pirate-word-difficulty');
+    if (soundStorage !== null) {
+      sound = (soundStorage == 'true');
+    }
+    if (difficultyStorage !== null) {
+      difficulty = parseInt(difficultyStorage);
+    }
+
+    // Determine if guessed letter is part of word
+    function tryLetter(asciiVal) {
+      if (score.gameOver || document.getElementById("options").style.visibility == "visible") { return; }
+
+      // Check if the letter has already been used up
+      if (document.getElementById(asciiVal.id).style.color != "gray") {
+        score.tries += 1;
+
+        // Do if letter is still available:
+        var charVal = String.fromCharCode(asciiVal.id);
+
+        // Check if the letter is part of the word
+        //   index = -1 if letter is not in word
+        //   index => 0 if letter is in word
+        //   when index => 0, index indicates location of letter in word
+        var index = wordArr.indexOf(charVal);
+
+        if (Boolean(~index)) {              //Convert index value to simple boolean (-1=true; 0=false)
+          maskArr[index] = wordArr[index];
+          wordArr[index] = "";
+          var p = document.getElementById("word").getElementsByTagName("p")[0];
+          p.innerHTML = maskArr.join("");
+          score.miss -= 1;
+          score.match += 1;
+          updateScore();
+          if (sound) {                      // Play effect if sound is on
+            createjs.Sound.play("boing");
+          }
+          // Gray out used letter; look for same letters in rest of word
+          document.getElementById(asciiVal.id).style.color = "gray";
+          for (var i = 0; i < wordArr.length; i++) {
+              if (charVal == wordArr[i]) {
+                maskArr[i] = wordArr[i];
+                wordArr[i] = "";
+                p.innerHTML = maskArr.join("");
+              }
+          }
+
+          // Game over if no more letters in word
+          if (wordArr.join("") == "") {
+            score.miss = 0;
+            updateScore();
+            score.gameOver = true;
+            score.won = true;
+            gameOver();
+          }
+        } else {
+          score.miss += 1;
+          updateScore();
+          document.getElementById(asciiVal.id).style.color = "gray";
+          if (sound) {
+            createjs.Sound.play("splat");
+          }
+        }
+      } else {
+        // Letter isn't available; ignore the click
+      }
+    }
+
+    // Perform an action based on the button that was clicked
+    //   Buttons are identified by a string value contained in 'action'
+    //   This string is set up in the onclick event handler
+    function controlBtn(action) {
+      switch (action) {
+        case "playNewGame":
+          gameReset();
+          startGame();
+          break;
+        case "playOptions":
+          document.getElementById("message").style.visibility = "hidden";
+          document.getElementById("options").style.visibility = "visible";
+          break;
+        case "closeOptions":
+          sound = document.getElementById("soundOption").checked;
+          switch (document.getElementById("difficultyLevel").value) {
+            case "4 letter words":
+              difficulty = 1;
+              break;
+            case "5 letter words":
+              difficulty = 2;
+              break;
+            case "6 letter words":
+              difficulty = 3;
+              break;
+            case "7 letter words":
+              difficulty = 4;
+              break;
+            case "8 and 9 letter words":
+              difficulty = 5;
+              break;
+          }
+          if (typeof(Storage) !== "undefined") {
+            localStorage.setItem('pirate-word-sound', sound);
+            localStorage.setItem('pirate-word-difficulty', difficulty);
+          } else {
+            console.log ("Local storage is not available.");
+          }
+          document.getElementById("options").style.visibility = "hidden";
+          gameReset();
+          startGame();
+      }
+    }
+
+    // Start a new game
+    function startGame() {
+      // Get a word based on difficulty level
+      //    Level is set by user and recorded in localStorage
+      switch (difficulty) {
+        case 1:
+          myWord = words4[ getRandomInt(0, words4.length-1) ];
+          score.max = 10;
+          break;
+        case 2:
+          myWord = words5[ getRandomInt(0, words5.length-1) ];
+          score.max = 12;
+          break;
+        case 3:
+          myWord = words6[ getRandomInt(0, words6.length-1) ];
+          score.max = 14;
+          break;
+        case 4:
+          myWord = words7[ getRandomInt(0, words7.length-1) ];
+          score.max = 16;
+          break;
+        case 5:
+          myWord = words8plus[ getRandomInt(0, words8plus.length-1) ];
+          score.max = 18;
+          break;
+      }
+
+      // Comment to not see the word in the console (for development)
+      console.log (myWord);
+
+      // Split the fetched word into an array
+      wordArr = myWord.split("");
+
+      // Nifty custom function added to Arrays to assign default values to array elements
+      //   See page for other ways to do it
+      // http://stackoverflow.com/questions/2044760/default-array-values
+      Array.prototype.arrayrepeat = function(char, length){
+       while(length) this[--length] = char;
+       return this;
+      }
+      // Create a second array for a "mask"
+      maskArr = [].arrayrepeat("-", wordArr.length);
+      // Get the text box, and insert the masked version of the word into
+      var p = document.getElementById("word").getElementsByTagName("p")[0];
+      p.innerHTML = maskArr.join("");
+
+      // On game start set visibility of main scene elements
+      document.getElementById("base").style.visibility = "visible";
+      document.getElementById("startButton").style.visibility = "hidden";
+      document.getElementById("message").style.visibility = "hidden";
+      document.getElementById("keyboard").style.visibility = "visible";
+
+      // Set visibility of secondary scene elements
+      document.getElementById("score").style.visibility = "visible";
+      document.getElementById("word").style.visibility = "visible";
+
+      // Update the score (hits, misses, guesses left)
+      updateScore();
+
+    }
+
+    // Update score on each play
+    //   Add/remove pirate costume based on correct and incorrect letters guessed
+    function updateScore() {
+      var buildCharacter = Math.floor((score.match * 6) / wordArr.length);
+      if (buildCharacter >= 1)
+        document.getElementById("hair").style.visibility = "visible";
+      if (buildCharacter >= 2)
+        document.getElementById("scarf").style.visibility = "visible";
+      if (buildCharacter >= 3)
+        document.getElementById("eyepatch").style.visibility = "visible";
+      if (buildCharacter >= 4)
+        document.getElementById("hat").style.visibility = "visible";
+      if (buildCharacter >= 5)
+        document.getElementById("sword").style.visibility = "visible";
+      if (buildCharacter >= 6)
+        document.getElementById("foil").style.visibility = "visible";
+
+      document.getElementById("_concern").style.visibility = "hidden";
+      document.getElementById("_worry").style.visibility = "hidden";
+      document.getElementById("_upset").style.visibility = "hidden";
+      if (score.miss < 0)
+        score.miss = 0;
+      switch (score.miss) {
+        case 0:
+          break;
+        case 1:
+          document.getElementById("_concern").style.visibility = "visible";
+          break;
+        case 2:
+          document.getElementById("_worry").style.visibility = "visible";
+          break;
+        default:
+          document.getElementById("_upset").style.visibility = "visible";
+          break;
+      }
+
+      // Update scoring
+      var temp = "Hits: " + score.match
+        + "<br />Misses: " + score.miss
+        + "<br />Tries left: " + (score.max - score.tries);
+      document.getElementById("score").innerHTML = temp;
+
+      // Determine if game is over
+      if (score.tries >= score.max) {
+        score.gameOver = true;
+        score.won = false;
+        gameOver();
+      }
+    }
+
+    // Game over; display results in popup overlay
+    function gameOver() {
+      var p = document.getElementById("word").getElementsByTagName("p")[0];
+      p.innerHTML = myWord;
+      var message = document.getElementById("message");
+      var p = message.getElementsByTagName("p")[0];
+      message.style.visibility = "visible";
+      if (score.gameOver && score.won) {
+        p.innerHTML = "Hurray, you won!";
+      } else {
+        p.innerHTML = "Sorry, you lost!";
+      }
+    }
+
+    // Reset game back to starting position
+    function gameReset() {
+      score.tries = 0;
+      score.max =  0;
+      score.match = 0
+      score.miss = 0;
+      score.won = false;
+      score.gameOver = false;
+      document.getElementById("hair").style.visibility = "hidden";
+      document.getElementById("scarf").style.visibility = "hidden";
+      document.getElementById("eyepatch").style.visibility = "hidden";
+      document.getElementById("hat").style.visibility = "hidden";
+      document.getElementById("sword").style.visibility = "hidden";
+      document.getElementById("foil").style.visibility = "hidden";
+      document.getElementById("_concern").style.visibility = "hidden";
+      document.getElementById("_worry").style.visibility = "hidden";
+      document.getElementById("_upset").style.visibility = "hidden";
+
+      var letters = document.getElementsByClassName("letters");
+      for (var i = 0; i < letters.length; i++) {
+        document.getElementById(letters[i].id).style.color = "white";
+      }
+    }
+
+    // Generalized random number generator function
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // For debugging: triggered when sound is preloaded
+    function playSound(event) {
+      //console.log("Preloaded:", event.id, event.src);
+    }
+
+    // Load and register sounds
+    function init() {
+      if (!createjs.Sound.initializeDefaultPlugins()) {
+        console.log ("Error loading SoundJS");
+      } else {
+      	createjs.Sound.addEventListener("fileload", playSound); // add an event listener for when load is completed
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.registerSounds(
+          [ {id: "boing",  src: "boing.ogg"},
+            {id: "splat",  src: "splat.ogg"} ],
+            "./assets/pirate/");
+      }
+    }
+
+  </script>
+</body>
+</html>

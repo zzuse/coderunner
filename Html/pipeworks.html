@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Pipe Works</title>
+<meta name="description" content="Pipe Works. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+
+body {
+  background-color: #010d12;
+}
+
+#mainContent {
+  position: absolute;
+  background-color: #010d12;
+  background-image: url("./assets/pipeworks/pipe-room-bg.jpg");
+  border-radius: 0px;
+  margin: 2px;
+  padding: 0;
+  width: 1200px;
+  height: 700px;
+  overflow: hidden;
+}
+
+#overlay {
+  position: absolute;
+  margin: 0;
+  width: 1200px;
+  height: 700px;
+  overflow: hidden;
+}
+
+#grid {
+  position: absolute;
+  margin: 0;
+  top: 0;
+  left: -50px;
+  width: 1100px;
+  height: 700px;
+}
+
+.wall {
+  position: absolute;
+  margin: 0;
+  width: 100px;
+  height: 600px;
+  visibility: hidden;
+}
+#centerwall{
+  left: 450px;
+  top: 0px;
+}
+#leftwall{
+  left: 250px;
+  top: 500px;
+}
+#rightwall{
+  left: 750px;
+  top: 300px;
+}
+
+.square {
+  position: absolute;
+  margin: 0;
+  top: 100;
+  left: 300px;
+  width: 100px;
+  height: 100px;
+}
+
+.pipes {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 1px solid blue;
+}
+
+.wells {
+  position: absolute;
+  margin: 0;
+  height: 100px;
+  width: 100px;
+  left: 1096px;
+}
+#straight {   top: 16px;  }
+#ell      {   top: 127px; }
+#tee      {   top: 239px; }
+#cap      {   top: 350px; }
+
+#io {
+  position: absolute;
+  margin: 0;
+  width: 1200px;
+  height: 700px;
+}
+.outlets {
+  position: absolute;
+  margin: 0;
+  left: -50px;
+  width: 100px;
+  height: 100px;
+}
+.inlets {
+  position: absolute;
+  margin: 0;
+  left: 1050px;
+  width: 100px;
+  height: 100px;
+}
+
+#stockImg {
+  position: absolute;
+  margin: 0;
+  left: -150px;
+  width: 100px;
+  height: 100px;
+}
+
+.rotator {
+  position: absolute;
+  margin: 0;
+  height: 26px;
+  width: 26px;
+  left: 1063px;
+}
+#straight_rotate   { top: 53px;   }
+#ell_rotate        { top: 163px;  }
+#tee_rotate        { top: 274px;  }
+#cap_rotate        { top: 386px;  }
+
+#undoLastButton {
+  position: absolute;
+  margin: 0;
+  left: 1070px;
+  width: 125px;
+  top: 465px;
+  height: 30px;
+}
+
+#reservoirOuter {
+  position: absolute;
+  background-color: #d6e0f5;
+  margin: 0;
+  left: 1070px;
+  top: 510px;
+  width: 125px;
+  height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#reservoirInner {
+  position: absolute;
+  background-color: #4747d1;
+  margin: 0;
+  left: 0;
+  top: 125px;
+  width: 130px;
+  height: 125px;
+  border-radius: 0px;
+}
+#gameover {
+  position: absolute;
+  margin: 0;
+  left: 15px;
+  top: 50px;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 600;
+  font-size: 0.8em;
+  color: #fff;
+  letter-spacing: 0.20em;
+  visibility: hidden;
+}
+
+.test {
+  position: absolute;
+  background-color: red;
+  opacity: 0.60;
+  border: 1px solid white;
+  visibility: visible;
+}
+
+</style>
+
+<script src="./prefixfree.min.js"></script>
+</head>
+
+<body onload="setupGame()">
+
+  <div id="mainContent">
+
+    <!-- Build "pipe room" with overlays, walls, and "wells" for selecting a pipe -->
+    <div id="io"></div>
+    <img id="overlay" class="" alt="" src="./assets/pipeworks/pipe-room-overlay.png" />
+    <img id="stockImg" draggable="true" alt="0101" src="./assets/pipeworks/1.png" >
+    <div id="grid" class=""></div>
+
+    <!-- Display "wells" for the four types of pipe
+      Note the alt attribute. It contains a code that represents the sides of the
+      pipe that can be connected to. The coordinates are Top, Right, Bottom, Left.
+      For example, a straight pipe (when in horizontal position) has in/outlets
+      on the top and bottom: 0101.
+    -->
+    <div id="straight" class="wells">
+      <img id="img1" class="straight pipe" alt="0101" src="./assets/pipeworks/straight.png" />
+    </div>
+    <div id="ell" class="wells">
+      <img id="img2" class="ell pipe" alt="1001" src="./assets/pipeworks/ell.png" />
+    </div>
+    <div id="tee" class="wells">
+      <img id="img3" class="tee pipe" alt="0111" src="./assets/pipeworks/tee.png" />
+    </div>
+    <div id="cap" class="wells">
+      <img id="img4" class="cap pipe" alt="0001" src="./assets/pipeworks/cap.png" />
+    </div>
+
+    <!-- Create arrows to rotate the pipe in the well before selecting it -->
+    <div id="straight_rotate" class="rotator"></div>
+    <div id="ell_rotate" class="rotator"></div>
+    <div id="tee_rotate" class="rotator"></div>
+    <div id="cap_rotate" class="rotator"></div>
+
+    <!-- Button for undoing the last pipe connection -->
+    <div id="undoLastButton"></div>
+
+    <!-- Simpe game time tracker. Blue (water) fills a reservoir, and when it's full, game over. -->
+    <div id="reservoirOuter" class="">
+      <div id="reservoirInner" class="">
+        <p id="gameover">GAME OVER</p>
+      </div>
+    </div>
+
+    <!-- Wall overlays for the center, left, and right -->
+    <img id="centerwall" class="wall" alt="" src="./assets/pipeworks/wall.png" />
+    <img id="leftwall" class="wall" alt="" src="./assets/pipeworks/wall.png" />
+    <img id="rightwall" class="wall" alt="" src="./assets/pipeworks/wall.png" />
+
+  </div>
+
+  <script>
+    "use strict";                   // Option for catching more potential coding errors; see the browser console
+
+    var gameSettings = {            // General game settings
+      images:       5,
+      columns:      12,             // Gameboard is 12 columns across by 7 rows
+      rows:         7,
+      lastSource:   "",
+      lastDragged:  "",
+      lastTarget:   "",
+      interval:     1000,           // Keep at 1000 for 1 second counts
+      duration:     600,             // Set timer for game, in seconds
+      waterLevel:   0,              // Visible display of game time
+      running:      false,
+      gameOver:     false
+    }
+    var gameTimer;                  // Used for 1sec game timer interval
+
+    // Object constructor function for defining each playable square in the game
+    function Square(col, row) {
+      this.droppable = false;       // Can a pipe be dropped into this square
+      this.locked = false;          // Is square locked from further use
+      this.flow = false;            // For future expansion
+      this.col = col;               // Column/row coordinates for this square
+      this.row = row;
+      this.top = 0;                 // In/outlet values for sides
+      this.bottom = 0;
+      this.right = 0;
+      this.left = 0;
+      this.alt = "";                // Origin alt text for i/o values
+    }
+    Square.prototype = {
+      setImage: function (imageId) {
+        this.image = imageId;       // Function for setting the image applied to the square
+      },
+      reset: function() {           // Function for resetting the square
+        this.droppable = false;
+        this.locked = false;
+        this.flow = false;
+        this.top = 0;
+        this.bottom = 0;
+        this.right = 0;
+        this.left = 0;
+        this.alt = "";
+      }
+    };
+
+    // Set up a new game board by creating an 2-dimensional array of columns and rows
+    var gameboard = new Array(gameSettings.columns);
+    for (var i = 0; i < gameSettings.columns; i++) {
+      gameboard[i] = new Array(gameSettings.rows);
+    }
+
+    // Use dynamic HTML to create and insert new DIVs for each square in the game
+    //  Add event listeners for mouse drag-and-drop action
+    var grid = document.getElementById("grid");           // "grid" is the parent container
+    for (var col = 0; col < gameSettings.columns; col++) {
+      for (var row = 0; row < gameSettings.rows; row++) {
+        var div = document.createElement ("div");         // Create a new DIV
+        div.setAttribute("id", (col) + "_" + (row));      // Set its attributes
+        div.setAttribute("class", "square");
+        div.setAttribute("style", "left:" + ((col) * 100) + "px; top:" + (row * 100) + "px;");
+        grid.appendChild(div);                            // Set new DIV to the parent container
+
+        // Add all four types of drag/drop listeners
+        div.addEventListener("dragenter", dragEnter, false);
+        div.addEventListener("dragleave", dragLeave, false);
+        div.addEventListener("drop", drop, false);
+        div.addEventListener("dragover", allowDrop, false);
+
+        // Create a new Square object for each DIV in the game
+        gameboard[col][row] = new Square (col, row);
+
+      }
+    }
+
+    var di = new Square(-1, -1);            // Draggable image sentinel (appears when dragging)
+
+    var ghost = new Image();
+    ghost.src = './assets/pipeworks/pipeworks.png';
+    ghost.style.width = "100px";
+    var wells = document.getElementsByClassName("wells");
+    for (var i = 0; i < wells.length; i++) {
+      wells[i].addEventListener("dragstart", dragStart, true);
+    }
+
+    // Get all pipes and set them up for initial play
+    var pipes = document.getElementsByClassName("pipe");
+    for (var i = 0; i < pipes.length; i++) {
+      pipes[i].setAttribute('draggable', 'true');
+      pipes[i].style.transform = "rotate(0deg)";
+    }
+
+    // Set up onclick listener for the unfo button
+    var undo = document.getElementById("undoLastButton");
+    document.getElementById("undoLastButton").addEventListener("click", undoLast, false);
+
+    // Set up onclick listeners for all pipe rotator images
+    var rotators = document.getElementsByClassName("rotator");
+    for (var i = 0; i < rotators.length; i++) {
+      rotators[i].addEventListener("click", rotate, false);
+    }
+
+    // Event handler for pipe rotators; rotate the pipe 90 degrees for each click
+    function rotate(ev) {
+      var arr = ev.target.id.split("_");                // Get reference to the well associated with the rotate button
+      var well = document.getElementById(arr[0]);
+      var image = well.getElementsByTagName("img")[0];  // Get img associated with well
+      var rotImage = document.getElementById(image.id); // Get the pipe image
+      var x = image.alt.split("");                      // Set temporary array for the in/outlets
+      switch (rotImage.style.transform) {               // Further rotate image based on current rotation
+        case "rotate(0deg)":
+          rotImage.style.transform = "rotate(90deg)";
+          break;
+        case "rotate(90deg)":
+          rotImage.style.transform = "rotate(180deg)";
+          break;
+        case "rotate(180deg)":
+          rotImage.style.transform = "rotate(270deg)";
+          break;
+        case "rotate(270deg)":
+          rotImage.style.transform = "rotate(0deg)";
+          break;
+      }
+      x.unshift(x.pop());                               // Update temporary array with new in/outlets
+      rotImage.alt = x.join("");                        // Example: 0101 becomes 1010
+    }
+
+    // Event handler for undo button
+    function undoLast() {
+      var container = document.getElementById(gameSettings.lastTarget);
+      var arr = container.id.split("_");
+      gameboard[arr[0]][arr[1]].droppable = true;
+      container.style.backgroundColor = "";
+      container.innerHTML = "";
+    }
+
+    // Do this when dragging starts on a pipe
+    function dragStart(ev) {
+      ev.dataTransfer.setData("text/plain", ev.target.id);
+      ev.dataTransfer.setDragImage(ghost, 50, 50);
+      gameSettings.lastDragged = ev.target.id;
+      gameSettings.lastSource = ev.target.parentNode.id;
+      setDraggedImage(ev);
+    }
+
+    // Set up the pipe image when dragging begins
+    function setDraggedImage (ev) {
+      var x = ev.target.alt.split("");
+      di.top = parseInt(x[0]);
+      di.right = parseInt(x[1]);
+      di.bottom = parseInt(x[2]);
+      di.left = parseInt(x[3]);
+    }
+
+    // Do this when a pipe is dragged into a DIV
+    function dragEnter(ev) {
+      document.getElementById(ev.target.id).style.backgroundColor = "#aaa";
+    }
+
+    // Do this when a pipe is dragged out of a DIV
+    function dragLeave(ev) {
+      document.getElementById(ev.target.id).style.backgroundColor = null;
+    }
+
+    // Set up the dropping parameters
+    function allowDrop(ev) {
+      if (!gameSettings.running) { return; };     // No more drops if game is over
+      var arr = ev.target.id.split("_");
+      // Trap unforeseen errors in the try/catch statement
+      //   For more info see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+      try {
+        if (gameboard[arr[0]][arr[1]].droppable && arr[0] > 0 && arr[0] < (gameSettings.columns -1)) {
+          var ts = gameboard[arr[0]][arr[1]];               // Do for "this square"
+          // Validate that dropped-in square satisfies the in/outlet requirements of the target square
+          if (  (di.top == 1 && ts.top == 1) ||
+                (di.right == 1 && ts.right == 1) ||
+                (di.bottom == 1 && ts.bottom == 1) ||
+                (di.left == 1 && ts.left == 1)  ) {
+            ev.preventDefault();
+          }
+        }
+      }
+      catch(err) {
+      }
+    }
+
+    // Complete the drop by inserting pipe into destination DIV
+    //  This function uses dynamic HTML to remove the pipe DIV from one container,
+    //  and insert it into another.
+    function drop(ev) {
+      ev.preventDefault();
+
+      var container = document.getElementById(ev.target.id);    // Get id of container dropped into
+      container.style.backgroundColor = null;
+      var data = ev.dataTransfer.getData("text");               // Get id for dropped image
+      ev.target.appendChild(document.getElementById(data));     // Append dropped img as child to this container
+
+      var arr = ev.target.id.split("_");                        // Get id and split into 2-element array
+      gameboard[arr[0]][arr[1]].droppable = false;              // Use array values to mark this container as not droppable
+
+      gameSettings.lastTarget = ev.target.id;                   // Set flag for this container as the last target
+      gameSettings.lastDragged = data;                          // Set flag for img hat was last dragged
+
+      var image = document.getElementById(data);                // Get pointer to image of dropped img
+      var stockImage = document.getElementById("stockImg");     // Apply a stock image, then change it to the appropriate pipe
+      var newImage = stockImage.cloneNode(false);
+      newImage.id = "img" + gameSettings.images;
+      newImage.className = image.className;
+      newImage.style.transform = "rotate(0deg)";
+      newImage.src = image.src;
+      // Set the in/outlet pattern to match the selected pipe type
+      if (image.className.indexOf("straight") > -1) { newImage.alt = "0101";  }
+      if (image.className.indexOf("ell") > -1)      { newImage.alt = "1001";  }
+      if (image.className.indexOf("tee") > -1)      { newImage.alt = "0111";  }
+      if (image.className.indexOf("cap") > -1)      { newImage.alt = "0001";  }
+
+      // Fetch image to place into well, append to well parent
+      var well = document.getElementById(gameSettings.lastSource);
+      well.appendChild(newImage);
+      setDrops(container, image.alt);
+      gameSettings.images += 2;                                 // Increment counter for adding unique img id's
+    }
+
+    // Set pipe object values depending on in/outflow of it and surrounding pipes
+    function setDrops(container, pattern) {
+      var col = parseInt(container.id.split("_")[0]);
+      var row = parseInt(container.id.split("_")[1]);
+      var x = pattern.split("");
+      // Make sure pipe is dropping into an appropriate target DIV
+      //   If so, set the tagrt DIV according to pipe type
+      if (x[0] == 1 && row > 0) {
+        gameboard[col][row-1].droppable = true;
+        gameboard[col][row-1].bottom = 1;
+      }
+      if (x[1] == 1 && col < (gameSettings.columns-1)) {
+        gameboard[col+1][row].droppable = true;
+        gameboard[col+1][row].left = 1;
+      }
+      if (x[2] == 1 && row < gameSettings.rows) {
+        gameboard[col][row+1].droppable = true;
+        gameboard[col][row+1].top = 1;
+      }
+      if (x[3] == 1 && col > 0) {
+        gameboard[col-1][row].droppable = true;
+        gameboard[col-1][row].right = 1;
+      }
+    }
+
+    // Reset the DIV square to its initial state
+    function resetDiv() {
+      var container = document.getElementById(gameSettings.lastTarget);
+      gameboard[arr[0]][arr[1]].droppable = true;
+      container.style.backgroundColor = "none;";
+      container.innerHTML = "";
+    }
+
+    // Do this when page fully loads (right now just one function for setting up the game)
+    function init() {
+      setupGame();
+    }
+
+    // Set up the game for playing
+    function setupGame() {
+      setupIOs (2, "outlets", true);
+      setupIOs (3, "inlets", false);
+      setupWalls(document.getElementById("centerwall"), 4, 5, 0, -4);
+      setupWalls(document.getElementById("leftwall"), 1, 2, 1, 5);
+      setupWalls(document.getElementById("rightwall"), 7, 8, 1, 6);
+      gameSettings.running = true;
+      startGame();
+    }
+
+    // Randomly set the number of faucets (left side) and drains (right side) in the game
+    function setupIOs (maxPipes, className, makeDroppable) {
+      var stockImage = document.getElementById("stockImg");
+      var parentDiv = document.getElementById("io");
+      var ioArr = [];
+      while (ioArr.length < maxPipes) {
+        var row = getRandomInt(0, 6);
+        if ( ioArr.indexOf(row) < 0 ) { ioArr.push(row);  }
+      }
+      var numPipes = getRandomInt(1, maxPipes);
+      for (var i = 0; i < numPipes; i++) {
+        if (makeDroppable) {
+          gameboard[1][ioArr[i]].droppable = true;
+          gameboard[1][ioArr[i]].left = 1;
+        }
+        var pipeImg = stockImage.cloneNode(false);
+        pipeImg.id = "img" + gameSettings.images;
+        pipeImg.className = className;
+        parentDiv.appendChild(pipeImg);
+        pipeImg.style.top = (ioArr[i] * 100) + "px";
+        pipeImg.style.backgroundColor = "blue";
+        gameSettings.images += 2;
+      }
+    }
+
+    // Randomly set the number and position of intermediary walls
+    function setupWalls(element, minCol, maxCol, minRow, maxRow) {
+      var wallCol = getRandomInt(minCol, maxCol);
+      var wallRow = getRandomInt(minRow, maxRow);
+      element.style.left = (wallCol * 100) + 50 + "px";
+      element.style.top = wallRow * 100 + "px";
+      element.style.visibility = "visible";
+    }
+
+    // Begin the game
+    function startGame() {
+      gameTimer = setInterval(function() {
+        if (gameSettings.running) {
+          var reservoir = document.getElementById("reservoirInner");
+          var num = gameSettings.waterLevel;
+          var waterPos = num.map(0, gameSettings.duration, 120, 0);
+          if (waterPos > 0) {
+            reservoir.style.top = waterPos + "px";
+            gameSettings.waterLevel += 1;
+          } else {
+            document.getElementById("gameover").style.visibility = "visible";
+            reservoir.style.top = "0px";
+            gameSettings.running = false;
+            gameSettings.gameOver = true;
+            clearInterval (gameTimer);
+          }
+        }
+      }, gameSettings.interval);
+    }
+
+    // Generic function for mapping one set of numbers into another set
+    Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+      return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    // Generic function for generating a random number
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+  </script>
+  </body>
+</html>
