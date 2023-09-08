@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8" />
+<title>Planet Pizza 3 (with CSS animation)</title>
+<meta name="description" content="Planet Pizza 3 (with CSS animation). Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- See lessons 1 and 2 code and book description for basic comments -->
+
+<style>
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/planet/planetscape.jpg");
+  width: 600px;
+  height: 600px;
+  user-select: none;
+  overflow: hidden;
+}
+#ship {
+  position: absolute;
+  height: 200px;
+  width: 120px;
+  left: 175px;
+  top: 0px;
+  transition-timing-function: ease-in-out;
+  transition-duration: 1s;
+  transition-property: left, top;
+  overflow: hidden;
+}
+#shipImg {
+  height: 175px;
+  margin: 0;
+}
+
+/* Exhaust animation, using 6-frame spritesheet */
+#exhaust {
+  position:absolute;
+  top: 143px;
+  left: 45px;
+  width: 25px;
+  height: 70px;
+  visibility: hidden;
+  animation: exhaust .6s steps(6) infinite;
+  background-image: url("./assets/planet/flames-sprite.png");
+}
+.panel {
+  position: absolute;
+  height: 600px;
+  width: 600px;
+  opacity: 0;
+  transition: opacity 1.5s linear;
+}
+
+.controls {
+  position: absolute;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+}
+#left   { left: 2px;   top: 450px; }
+#right  { left: 128px; top: 450px; }
+#up     { left: 65px;  top: 455px; }
+#down   { left: 65px;  top: 520px; height: 80px; }
+
+p {
+  position: absolute;
+  color: yellow;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .75em;
+  font-weight: 600;
+  top: 494px;
+  left: 530px;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+
+<body>
+  <div id="mainContent">
+    <div id="ship">
+      <div id="exhaust"></div>
+      <img id="shipImg" class="image" alt="" src="./assets/planet/ship.png" />
+    </div>
+    <img id="leftpanel" class="panel" alt="" src="./assets/planet/leftpanel.png" />
+    <img id="rightpanel" class="panel" alt="" src="./assets/planet/rightpanel.png" />
+    <div id="left" class="controls"></div>
+    <div id="right" class="controls"></div>
+    <div id="down" class="controls"></div>
+    <div id="up" class="controls"></div>
+    <p id="result">&nbsp;</p>
+  </div>
+  <script>
+
+    var timerID;
+    var fuel = 1000;                      // Fuel amount acts as count-down scoring mechanism
+    var gameEnabled = false;              // Keep game from playing until ready
+    var gameOver = false;                 // Prevent further play after game is over
+    var readout = document.getElementById ("result");
+    var theShip = document.getElementById ("ship");
+    theShip.addEventListener("transitionend", moveComplete);
+    var controls = document.getElementsByClassName ("controls");
+    for (var i = 0; i < controls.length; i++) {
+      controls[i].onclick = function() { shipControl(this) };
+    }
+    window.onload = function() {
+      var panels = document.getElementsByClassName ("panel");
+      for (var i = 0; i < panels.length; i++) {
+        panels[i].style.opacity = 1;
+      }
+      panels[0].addEventListener("transitionend", beginGame, false);
+    };
+
+    // Start the game, and run interval timer every 1/4 second
+    function beginGame() {
+      if (!gameOver) {
+        gameEnabled = true;
+        document.getElementById("exhaust").style.visibility = "visible";
+        timerID = setInterval(updateFuel, 250);
+      }
+    }
+
+    // Calculate remaining fuel by subtracting 25 points at each interval
+    function updateFuel() {
+      fuel -=25;
+      if (fuel <= 0) {                        // Fuel is empty, game is over
+        fuel = 0;
+        clearInterval(timerID);
+        document.getElementById("exhaust").style.visibility = "hidden";
+        theShip.style.top = "320px";
+        gameOver = true;
+        crashed();                            // Ship crashes because no more fuel
+      } else {
+        readout.innerText = "Fuel: " + fuel;
+      }
+    }
+
+    function shipControl (control) {
+      if (gameOver || !gameEnabled) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+      switch (control.id) {
+        case "left":
+          theShip.style.left = (left - 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "right":
+          theShip.style.left = (left + 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "down":
+          theShip.style.top = (top + 120) + "px";
+          break;
+        case "up":
+          theShip.style.top = (top - 10) + "px";
+          break;
+      }
+    }
+
+    function moveComplete() {
+      if (gameOver) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+      switch (true) {
+        case (left < 0):
+          theShip.style.left = "0px";
+          break;
+        case (left > 500):
+          theShip.style.left = "500px";
+          break;
+        case (top < 5):
+          theShip.style.top = "5px";
+          break;
+        case (top > 300 && top < 310):
+          landed();
+          break;
+        case (top >= 310):
+          crashed();
+          break;
+      }
+    }
+
+    // Display game won
+    function landed() {
+      gameOver = true;
+      clearInterval(timerID);
+      document.getElementById("result").innerText = "LANDED";
+      document.getElementById("result").style.visibility = "visible";
+      document.getElementById("leftpanel").style.transition = "opacity .5s linear";
+      document.getElementById("leftpanel").style.opacity = 0;
+      document.getElementById("exhaust").style.visibility = "hidden";
+    }
+
+    // Display game lost
+    function crashed() {
+      gameOver = true;
+      clearInterval(timerID);
+      theShip.style.transitionProperty = "transform, top";
+      theShip.style.transform = "rotate(250deg)";
+      theShip.style.top = "500px";
+      document.getElementById("result").innerText = "CRASH!";
+      document.getElementById("result").style.visibility = "visible";
+      document.getElementById("leftpanel").style.transition = "opacity .5s linear";
+      document.getElementById("leftpanel").style.opacity = 0;
+      document.getElementById("exhaust").style.visibility = "hidden";
+    }
+
+  </script>
+</body>
+</html>

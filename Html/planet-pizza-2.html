@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8" />
+<title>Planet Pizza 2</title>
+<meta name="description" content="Planet Pizza 2. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- See lesson 1 code and book description for basic comments -->
+
+<style>
+#mainContent {
+  position: absolute;
+  background-image: url("./assets/planet/planetscape.jpg");
+  width: 600px;
+  height: 600px;
+  user-select: none;
+  overflow: hidden;
+}
+#ship {
+  position: absolute;
+  height: 175px;
+  left: 175px;
+  top: 0px;
+  transition-timing-function: ease-in-out;
+  transition-duration: 1s;
+  transition-property: left, top;
+}
+
+.panel {
+  position: absolute;
+  height: 600px;
+  width: 600px;
+  opacity: 0;
+  transition: opacity 2.5s linear;
+}
+
+.controls {
+  position: absolute;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+}
+#left   { left: 2px;   top: 450px; }
+#right  { left: 128px; top: 450px; }
+#up     { left: 65px;  top: 455px; }
+#down   { left: 65px;  top: 520px; height: 80px; }
+
+p {
+  position: absolute;
+  color: yellow;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .8em;
+  font-weight: 600;
+  top: 492px;
+  left: 530px;
+  visibility: hidden;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+
+<body>
+  <div id="mainContent">
+    <img id="ship" class="image" alt="" src="./assets/planet/ship.png" />
+    <img id="leftpanel" class="panel" alt="" src="./assets/planet/leftpanel.png" />
+    <img id="rightpanel" class="panel" alt="" src="./assets/planet/rightpanel.png" />
+    <div id="left" class="controls"></div>
+    <div id="right" class="controls"></div>
+    <div id="down" class="controls"></div>
+    <div id="up" class="controls"></div>
+    <p id="result"> </p>
+  </div>
+
+  <script>
+
+    // Set up game, get ship ID
+    var gameOver = false;
+    var theShip = document.getElementById ("ship");
+
+    // Set up event for when ship movement is ended
+    theShip.addEventListener("transitionend", moveComplete);
+    var controls = document.getElementsByClassName ("controls");
+
+    // Add onclick handlers for the four hotspot controls
+    for (var i = 0; i < controls.length; i++) {
+      controls[i].onclick = function() { shipControl(this) };
+    }
+
+    // Add onload handler to autostart the game when page finishes loading
+    //  Display panels to indicate game is ready to play
+    window.onload = function() {
+      var panels = document.getElementsByClassName ("panel");
+      for (var i = 0; i < panels.length; i++) {
+        panels[i].style.opacity = 1;
+      }
+    };
+
+    // Control ship movement by clicking on hotspot control areas
+    //   Each movement causes a CSS transition to begin
+    function shipControl (control) {
+      if (gameOver) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+      switch (control.id) {
+        case "left":
+          theShip.style.left = (left - 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "right":
+          theShip.style.left = (left + 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "down":
+          theShip.style.top = (top + 120) + "px";
+          break;
+        case "up":
+          theShip.style.top = (top - 10) + "px";
+          break;
+      }
+    }
+
+    // Function called when ship movement transition has ended
+    function moveComplete() {
+      if (gameOver) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+
+      // Determine location of ship
+      switch (true) {
+        case (left < 0):                                  // Keep ship within playing area
+          theShip.style.left = "0px";
+          break;
+        case (left > 500):
+          theShip.style.left = "500px";
+          break;
+        case (top < 5):
+          theShip.style.top = "5px";
+          break;
+        case (top > 300 && top < 310):                    // Safe landing zone
+          theShip.style.transitionProperty = "opacity";
+          theShip.style.transitionDuration = "2s";
+          theShip.style.opacity = .4;
+          gameOver = true;
+          document.getElementById("result").innerText = "LANDED";
+          document.getElementById("result").style.visibility = "visible";
+          document.getElementById("leftpanel").style.transition = "opacity .5s linear";
+          document.getElementById("leftpanel").style.opacity = 0;
+          break;
+        case (top >= 310):                                // Oops, too far!
+          theShip.style.transitionProperty = "transform, top";
+          theShip.style.transform = "rotate(250deg)";
+          theShip.style.top = "500px";
+          gameOver = true;
+          document.getElementById("result").innerText = "CRASH!";
+          document.getElementById("result").style.visibility = "visible";
+          document.getElementById("leftpanel").style.transition = "opacity .5s linear";
+          document.getElementById("leftpanel").style.opacity = 0;
+          break;
+      }
+    }
+
+  </script>
+
+</body>
+</html>

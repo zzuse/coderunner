@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8" />
+<title>Planet Pizza 1</title>
+<meta name="description" content="Planet Pizza 1. Version 1.0" />
+<meta name="author" content="The Gamer's Guide to Coding; www.buenacreek.com" />
+<meta name="dcterms.rights" content="https://creativecommons.org/licenses/by-sa/4.0/" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+#mainContent {                        /* Main play area */
+  position: absolute;
+  background-image: url("./assets/planet/planetscape.jpg");
+  width: 600px;
+  height: 600px;
+  user-select: none;
+  overflow: hidden;
+}
+
+#ship {                               /* Ship, with CSS transition properties */
+  position: absolute;
+  height: 175px;
+  left: 175px;
+  top: 0px;
+  transition-timing-function: ease-in-out;
+  transition-duration: 1s;
+  transition-property: left, top;
+}
+.panel {                              /* Class style for control panels, left and right */
+  position: absolute;
+  height: 600px;
+  width: 600px;
+}
+
+.controls {                           /* Class style for hotspot control buttons */
+  position: absolute;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+}
+#left   { left: 2px;   top: 450px; }  /* Hotspots for individual controls */
+#right  { left: 128px; top: 450px; }
+#up     { left: 65px;  top: 455px; }
+#down   { left: 65px;  top: 520px; height: 80px; }
+
+p {
+  position: absolute;                 /* Info text (bottom right) */
+  color: yellow;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .8em;
+  font-weight: 600;
+  top: 492px;
+  left: 530px;
+  visibility: hidden;
+}
+
+</style>
+<script src="./prefixfree.min.js"></script>
+</head>
+<body>
+    <div id="mainContent">
+         <img id="ship" class="image" alt="" src="./assets/planet/ship.png" />
+         <img id="leftpanel" class="panel" alt="" src="./assets/planet/leftpanel.png" />
+         <img id="rightpanel" class="panel" alt="" src="./assets/planet/rightpanel.png" />
+         <div id="left" class="controls"></div>
+         <div id="right" class="controls"></div>
+         <div id="down" class="controls"></div>
+         <div id="up" class="controls"></div>
+         <p id="result"> </p>
+    </div>
+    <script>
+
+    var gameOver = false;
+    var theShip = document.getElementById ("ship");
+    theShip.addEventListener("transitionend", moveComplete);
+
+    var controls = document.getElementsByClassName ("controls");
+    for (var i = 0; i < controls.length; i++) {
+      controls[i].onclick = function() { shipControl(this) };
+    }
+
+    function shipControl (control) {
+      if (gameOver) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+      switch (control.id) {
+        case "left":
+          theShip.style.left = (left - 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "right":
+          theShip.style.left = (left + 35) + "px";
+          theShip.style.top = (top + 15) + "px";
+          break;
+        case "down":
+          theShip.style.top = (top + 120) + "px";
+          break;
+        case "up":
+          theShip.style.top = (top - 10) + "px";
+          break;
+      }
+    }
+
+    function moveComplete() {
+      if (gameOver) return;
+      var left = parseInt(window.getComputedStyle(theShip, null).left);
+      var top = parseInt(window.getComputedStyle(theShip, null).top);
+      switch (true) {
+        case (left < 0):
+          theShip.style.left = "0px";
+          break;
+        case (left > 500):
+          theShip.style.left = "500px";
+          break;
+        case (top < 5):
+          theShip.style.top = "5px";
+          break;
+        case (top > 300 && top < 310):
+          theShip.style.transitionProperty = "opacity";
+          theShip.style.transitionDuration = "2s";
+          theShip.style.opacity = .4;
+          gameOver = true;
+          document.getElementById("result").innerText = "LANDED";
+          document.getElementById("result").style.visibility = "visible";
+          break;
+        case (top >= 310):
+          theShip.style.transitionProperty = "transform, top";
+          theShip.style.transform = "rotate(250deg)";
+          theShip.style.top = "500px";
+          gameOver = true;
+          document.getElementById("result").innerText = "CRASH!";
+          document.getElementById("result").style.visibility = "visible";
+          break;
+      }
+    }
+
+  </script>
+</body>
+</html>
