@@ -16,7 +16,7 @@ ExternalProject_Add(
 ExternalProject_Get_Property(catch2_build install_dir)
 file(MAKE_DIRECTORY "${install_dir}/include")
 
-# message(${install_dir})
+message(${install_dir})
 add_library(catch2 STATIC IMPORTED GLOBAL)
 add_dependencies(catch2 catch2_build)
 set_target_properties(catch2 PROPERTIES
