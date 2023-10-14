@@ -1,4 +1,7 @@
 # These tests can use the Catch2-provided main
+file(GLOB ADD_CASE
+        ../cases/*.cpp
+	)
 find_package(Catch2 REQUIRED)
-add_executable(mytests main.cpp)
+add_executable(mytests main.cpp ${ADD_CASE})
 target_link_libraries(mytests PRIVATE Catch2::Catch2)

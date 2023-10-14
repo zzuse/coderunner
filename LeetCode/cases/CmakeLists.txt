@@ -1,4 +1,0 @@
-add_library(
-        cases SHARED
-		example.cpp
-		)
