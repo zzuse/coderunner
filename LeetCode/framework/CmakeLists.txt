@@ -2,6 +2,5 @@
 file(GLOB ADD_CASE
         ../cases/*.cpp
 	)
-find_package(Catch2 REQUIRED)
 add_executable(mytests main.cpp ${ADD_CASE})
-target_link_libraries(mytests PRIVATE Catch2::Catch2)
+target_link_libraries(mytests PRIVATE catch2 args)

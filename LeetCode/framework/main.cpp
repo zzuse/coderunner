@@ -3,30 +3,19 @@
 
 int main(int argc, char* argv[])
 {
-    // args::ArgumentParser parser("This is a test program.", "This goes after the options.");
-    // args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
-    // args::CompletionFlag completion(parser, {"complete"});
-    // try {
-    //     parser.ParseCLI(argc, argv);
-    // } catch (const args::Completion& e) {
-    //     std::cout << e.what();
-    //     return 0;
-    // } catch (const args::Help&) {
-    //     std::cout << parser;
-    //     return 0;
-    // } catch (const args::ParseError& e) {
-    //     std::cerr << e.what() << std::endl;
-    //     std::cerr << parser;
-    //     return 1;
-    // }
-    // return 0;
-    // int loglevel = 0;
     Catch::Session session;
-    using namespace Catch::Clara;
-    auto cli = session.cli() | Opt(loglevel, "loglevel")["-l"]["--loglevel"]("log level");
-    session.cli(cli);
-    int returnCode = session.applyCommandLine(argc, argv);
-    if (returnCode != 0) return returnCode;
-    session.run();
-    return 0;
+
+    args::ArgumentParser parser("This is a leetcode testing framework.", "This goes after the options.");
+    args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+    args::ValueFlag<int> logLevel(parser, "logLevel", "log level flag", {'l', "log"}, -1);
+    try {
+        parser.ParseCLI(argc, argv);
+    } catch (args::Error e) {
+        // std::cerr << e.what() << std::endl;
+        std::cerr << parser;
+        int returnCode = session.applyCommandLine(1, argv);
+        std::cout << returnCode << std::endl;
+    }
+    int numFailed = session.run();
+    return numFailed;
 }

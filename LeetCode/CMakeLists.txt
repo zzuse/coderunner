@@ -28,16 +28,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb")
 ##################MACROS#############################
 ##################MACROS#############################
 
-SET(PRJ_HEADER_PATH include utils/yaml utils/json/nlohmann utils/catch utils/file_op utils/argparse)
+# SET(PRJ_HEADER_PATH include utils/yaml utils/json/nlohmann utils/catch utils/file_op utils/argparse)
 
 include_directories(${PRJ_HEADER_PATH})
-
-
-set(THIRD_PARTY_LIBS
-        -lleet_code_problems
-        libstdc++.a
-        -lm
-        )
 
 add_subdirectory(utils)
 # add_subdirectory(profiler)
