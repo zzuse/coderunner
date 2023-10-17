@@ -1,5 +1,5 @@
+#include "include/argparse/argparse.hpp"
 #include <catch2/catch_all.hpp>
-#include <include/argparse.hpp>
 
 int main(int argc, char* argv[])
 {

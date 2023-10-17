@@ -2,7 +2,7 @@
 add_library(static-cxx-runtime INTERFACE IMPORTED GLOBAL)
 
 # args
-include(args.cmake)
+include(argparse.cmake)
 
 # catch2
 include(catch2.cmake)

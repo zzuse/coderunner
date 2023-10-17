@@ -3,4 +3,4 @@ file(GLOB ADD_CASE
         ../cases/*.cpp
 	)
 add_executable(mytests main.cpp ${ADD_CASE})
-target_link_libraries(mytests PRIVATE catch2 args)
+target_link_libraries(mytests PRIVATE catch2 argparse)
