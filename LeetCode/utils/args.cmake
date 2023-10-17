@@ -2,8 +2,8 @@ include(ExternalProject)
 
 ExternalProject_Add(
     args_build
-    GIT_REPOSITORY https://github.com/Taywee/args.git
-    GIT_TAG 6.4.6
+    GIT_REPOSITORY https://github.com/p-ranav/argparse
+    GIT_TAG v2.9
     UPDATE_COMMAND ""
     INSTALL_COMMAND ""
 )
