@@ -21,10 +21,11 @@ int main(int argc, char* argv[])
     try {
         auto catch_cases = program.get<std::vector<std::string>>("catchcase");
         std::cout << catch_cases.size() << " test provided" << std::endl;
-        char* args[] = {"leetcoder", "Factorials are computed"};
+        std::string test_name = catch_cases[0];
+        char* args[] = {(char*)"leetcoder", (char*)test_name.c_str()};
         Catch::Session session;
         session.applyCommandLine(2, args);
-        int numFailed = session.run();
+        session.run();
     } catch (std::logic_error& e) {
         std::cout << "No test provided" << std::endl;
     }
