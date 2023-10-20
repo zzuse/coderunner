@@ -2,5 +2,5 @@
 file(GLOB ADD_CASE
         ../cases/*.cpp
 	)
-add_executable(mytests main.cpp ${ADD_CASE})
-target_link_libraries(mytests PRIVATE catch2 argparse)
+add_executable(leetcoder main.cpp ${ADD_CASE})
+target_link_libraries(leetcoder PRIVATE catch2 argparse)
