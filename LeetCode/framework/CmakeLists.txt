@@ -3,4 +3,5 @@ file(GLOB ADD_CASE
         ../cases/*.cpp
 	)
 add_executable(leetcoder main.cpp ${ADD_CASE})
-target_link_libraries(leetcoder PRIVATE catch2 argparse)
+target_link_libraries(leetcoder PRIVATE catch2 argparse spdlog)
+target_include_directories(leetcoder PRIVATE ${PRJ_HEADER_PATH})

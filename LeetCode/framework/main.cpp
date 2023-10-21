@@ -1,4 +1,5 @@
 #include "include/argparse/argparse.hpp"
+#include "log.h"
 #include <catch2/catch_all.hpp>
 
 int main(int argc, char* argv[])
@@ -17,6 +18,7 @@ int main(int argc, char* argv[])
     }
     auto loglevel = program.get<int>("loglevel");
     std::cout << "Log Level" << loglevel << std::endl;
+    set_log_level(loglevel);
 
     try {
         auto catch_cases = program.get<std::vector<std::string>>("catchcase");
