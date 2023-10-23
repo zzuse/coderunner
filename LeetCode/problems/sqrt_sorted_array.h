@@ -39,3 +39,24 @@ public:
         return results3;
     }
 };
+
+class SolutionBetter {
+public:
+    vector<int> sortedSquares(vector<int>& nums)
+    {
+        vector<int> results(nums.size(), 0);
+        int k = nums.size() - 1;
+        for (int i = 0, j = nums.size() - 1; (i <= j) && (k >= 0);) {
+            if (abs(nums[i]) < abs(nums[j])) {
+                results[k] = nums[j] * nums[j];
+                j--;
+                k--;
+            } else {
+                results[k] = nums[i] * nums[i];
+                i++;
+                k--;
+            }
+        }
+        return results;
+    }
+};
