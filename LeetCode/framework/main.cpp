@@ -1,5 +1,5 @@
+#include "common.h"
 #include "include/argparse/argparse.hpp"
-#include "log.h"
 #include <catch2/catch_all.hpp>
 
 int main(int argc, char* argv[])
@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
         std::exit(1);
     }
     auto loglevel = program.get<int>("loglevel");
-    std::cout << "Log Level" << loglevel << std::endl;
+    std::cout << "Log Level " << loglevel << std::endl;
     set_log_level(loglevel);
 
     try {

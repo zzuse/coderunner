@@ -28,7 +28,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb")
 ##################MACROS#############################
 ##################MACROS#############################
 
-SET(PRJ_HEADER_PATH include)
+SET(PRJ_HEADER_PATH include problems)
 
 include_directories(${PRJ_HEADER_PATH})
 
