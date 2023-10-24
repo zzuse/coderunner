@@ -38,6 +38,23 @@ public:
         }
         return results3;
     }
+
+    void duplicateZeros(vector<int>& arr)
+    {
+        for (int i = 0; i < arr.size();) {
+            if (arr[i] == 0) {
+                int j = arr.size() - 1;
+                while (j > i + 1) {
+                    arr[j] = arr[j - 1];
+                    j--;
+                }
+                if ((i + 1) < arr.size()) arr[i + 1] = 0;
+                i = i + 2;
+            } else {
+                i++;
+            }
+        }
+    }
 };
 
 class SolutionBetter {
@@ -58,5 +75,46 @@ public:
             }
         }
         return results;
+    }
+
+    void duplicateZeros(vector<int>& arr)
+    {
+        int count = 0;
+        for (int i = 0; i < arr.size(); i++) {
+            if (arr[i] == 0) {
+                count++;
+            }
+        }
+        int i = arr.size() - 1;
+        for (int j = count + arr.size() - 1; j >= 0 && i >= 0;) {
+            if (j > arr.size() - 1) {
+                if (arr[i] == 0) {
+                    j--;
+                    i--;
+                    if (j > arr.size() - 1) {
+                        j--;
+                    } else {
+                        arr[j] = 0;
+                        j--;
+                    }
+                } else {
+                    j--;
+                    i--;
+                }
+            } else {
+                // cout << "j" << j << " " << arr[j] << endl;
+                if (arr[i] == 0) {
+                    arr[j] = 0;
+                    j--;
+                    arr[j] = 0;
+                    i--;
+                    j--;
+                } else {
+                    arr[j] = arr[i];
+                    j--;
+                    i--;
+                }
+            }
+        }
     }
 };
