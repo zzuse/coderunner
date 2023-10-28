@@ -17,9 +17,8 @@ int main(int argc, char* argv[])
         std::exit(1);
     }
     auto loglevel = program.get<int>("loglevel");
-    std::cout << "Log Level " << loglevel << std::endl;
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(set_log_level(loglevel));
+    spdlog::info("Log Level: {}", loglevel);
+    set_log_config(loglevel);
 
     try {
         auto catch_cases = program.get<std::vector<std::string>>("catchcase");

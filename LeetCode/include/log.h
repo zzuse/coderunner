@@ -10,24 +10,35 @@ typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::nanoseconds Unit;
 typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
 
-inline spdlog::level::level_enum set_log_level(int level)
+inline void set_log_config(int level)
 {
-    auto log_level = spdlog::level::debug;
+    spdlog::init_thread_pool(8192, 1);
+    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("run.log", true);
+    spdlog::level::level_enum spd_log_level = spdlog::level::level_enum::info;
     switch (level) {
+        case 0:
+            spd_log_level = spdlog::level::level_enum::debug;
+            break;
         case 1:
-            log_level = spdlog::level::info;
+            spd_log_level = spdlog::level::level_enum::info;
             break;
         case 2:
-            log_level = spdlog::level::warn;
-            break;
-        case 3:
-            log_level = spdlog::level::err;
+            spd_log_level = spdlog::level::level_enum::warn;
             break;
         default:
-            log_level = spdlog::level::debug;
             break;
     }
-    return log_level;
+    console_sink->set_level(spdlog::level::level_enum::warn);
+    file_sink->set_level(spd_log_level);
+
+    std::vector<spdlog::sink_ptr> sinks{console_sink, file_sink};
+    auto logger = std::make_shared<spdlog::async_logger>("leet", sinks.begin(), sinks.end(), spdlog::thread_pool(),
+                                                         spdlog::async_overflow_policy::block);
+    spdlog::register_logger(logger);
+    spdlog::set_default_logger(logger);
+    spdlog::flush_every(std::chrono::seconds(3));
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%n] [%^%l%$] [%t] %v");
 }
 
 inline double difftime(TimePoint e_time, TimePoint s_time)
