@@ -102,6 +102,7 @@ public:
                     i--;
                 }
             } else {
+                spdlog::info("j: {} arr[j]: {}", j, arr[j]);
                 // cout << "j" << j << " " << arr[j] << endl;
                 if (arr[i] == 0) {
                     arr[j] = 0;
