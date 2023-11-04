@@ -11,8 +11,8 @@
             "program": "${workspaceRoot}/bin/leetcoder",
             "args": [
                 "-l",
-                "2",
-                "Duplicate Zeros"
+                "0",
+                "Merge Sorted Array"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",

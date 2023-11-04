@@ -21,3 +21,38 @@ TEST_CASE("Duplicate Zeros", "[array]")
     solution.duplicateZeros(input2);
     REQUIRE(input2 == std::vector<int>({8, 4, 5, 0, 0, 0, 0, 0}));
 }
+
+TEST_CASE("Merge Sorted Array", "[array]")
+{
+    Solution solution;
+    SECTION("two array greater than 1")
+    {
+        std::vector<int> nums1 = {1, 2, 3, 0, 0, 0};
+        std::vector<int> nums2 = {2, 5, 6};
+        int m = 3, n = 3;
+        REQUIRE(nums1.size() == m + n);
+        REQUIRE(nums2.size() == n);
+        solution.merge(nums1, m, nums2, n);
+        REQUIRE(nums1 == std::vector<int>({1, 2, 2, 3, 5, 6}));
+    }
+    SECTION("first array equal 1")
+    {
+        std::vector<int> nums1 = {1};
+        std::vector<int> nums2 = {};
+        int m = 1, n = 0;
+        REQUIRE(nums1.size() == m + n);
+        REQUIRE(nums2.size() == n);
+        solution.merge(nums1, m, nums2, n);
+        REQUIRE(nums1 == std::vector<int>({1}));
+    }
+    SECTION("second array equal 1")
+    {
+        std::vector<int> nums1 = {0};
+        std::vector<int> nums2 = {1};
+        int m = 0, n = 1;
+        REQUIRE(nums1.size() == m + n);
+        REQUIRE(nums2.size() == n);
+        solution.merge(nums1, m, nums2, n);
+        REQUIRE(nums1 == std::vector<int>({1}));
+    }
+}
