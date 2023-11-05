@@ -55,4 +55,14 @@ TEST_CASE("Merge Sorted Array", "[array]")
         solution.merge(nums1, m, nums2, n);
         REQUIRE(nums1 == std::vector<int>({1}));
     }
+    SECTION("include negative numbers")
+    {
+        std::vector<int> nums1 = {-5, -1, 0, 1, 4, 5, 0, 0, 0};
+        std::vector<int> nums2 = {-2, 2, 3};
+        int m = 6, n = 3;
+        REQUIRE(nums1.size() == m + n);
+        REQUIRE(nums2.size() == n);
+        solution.merge(nums1, m, nums2, n);
+        REQUIRE(nums1 == std::vector<int>({-5, -2, -1, 0, 1, 2, 3, 4, 5}));
+    }
 }
