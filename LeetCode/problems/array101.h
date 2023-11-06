@@ -61,8 +61,8 @@ public:
         vector<int> temp;
         for (int i = 0; i < m; i++) temp.push_back(nums1[i]);
         int i = 0, j = 0, k = 0;
-        while (i < m && temp[i]) {
-            if (temp[i] <= nums2[j]) {
+        while (i < m && j < n && temp[i] && nums2[j]) {
+            if (temp[i] < nums2[j]) {
                 nums1[k] = temp[i];
                 k++;
                 i++;
@@ -72,7 +72,12 @@ public:
                 j++;
             }
         }
-        while (j < n) {
+        while (i < m && temp[i]) {
+            nums1[k] = temp[i];
+            k++;
+            i++;
+        }
+        while (j < n && nums2[j]) {
             nums1[k] = nums2[j];
             k++;
             j++;
