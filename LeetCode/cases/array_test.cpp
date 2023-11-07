@@ -24,7 +24,7 @@ TEST_CASE("Duplicate Zeros", "[array]")
 
 TEST_CASE("Merge Sorted Array", "[array]")
 {
-    Solution solution;
+    SolutionBetter solution;
     SECTION("two array greater than 1")
     {
         std::vector<int> nums1 = {1, 2, 3, 0, 0, 0};
