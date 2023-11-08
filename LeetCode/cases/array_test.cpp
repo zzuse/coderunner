@@ -57,6 +57,7 @@ TEST_CASE("Merge Sorted Array", "[array]")
     }
     SECTION("include negative numbers")
     {
+        spdlog::info("include negative numbers");
         std::vector<int> nums1 = {-5, -1, 0, 1, 4, 5, 0, 0, 0};
         std::vector<int> nums2 = {-2, 2, 3};
         int m = 6, n = 3;
