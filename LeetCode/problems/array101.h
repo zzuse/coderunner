@@ -83,6 +83,22 @@ public:
             j++;
         }
     }
+
+    int removeElement(vector<int>& nums, int val)
+    {
+        int j = nums.size() - 1;
+        for (int i = 0; (i < j) && (i < nums.size()); i++) {
+            if (nums[i] == val) {
+                int temp = nums[i];
+                while (nums[j] == val && (j > 0)) j--;
+                nums[i] = nums[j];
+                nums[j] = temp;
+                j--;
+            }
+        }
+        if ((j == 0) && (nums[j] == val)) j--;
+        return j + 1;
+    }
 };
 
 class SolutionBetter {

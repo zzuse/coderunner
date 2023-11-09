@@ -67,3 +67,19 @@ TEST_CASE("Merge Sorted Array", "[array]")
         REQUIRE(nums1 == std::vector<int>({-5, -2, -1, 0, 1, 2, 3, 4, 5}));
     }
 }
+
+TEST_CASE("Remove Element", "[array]")
+{
+    // int[] nums = [...]; // Input array
+    // int val = ...; // Value to remove
+    // int[] expectedNums = [...]; // The expected answer with correct length.
+    //                             // It is sorted with no values equaling val.
+
+    // int k = removeElement(nums, val); // Calls your implementation
+
+    // assert k == expectedNums.length;
+    // sort(nums, 0, k); // Sort the first k elements of nums
+    // for (int i = 0; i < actualLength; i++) {
+    //     assert nums[i] == expectedNums[i];
+    // }
+}
