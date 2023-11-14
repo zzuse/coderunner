@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Merge Sorted Array"
+                "Remove Element"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
