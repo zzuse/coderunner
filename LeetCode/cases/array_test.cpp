@@ -84,4 +84,69 @@ TEST_CASE("Remove Element", "[array]")
             CHECK(nums[i] == expectedNums[i]);
         }
     }
+    SECTION("Remove from end 1")
+    {
+        std::vector<int> nums = {4, 5};            // Input array
+        int val = 5;                               // Value to remove
+        std::vector<int> expectedNums = {4};       // The expected answer with correct length.
+                                                   // It is sorted with no values equaling val.
+        int k = solution.removeElement(nums, val); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        std::sort(nums.begin(), nums.begin() + k); // Sort the first k elements of nums
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
+    SECTION("Remove from end 2")
+    {
+        std::vector<int> nums = {2, 3, 3};         // Input array
+        int val = 3;                               // Value to remove
+        std::vector<int> expectedNums = {2};       // The expected answer with correct length.
+                                                   // It is sorted with no values equaling val.
+        int k = solution.removeElement(nums, val); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        std::sort(nums.begin(), nums.begin() + k); // Sort the first k elements of nums
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
+    SECTION("Remove All 1")
+    {
+        std::vector<int> nums = {3};               // Input array
+        int val = 3;                               // Value to remove
+        std::vector<int> expectedNums = {};        // The expected answer with correct length.
+                                                   // It is sorted with no values equaling val.
+        int k = solution.removeElement(nums, val); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        std::sort(nums.begin(), nums.begin() + k); // Sort the first k elements of nums
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
+    SECTION("Remove All 2")
+    {
+        std::vector<int> nums = {3, 3};            // Input array
+        int val = 3;                               // Value to remove
+        std::vector<int> expectedNums = {};        // The expected answer with correct length.
+                                                   // It is sorted with no values equaling val.
+        int k = solution.removeElement(nums, val); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        std::sort(nums.begin(), nums.begin() + k); // Sort the first k elements of nums
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
+    SECTION("None ")
+    {
+        std::vector<int> nums = {};                // Input array
+        int val = 3;                               // Value to remove
+        std::vector<int> expectedNums = {};        // The expected answer with correct length.
+                                                   // It is sorted with no values equaling val.
+        int k = solution.removeElement(nums, val); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        std::sort(nums.begin(), nums.begin() + k); // Sort the first k elements of nums
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
 }
