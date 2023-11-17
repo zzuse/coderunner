@@ -100,6 +100,8 @@ public:
         while ((j >= 0) && nums[j] == val) j--;
         return j + 1;
     }
+
+    int removeDuplicates(vector<int>& nums) { return 0; }
 };
 
 class SolutionBetter {
