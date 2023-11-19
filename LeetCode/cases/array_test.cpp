@@ -154,6 +154,17 @@ TEST_CASE("Remove Element", "[array]")
 TEST_CASE("Remove Duplicates from Sorted Array", "[array]")
 {
     Solution solution;
+    SECTION("1 ")
+    {
+        std::vector<int> nums = {1};             // Input array
+        std::vector<int> expectedNums = {1};     // The expected answer with correct length.
+                                                 // It is sorted with no values equaling val.
+        int k = solution.removeDuplicates(nums); // Calls your implementation
+        CHECK(k == expectedNums.size());
+        for (int i = 0; i < k; i++) {
+            CHECK(nums[i] == expectedNums[i]);
+        }
+    }
     SECTION("2 ")
     {
         std::vector<int> nums = {1, 1, 2};       // Input array
