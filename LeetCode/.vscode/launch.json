@@ -12,7 +12,8 @@
             "args": [
                 "-l",
                 "0",
-                "Remove Duplicates from Sorted Array"
+                "Remove Duplicates from Sorted Array",
+                "-s"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
