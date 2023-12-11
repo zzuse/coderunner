@@ -101,7 +101,32 @@ public:
         return j + 1;
     }
 
-    int removeDuplicates(vector<int>& nums) { return 0; }
+    int removeDuplicates(vector<int>& nums)
+    {
+        int cur = 1, uni = 0;
+        if (nums.size() == 2) {
+            if (nums[cur] == nums[uni]) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+        if (nums.size() < 2) return nums.size();
+        while (cur < (nums.size() - 1)) {
+            if ((cur != uni) && (nums[cur] == nums[uni])) cur++;
+            if (cur == nums.size()) return ++uni;
+            if (nums[cur] != nums[uni]) {
+                uni++;
+                nums[uni] = nums[cur];
+                cur++;
+            }
+        }
+        if ((cur == (nums.size() - 1)) && nums[cur] != nums[uni]) {
+            uni++;
+            nums[uni] = nums[cur];
+        }
+        return ++uni;
+    }
 };
 
 class SolutionBetter {

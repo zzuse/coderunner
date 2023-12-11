@@ -24,9 +24,10 @@ int main(int argc, char* argv[])
         auto catch_cases = program.get<std::vector<std::string>>("catchcase");
         std::cout << catch_cases.size() << " test provided" << std::endl;
         std::string test_name = catch_cases[0];
-        char* args[] = {(char*)"leetcoder", (char*)test_name.c_str()};
+        std::string test_report = catch_cases[1];
+        char* args[] = {(char*)"leetcoder", (char*)test_name.c_str(), (char*)test_report.c_str()};
         Catch::Session session;
-        session.applyCommandLine(2, args);
+        session.applyCommandLine(sizeof(args) / sizeof(args[0]), args);
         session.run();
     } catch (std::logic_error& e) {
         std::cout << "No test provided" << std::endl;
