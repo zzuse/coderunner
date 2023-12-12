@@ -153,7 +153,7 @@ TEST_CASE("Remove Element", "[array]")
 
 TEST_CASE("Remove Duplicates from Sorted Array", "[array]")
 {
-    Solution solution;
+    SolutionBetter solution;
     SECTION("1 ")
     {
         std::vector<int> nums = {1};             // Input array
