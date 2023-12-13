@@ -127,6 +127,8 @@ public:
         }
         return ++uni;
     }
+
+    bool checkIfExist(vector<int>& arr) { return true; }
 };
 
 class SolutionBetter {

@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Remove Duplicates from Sorted Array",
+                "Check If N and Its Double Exist",
                 "-s"
             ],
             "stopAtEntry": false,
