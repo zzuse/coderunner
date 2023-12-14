@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+#include <unordered_set>
 
 class Solution {
 public:
@@ -128,7 +129,31 @@ public:
         return ++uni;
     }
 
-    bool checkIfExist(vector<int>& arr) { return true; }
+    bool checkIfExist(vector<int>& arr)
+    {
+        std::unordered_set<int> mySet{};
+        for (int i = 0; i < arr.size(); i++) {
+            mySet.insert(arr[i]);
+        }
+        int zero_count = 0;
+        for (int i = 0; i < arr.size(); i++) {
+            if (arr[i] == 0) {
+                zero_count++;
+                continue;
+            };
+            int element1 = arr[i] * 2;
+            int element2 = -10000;
+            if (arr[i] % 2 == 0) {
+                element2 = arr[i] / 2;
+            }
+            if (auto iter = mySet.find(element1); iter != mySet.end()) return true;
+            if (element2 != -10000) {
+                if (auto iter = mySet.find(element2); iter != mySet.end()) return true;
+            }
+        }
+        if (zero_count > 1) return true;
+        return false;
+    }
 };
 
 class SolutionBetter {

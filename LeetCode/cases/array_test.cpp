@@ -204,4 +204,10 @@ TEST_CASE("Check If N and Its Double Exist", "[array]")
         bool k = solution.checkIfExist(nums);  // Calls your implementation
         CHECK(k == false);
     }
+    SECTION("0 0 0 0 ")
+    {
+        std::vector<int> nums = {0, 0, 0, 0}; // Input array
+        bool k = solution.checkIfExist(nums); // Calls your implementation
+        CHECK(k == false);
+    }
 }
