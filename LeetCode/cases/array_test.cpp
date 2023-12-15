@@ -191,7 +191,7 @@ TEST_CASE("Remove Duplicates from Sorted Array", "[array]")
 
 TEST_CASE("Check If N and Its Double Exist", "[array]")
 {
-    Solution solution;
+    SolutionBetter solution;
     SECTION("10 2 5 3 ")
     {
         std::vector<int> nums = {10, 2, 5, 3}; // Input array
@@ -207,6 +207,12 @@ TEST_CASE("Check If N and Its Double Exist", "[array]")
     SECTION("0 0 0 0 ")
     {
         std::vector<int> nums = {0, 0, 0, 0}; // Input array
+        bool k = solution.checkIfExist(nums); // Calls your implementation
+        CHECK(k == true);
+    }
+    SECTION("1 12 ")
+    {
+        std::vector<int> nums = {1, 12};      // Input array
         bool k = solution.checkIfExist(nums); // Calls your implementation
         CHECK(k == false);
     }
