@@ -252,7 +252,7 @@ public:
 
     bool checkIfExist(vector<int>& arr)
     {
-        std::unordered_set<int> mySet{};
+        std::unordered_set<int> mySet;
         for (int i = 0; i < arr.size(); i++) {
             if ((mySet.count(2 * arr[i]) > 0) || ((arr[i] % 2 == 0) && mySet.count(arr[i] / 2) > 0)) {
                 return true;
