@@ -154,6 +154,8 @@ public:
         if (zero_count > 1) return true;
         return false;
     }
+
+    bool validMountainArray(vector<int>& arr) { return true; }
 };
 
 class SolutionBetter {

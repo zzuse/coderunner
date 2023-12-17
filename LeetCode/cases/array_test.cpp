@@ -217,3 +217,14 @@ TEST_CASE("Check If N and Its Double Exist", "[array]")
         CHECK(k == false);
     }
 }
+
+TEST_CASE("Valid Mountain Array", "[array]")
+{
+    Solution solution;
+    SECTION("0,3,2,1 ")
+    {
+        std::vector<int> nums = {0, 3, 2, 1};       // Input array
+        bool k = solution.validMountainArray(nums); // Calls your implementation
+        CHECK(k == true);
+    }
+}
