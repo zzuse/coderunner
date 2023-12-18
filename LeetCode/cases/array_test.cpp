@@ -227,4 +227,10 @@ TEST_CASE("Valid Mountain Array", "[array]")
         bool k = solution.validMountainArray(nums); // Calls your implementation
         CHECK(k == true);
     }
+    SECTION("2,1 ")
+    {
+        std::vector<int> nums = {2, 1};             // Input array
+        bool k = solution.validMountainArray(nums); // Calls your implementation
+        CHECK(k == false);
+    }
 }
