@@ -175,6 +175,9 @@ public:
                 i++;
                 descend++;
             }
+            if ((descend > increase) && (increase == 0)) {
+                return false;
+            }
         }
         if ((increase + descend) == arr.size() - 1) {
             return true;
