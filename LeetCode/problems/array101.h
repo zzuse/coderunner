@@ -158,28 +158,17 @@ public:
     bool validMountainArray(vector<int>& arr)
     {
         int i = 0;
-        int increase = 0;
-        int descend = 0;
+        int j = arr.size() - 1;
         if (arr.size() < 3) {
             return false;
         }
-        while (i < arr.size() - 1) {
-            while ((i < arr.size() - 1) && (arr[i] < arr[i + 1])) {
-                i++;
-                increase++;
-            }
-            if (arr[i] == arr[i + 1]) {
-                return false;
-            }
-            while ((i < arr.size() - 1) && (i >= increase) && (arr[i] > arr[i + 1])) {
-                i++;
-                descend++;
-            }
-            if ((descend > increase) && (increase == 0)) {
-                return false;
-            }
+        while ((i < arr.size() - 1) && (arr[i] < arr[i + 1])) {
+            i++;
         }
-        if ((increase + descend) == arr.size() - 1) {
+        while ((j > 0) && (arr[j] < arr[j - 1])) {
+            j--;
+        }
+        if ((j > 0) && (i == j) && (i < arr.size() - 1)) {
             return true;
         } else {
             return false;
