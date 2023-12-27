@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Valid Mountain Array",
+                "Replace Elements with Greatest Element on Right Side",
                 "-s"
             ],
             "stopAtEntry": false,

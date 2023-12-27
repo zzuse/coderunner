@@ -258,3 +258,15 @@ TEST_CASE("Valid Mountain Array", "[array]")
         CHECK(k == false);
     }
 }
+
+TEST_CASE("Replace Elements with Greatest Element on Right Side", "[array]")
+{
+    Solution solution;
+    SECTION("17,18,5,4,6,1")
+    {
+        std::vector<int> nums = {17, 18, 5, 4, 6, 1};
+        std::vector<int> expectedNums = {18, 6, 6, 6, 1, -1};
+        auto k = solution.replaceElements(nums);
+        CHECK(k == expectedNums);
+    }
+}

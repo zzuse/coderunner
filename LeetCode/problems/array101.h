@@ -174,6 +174,8 @@ public:
             return false;
         }
     }
+
+    vector<int> replaceElements(vector<int>& arr) { return arr; }
 };
 
 class SolutionBetter {
