@@ -269,4 +269,11 @@ TEST_CASE("Replace Elements with Greatest Element on Right Side", "[array]")
         auto k = solution.replaceElements(nums);
         CHECK(k == expectedNums);
     }
+    SECTION("400")
+    {
+        std::vector<int> nums = {400};
+        std::vector<int> expectedNums = {-1};
+        auto k = solution.replaceElements(nums);
+        CHECK(k == expectedNums);
+    }
 }
