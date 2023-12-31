@@ -261,7 +261,7 @@ TEST_CASE("Valid Mountain Array", "[array]")
 
 TEST_CASE("Replace Elements with Greatest Element on Right Side", "[array]")
 {
-    Solution solution;
+    SolutionBetter solution;
     SECTION("17,18,5,4,6,1")
     {
         std::vector<int> nums = {17, 18, 5, 4, 6, 1};

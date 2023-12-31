@@ -177,9 +177,6 @@ public:
 
     vector<int> replaceElements(vector<int>& arr)
     {
-        if (arr.size() == 1) {
-            arr[0] = -1;
-        }
         for (int i = 0; i <= arr.size() - 1; i++) {
             int max = -1;
             for (int j = i + 1; j <= arr.size() - 1; j++) {
@@ -297,5 +294,20 @@ public:
             mySet.insert(arr[i]);
         }
         return false;
+    }
+
+    vector<int> replaceElements(vector<int>& arr)
+    {
+        int max = -1;
+        int tmp = arr[arr.size() - 1];
+        arr[arr.size() - 1] = max;
+        for (int i = arr.size() - 1; i > 0; i--) {
+            if (tmp > max) {
+                max = tmp;
+            }
+            tmp = arr[i - 1];
+            arr[i - 1] = max;
+        }
+        return arr;
     }
 };
