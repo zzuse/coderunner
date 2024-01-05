@@ -1,5 +1,5 @@
 from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from langchain.schema import HumanMessage, SystemMessage, AIMessage, Document
 from dotenv import load_dotenv
 import time
 import os
@@ -11,6 +11,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 # System - Helpful background context that tell the AI what to do
 # Human - Messages that are intented to represent the user
 # AI - Messages that show what the AI responded with
+# temprature -  equal 1 means more bragging, exaggerate
 
 chat_model = ChatOpenAI(temperature=.7, openai_api_key=api_key)
 
@@ -40,3 +41,11 @@ messages3 = [
 ]
 result = chat_model.predict_messages(messages3)
 print(result.content)
+
+time.sleep(20)
+print(Document(page_content="This is my document. It is full of text that I've gathered from other places",
+         metadata={
+             'my_document_id': 234234,
+             'my_document_source': "The LangChain Papers",
+             'my_document_create_time' : 1680013019
+         }))

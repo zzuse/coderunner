@@ -1,22 +1,24 @@
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import ChatPromptTemplate
+from langchain.llms import OpenAI 
+from langchain import PromptTemplate
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
+llm = OpenAI(model_name="text-davinci-003", openai_api_key=api_key)
 
-chat_model = ChatOpenAI(openai_api_key=api_key)
+template = """
+I really want to travel to {location}. What should I do there?
+Respond in one short sentence
+"""
 
-template = "You are a helpful asistant that translates {input_language} to {output_language}."
-human_template = "{text}"
+prompt = PromptTemplate(
+    input_variables=["location"],
+    template=template,
+)
 
-chat_prompt = ChatPromptTemplate.from_messages([
-    ("system", template),
-    ("human", human_template),
-])
+final_prompt = prompt.format(location='Rome')
 
-messages = chat_prompt.format_messages(input_language="Chinese", output_language="English",text="我爱编程")
-
-result = chat_model.predict_messages(messages)
-print(result.content)
+print(f"Final Prompt: {final_prompt}")
+print("----------")
+print(f"LLM Output: {llm(final_prompt)}")
