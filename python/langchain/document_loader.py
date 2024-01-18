@@ -1,6 +1,11 @@
 """Module providing a docloader."""
-from langchain.document_loaders import HNLoader
+from langchain.document_loaders import HNLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.embeddings import OpenAIEmbeddings
+from dotenv import load_dotenv
+import os
+
 loader = HNLoader("https://news.ycombinator.com/item?id=34422627")
 data = loader.load()
 print(f"Found {len(data)} comments")
@@ -21,3 +26,18 @@ print(f"You have {len(texts)} documents")
 print("Preview:")
 print(texts[0].page_content, "\n")
 print(texts[1].page_content)
+
+textloader = TextLoader('./worked.txt')
+documents = textloader.load()
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+texts = text_splitter.split_documents(documents)
+
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+db = FAISS.from_documents(texts, embeddings)
+
+retriever = db.as_retriever()
+docs = retriever.get_relevant_documents('What types of things did the author want to build?')
+
+print("\n\n".join([x.page_content[:200] for x in docs[:2]]))
