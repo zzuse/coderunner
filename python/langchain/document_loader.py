@@ -1,10 +1,10 @@
 """Module providing a docloader."""
+import os
+from dotenv import load_dotenv
 from langchain.document_loaders import HNLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
-from dotenv import load_dotenv
-import os
 
 loader = HNLoader("https://news.ycombinator.com/item?id=34422627")
 data = loader.load()
