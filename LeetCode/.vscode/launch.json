@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Move Zeroes",
+                "Sort Array By Parity",
                 "-s"
             ],
             "stopAtEntry": false,

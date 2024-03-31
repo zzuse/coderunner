@@ -209,6 +209,23 @@ public:
             }
         }
     }
+
+    vector<int> sortArrayByParity(vector<int>& nums)
+    {
+        int odd = 0, even = 0;
+        while (odd < nums.size() && even < nums.size()) {
+            while (odd < nums.size() && nums[odd] % 2 == 0) odd++;
+            while (even < nums.size() && nums[even] % 2 != 0) even++;
+            if (odd < nums.size() && even < nums.size() && odd < even) {
+                int temp = nums[odd];
+                nums[odd] = nums[even];
+                nums[even] = temp;
+            } else {
+                even++;
+            }
+        }
+        return nums;
+    }
 };
 
 class SolutionBetter {

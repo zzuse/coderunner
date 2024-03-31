@@ -310,3 +310,29 @@ TEST_CASE("Move Zeroes", "[array]")
         CHECK(nums == expectedNums);
     }
 }
+
+TEST_CASE("Sort Array By Parity", "[array]")
+{
+    Solution solution;
+    SECTION("3,1,2,4")
+    {
+        std::vector<int> nums = {3, 1, 2, 4};
+        std::vector<int> expectedNums = {2, 4, 3, 1};
+        auto k = solution.sortArrayByParity(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("0")
+    {
+        std::vector<int> nums = {0};
+        std::vector<int> expectedNums = {0};
+        auto k = solution.sortArrayByParity(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("0,1")
+    {
+        std::vector<int> nums = {0, 1};
+        std::vector<int> expectedNums = {0, 1};
+        auto k = solution.sortArrayByParity(nums);
+        CHECK(k == expectedNums);
+    }
+}
