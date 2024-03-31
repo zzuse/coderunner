@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Replace Elements with Greatest Element on Right Side",
+                "Move Zeroes",
                 "-s"
             ],
             "stopAtEntry": false,

@@ -277,3 +277,36 @@ TEST_CASE("Replace Elements with Greatest Element on Right Side", "[array]")
         CHECK(k == expectedNums);
     }
 }
+
+TEST_CASE("Move Zeroes", "[array]")
+{
+    SolutionBetter solution;
+    SECTION("0,1,0,3,12")
+    {
+        std::vector<int> nums = {0, 1, 0, 3, 12};
+        std::vector<int> expectedNums = {1, 3, 12, 0, 0};
+        solution.moveZeroes(nums);
+        CHECK(nums == expectedNums);
+    }
+    SECTION("0")
+    {
+        std::vector<int> nums = {0};
+        std::vector<int> expectedNums = {0};
+        solution.moveZeroes(nums);
+        CHECK(nums == expectedNums);
+    }
+    SECTION("0,1")
+    {
+        std::vector<int> nums = {0, 1};
+        std::vector<int> expectedNums = {1, 0};
+        solution.moveZeroes(nums);
+        CHECK(nums == expectedNums);
+    }
+    SECTION("0,0")
+    {
+        std::vector<int> nums = {0, 0};
+        std::vector<int> expectedNums = {0, 0};
+        solution.moveZeroes(nums);
+        CHECK(nums == expectedNums);
+    }
+}

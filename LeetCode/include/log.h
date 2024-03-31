@@ -29,7 +29,7 @@ inline void set_log_config(int level)
         default:
             break;
     }
-    console_sink->set_level(spdlog::level::level_enum::warn);
+    console_sink->set_level(spdlog::level::level_enum::info);
     file_sink->set_level(spd_log_level);
 
     std::vector<spdlog::sink_ptr> sinks{console_sink, file_sink};
@@ -37,7 +37,7 @@ inline void set_log_config(int level)
                                                          spdlog::async_overflow_policy::block);
     spdlog::register_logger(logger);
     spdlog::set_default_logger(logger);
-    spdlog::flush_every(std::chrono::seconds(3));
+    spdlog::flush_every(std::chrono::seconds(1));
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%n] [%^%l%$] [%t] %v");
 }
 

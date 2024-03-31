@@ -17,8 +17,8 @@ int main(int argc, char* argv[])
         std::exit(1);
     }
     auto loglevel = program.get<int>("loglevel");
-    spdlog::info("Log Level: {}", loglevel);
     set_log_config(loglevel);
+    spdlog::info("Log Level after set: {}", loglevel);
 
     try {
         auto catch_cases = program.get<std::vector<std::string>>("catchcase");

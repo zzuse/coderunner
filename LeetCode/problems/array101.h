@@ -4,6 +4,8 @@
 
 class Solution {
 public:
+    Solution() { spdlog::info("Solution"); }
+
     vector<int> sortedSquares(vector<int>& nums)
     {
         vector<int> results1, results2, results3;
@@ -188,10 +190,31 @@ public:
         }
         return arr;
     }
+
+    void moveZeroes(vector<int>& nums)
+    {
+        int write = 0;
+        int read = 1;
+        while (read < nums.size() && write < nums.size()) {
+            while (write < nums.size() && nums[write] != 0) {
+                write++;
+            }
+            while ((read < nums.size()) && (nums[read] == 0 || read <= write)) {
+                read++;
+            }
+            if (write < read && write < nums.size() && read < nums.size()) {
+                int tmp = nums[write];
+                nums[write] = nums[read];
+                nums[read] = tmp;
+            }
+        }
+    }
 };
 
 class SolutionBetter {
 public:
+    SolutionBetter() { spdlog::info("Solution Better"); }
+
     vector<int> sortedSquares(vector<int>& nums)
     {
         vector<int> results(nums.size(), 0);
@@ -309,5 +332,20 @@ public:
             arr[i - 1] = max;
         }
         return arr;
+    }
+
+    void moveZeroes(vector<int>& nums)
+    {
+        int i = 0, j = 0;
+        int n = nums.size();
+        while (i < n && j < n) {
+            if (nums[i] == 0 && nums[j] != 0) {
+                nums[i] = nums[j];
+                nums[j] = 0;
+            } else if (nums[i] != 0 && nums[j] == 0) {
+                i++;
+            } else
+                j++;
+        }
     }
 };
