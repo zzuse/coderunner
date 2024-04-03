@@ -226,6 +226,18 @@ public:
         }
         return nums;
     }
+    int heightChecker(vector<int>& heights)
+    {
+        vector<int> arr_sorted = heights;
+        std::sort(arr_sorted.begin(), arr_sorted.end());
+        int count = 0;
+        for (int i = 0; i < heights.size(); i++) {
+            if (arr_sorted[i] != heights[i]) {
+                count++;
+            }
+        }
+        return count;
+    }
 };
 
 class SolutionBetter {

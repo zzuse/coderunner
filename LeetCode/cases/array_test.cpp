@@ -336,3 +336,29 @@ TEST_CASE("Sort Array By Parity", "[array]")
         CHECK(k == expectedNums);
     }
 }
+
+TEST_CASE("Height Checker", "[array]")
+{
+    Solution solution;
+    SECTION("1,1,4,2,1,3")
+    {
+        std::vector<int> nums = {1, 1, 4, 2, 1, 3};
+        // std::vector<int> expectedNums = {1, 1, 1, 2, 3, 4};
+        auto k = solution.heightChecker(nums);
+        CHECK(k == 3);
+    }
+    SECTION("5,1,2,3,4")
+    {
+        std::vector<int> nums = {5, 1, 2, 3, 4};
+        // std::vector<int> expectedNums = {1,2,3,4,5};
+        auto k = solution.heightChecker(nums);
+        CHECK(k == 5);
+    }
+    SECTION("1,2,3,4,5")
+    {
+        std::vector<int> nums = {1, 2, 3, 4, 5};
+        // std::vector<int> expectedNums = {1,2,3,4,5};
+        auto k = solution.heightChecker(nums);
+        CHECK(k == 0);
+    }
+}

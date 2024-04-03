@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Sort Array By Parity",
+                "Height Checker",
                 "-s"
             ],
             "stopAtEntry": false,
