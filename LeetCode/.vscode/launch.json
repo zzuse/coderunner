@@ -12,7 +12,7 @@
             "args": [
                 "-l",
                 "0",
-                "Height Checker",
+                "The Third Distinct Maximum Number",
                 "-s"
             ],
             "stopAtEntry": false,

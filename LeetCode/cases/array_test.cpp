@@ -362,3 +362,26 @@ TEST_CASE("Height Checker", "[array]")
         CHECK(k == 0);
     }
 }
+
+TEST_CASE("The Third Distinct Maximum Number", "[array]")
+{
+    SolutionBetter solution;
+    SECTION("3,2,1")
+    {
+        std::vector<int> nums = {3, 2, 1};
+        auto k = solution.thirdMax(nums);
+        CHECK(k == 1);
+    }
+    SECTION("1,2")
+    {
+        std::vector<int> nums = {1, 2};
+        auto k = solution.thirdMax(nums);
+        CHECK(k == 2);
+    }
+    SECTION("2,2,3,1")
+    {
+        std::vector<int> nums = {2, 2, 3, 1};
+        auto k = solution.thirdMax(nums);
+        CHECK(k == 1);
+    }
+}
