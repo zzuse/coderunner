@@ -385,3 +385,29 @@ TEST_CASE("The Third Distinct Maximum Number", "[array]")
         CHECK(k == 1);
     }
 }
+
+TEST_CASE("Find All Numbers Disappeared in an Array", "[array]")
+{
+    Solution solution;
+    SECTION("4,3,2,7,8,2,3,1")
+    {
+        std::vector<int> nums = {4, 3, 2, 7, 8, 2, 3, 1};
+        std::vector<int> expectedNums = {5, 6};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("1,1")
+    {
+        std::vector<int> nums = {1, 1};
+        std::vector<int> expectedNums = {2};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("4,3,2,7,7,2,3,1")
+    {
+        std::vector<int> nums = {4, 3, 2, 7, 7, 2, 3, 1};
+        std::vector<int> expectedNums = {5, 6, 8};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+}
