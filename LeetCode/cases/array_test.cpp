@@ -389,10 +389,20 @@ TEST_CASE("The Third Distinct Maximum Number", "[array]")
 TEST_CASE("Find All Numbers Disappeared in an Array", "[array]")
 {
     Solution solution;
-    SECTION("4,3,2,7,8,2,3,1")
+    SECTION("27,40,6,21,14,36,10,19,44,10,")
     {
-        std::vector<int> nums = {4, 3, 2, 7, 8, 2, 3, 1};
-        std::vector<int> expectedNums = {5, 6};
+        std::vector<int> nums
+            = {27, 40, 6,  21, 14, 36, 10, 19, 44, 10, 41, 26, 39, 20, 25, 19, 14, 7,  29, 27, 40, 38, 11, 44, 4,
+               6,  48, 39, 9,  13, 7,  45, 41, 23, 31, 8,  24, 1,  3,  5,  28, 11, 49, 29, 18, 4,  38, 32, 24, 15};
+        std::vector<int> expectedNums = {2, 12, 16, 17, 22, 30, 33, 34, 35, 37, 42, 43, 46, 47, 50};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+
+    SECTION("1,1,2,2")
+    {
+        std::vector<int> nums = {1, 1, 2, 2};
+        std::vector<int> expectedNums = {3, 4};
         auto k = solution.findDisappearedNumbers(nums);
         CHECK(k == expectedNums);
     }
@@ -400,6 +410,20 @@ TEST_CASE("Find All Numbers Disappeared in an Array", "[array]")
     {
         std::vector<int> nums = {1, 1};
         std::vector<int> expectedNums = {2};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("2,2")
+    {
+        std::vector<int> nums = {2, 2};
+        std::vector<int> expectedNums = {1};
+        auto k = solution.findDisappearedNumbers(nums);
+        CHECK(k == expectedNums);
+    }
+    SECTION("4,3,2,7,8,2,3,1")
+    {
+        std::vector<int> nums = {4, 3, 2, 7, 8, 2, 3, 1};
+        std::vector<int> expectedNums = {5, 6};
         auto k = solution.findDisappearedNumbers(nums);
         CHECK(k == expectedNums);
     }

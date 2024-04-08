@@ -245,36 +245,35 @@ public:
         auto sorted_array = nums;
         auto lack = vector<int>{};
         int index_pos = 0, sorted_pos = 0;
-        std::cout << "index"
+        std::cout << "index_pos"
                   << " "
-                  << "ind_po"
-                  << " "
-                  << "sorted" << std::endl;
+                  << "sort_value" << std::endl;
         std::sort(sorted_array.begin(), sorted_array.end());
-        for (int i = 0; i < sorted_array.size(); i++) {
-            std::cout << i + 1 << "    " << index_pos + 1 << "     ";
-            std::cout << sorted_array[i] << std::endl;
+        while (index_pos < sorted_array.size()) {
+            std::cout << index_pos + 1 << "     ";
+            std::cout << sorted_array[sorted_pos] << std::endl;
             if ((index_pos + 1) == sorted_array[sorted_pos]) {
                 sorted_pos++;
                 index_pos++;
             } else if ((index_pos + 1) > sorted_array[sorted_pos]) {
                 sorted_pos++;
-                if (sorted_pos == sorted_array.size() - 1) {
-                    while (index_pos < sorted_array.size()) {
-                        lack.push_back(index_pos + 1);
-                        index_pos++;
-                    }
-                }
             } else if ((index_pos + 1) < sorted_array[sorted_pos]) {
-                while (index_pos + 1 < sorted_array[sorted_pos]) {
+                while ((index_pos + 1) < sorted_array[sorted_pos]) {
                     lack.push_back(index_pos + 1);
                     index_pos++;
                 }
             }
-            if (sorted_pos >= (sorted_array.size() - 1)) {
-                while (index_pos < sorted_array.size()) {
+            if (sorted_pos == (sorted_array.size() - 1) && index_pos < sorted_array.size()) {
+                while ((index_pos + 1) != sorted_array[sorted_pos] && index_pos < sorted_array.size()) {
                     lack.push_back(index_pos + 1);
                     index_pos++;
+                }
+                if ((index_pos + 1) == sorted_array[sorted_pos] && index_pos < sorted_array.size()) {
+                    index_pos++;
+                    while (index_pos < sorted_array.size()) {
+                        lack.push_back(index_pos + 1);
+                        index_pos++;
+                    }
                 }
             }
         }
