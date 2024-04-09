@@ -388,7 +388,7 @@ TEST_CASE("The Third Distinct Maximum Number", "[array]")
 
 TEST_CASE("Find All Numbers Disappeared in an Array", "[array]")
 {
-    Solution solution;
+    SolutionBetter solution;
     SECTION("27,40,6,21,14,36,10,19,44,10,")
     {
         std::vector<int> nums
