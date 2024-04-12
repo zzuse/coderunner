@@ -303,6 +303,51 @@ public:
         return results;
     }
 
+    vector<int> sortedSquaresCenter(vector<int>& nums)
+    {
+        int left_idx = 0, right_idx = 0;
+        int len = nums.size();
+        int i = 0;
+        vector<int> result;
+
+        for (i = 0; i < len; i++) {
+            if (nums[i] >= 0) {
+                left_idx = i - 1;
+                right_idx = i;
+                break;
+            }
+
+            if (i == len - 1) {
+                left_idx = len - 1;
+                right_idx = len;
+            }
+        }
+
+        while (left_idx >= 0 && right_idx < len) {
+            if ((nums[left_idx] * -1) < nums[right_idx]) {
+                result.push_back(nums[left_idx] * nums[left_idx]);
+                left_idx--;
+            } else {
+                result.push_back(nums[right_idx] * nums[right_idx]);
+                right_idx++;
+            }
+        }
+
+        while (left_idx >= 0) {
+
+            result.push_back(nums[left_idx] * nums[left_idx]);
+            left_idx--;
+        }
+
+        while (right_idx < len) {
+
+            result.push_back(nums[right_idx] * nums[right_idx]);
+            right_idx++;
+        }
+
+        return result;
+    }
+
     void duplicateZeros(vector<int>& arr)
     {
         int count = 0;
