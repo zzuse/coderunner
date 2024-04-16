@@ -4,7 +4,7 @@
 
 class Solution {
 public:
-    Solution() { spdlog::info("Solution"); }
+    Solution() { spdlog::info("Array Solution"); }
 
     vector<int> sortedSquares(vector<int>& nums)
     {
@@ -283,7 +283,7 @@ public:
 
 class SolutionBetter {
 public:
-    SolutionBetter() { spdlog::info("Solution Better"); }
+    SolutionBetter() { spdlog::info("Array Solution Better"); }
 
     vector<int> sortedSquares(vector<int>& nums)
     {
